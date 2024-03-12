@@ -1,6 +1,6 @@
 #' Export manifest file with metadata
 #'
-#' @param manifest_path Path to the manifest file. Blah Blah
+#' @param manifest_path Path to the manifest file. Blah Blah Blah
 #' @param input_files List of files that are inputs to the workflow.
 #' @param output_files List of files that are outputs from the workflow.
 #'
