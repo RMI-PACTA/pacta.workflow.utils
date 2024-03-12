@@ -13,17 +13,33 @@ export_manifest <- function(
   output_files
 ) {
 
-  manifest_list <- list()
+  manifest_list <- create_manifest(
+    input_files = input_files,
+    output_files = output_files
+  )
 
   manifest_json <- jsonlite::toJSON(
     manifest_list,
     pretty = TRUE,
     auto_unbox = TRUE
   )
+
   logger::log_debug("Writing metadata to file: ", manifest_path)
   writeLines(
     text = manifest_json,
     con = manifest_path
   )
   return(invisible(manifest_json))
+}
+
+create_manifest <- function(
+  input_files,
+  output_files
+) {
+  logger::log_debug("Creating metadata manifest")
+  manifest_list <- list(
+    input_files = get_file_metadata(input_files),
+    output_files = get_file_metadata(output_files)
+  )
+  return(manifest_list)
 }
