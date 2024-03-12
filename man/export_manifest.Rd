@@ -7,7 +7,7 @@
 export_manifest(manifest_path, input_files, output_files)
 }
 \arguments{
-\item{manifest_path}{Path to the manifest file.}
+\item{manifest_path}{Path to the manifest file. Blah Blah}
 
 \item{input_files}{List of files that are inputs to the workflow.}
 
