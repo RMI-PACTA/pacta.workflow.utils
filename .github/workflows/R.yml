@@ -18,5 +18,5 @@ name: R
 
 jobs:
   R-package:
-    name: R Package Checks
+    name: R Package Check
     uses: RMI-PACTA/actions/.github/workflows/R.yml@feat/22-semver-check
