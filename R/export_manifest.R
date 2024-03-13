@@ -29,7 +29,7 @@ export_manifest <- function(
     text = manifest_json,
     con = manifest_path
   )
-  return(invisible(manifest_json))
+  return(manifest_json)
 }
 
 create_manifest <- function(
