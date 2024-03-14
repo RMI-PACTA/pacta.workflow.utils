@@ -214,7 +214,7 @@ test_that("get_single_file_metadata processes unnamed JSON list correctly", {
   )
 })
 
-test_that("get_single_file_metadata processes partially named JSON list correctly", {
+test_that("get_single_file_metadata processes partially named JSON", {
   json_file <- withr::local_tempfile(fileext = ".JSON")
   test_list <- list(
     1L,
