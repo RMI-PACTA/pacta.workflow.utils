@@ -99,3 +99,171 @@ test_that("get_single_file_metadata processes txt files correctly", {
     )
   )
 })
+
+test_that("get_single_file_metadata processes lists RDS correctly", {
+  rds_file <- withr::local_tempfile(fileext = ".rds")
+  test_list <- list(
+    a = 1L,
+    b = "two",
+    c = list(
+      d = 3.4,
+      e = "four"
+    )
+  )
+  saveRDS(test_list, rds_file)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(rds_file, test_time)
+  metadata <- get_single_file_metadata(rds_file)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(rds_file),
+      file_extension = "rds",
+      file_path = rds_file,
+      file_size = 124L,
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
+      file_md5 = "856a49f702cfc3e12a6eb947fff06cf3",
+      summary_info = list(
+        length = 3L,
+        names = c("a", "b", "c"),
+        class = "list"
+      )
+    )
+  )
+})
+
+test_that("get_single_file_metadata processes named JSON list correctly", {
+  json_file <- withr::local_tempfile(fileext = ".JSON")
+  test_list <- list(
+    a = 1L,
+    b = "two",
+    c = list(
+      d = 3.4,
+      e = "four"
+    )
+  )
+  jsonlite::write_json(test_list, json_file, auto_unbox = TRUE)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(json_file, test_time)
+  metadata <- get_single_file_metadata(json_file)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(json_file),
+      file_extension = "JSON",
+      file_path = json_file,
+      file_size = 43L,
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
+      file_md5 = "6ae81bbeea491d418cfa4e3a082d7a2e",
+      summary_info = list(
+        length = 3L,
+        names = c("a", "b", "c"),
+        class = "list"
+      )
+    )
+  )
+})
+
+test_that("get_single_file_metadata processes unnamed JSON list correctly", {
+  json_file <- withr::local_tempfile(fileext = ".JSON")
+  test_list <- list(
+    1L,
+    "two",
+    list(
+      d = 3.4,
+      e = "four"
+    )
+  )
+  jsonlite::write_json(test_list, json_file, auto_unbox = TRUE)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(json_file, test_time)
+  metadata <- get_single_file_metadata(json_file)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(json_file),
+      file_extension = "JSON",
+      file_path = json_file,
+      file_size = 31L,
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
+      file_md5 = "ae45a51f7004c0dde31d21078020588b",
+      summary_info = list(
+        length = 3L,
+        names = NULL,
+        class = "list"
+      )
+    )
+  )
+})
+
+test_that("get_single_file_metadata processes partially named JSON list correctly", {
+  json_file <- withr::local_tempfile(fileext = ".JSON")
+  test_list <- list(
+    1L,
+    b = "two",
+    list(
+      d = 3.4,
+      e = "four"
+    )
+  )
+  jsonlite::write_json(test_list, json_file, auto_unbox = TRUE)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(json_file, test_time)
+  metadata <- get_single_file_metadata(json_file)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(json_file),
+      file_extension = "JSON",
+      file_path = json_file,
+      file_size = 43L,
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
+      file_md5 = "4ef0b7bf858cbc635cb2d826b23849f0",
+      summary_info = list(
+        length = 3L,
+        names = c("1", "b", "3"),
+        class = "list"
+      )
+    )
+  )
+})
+
+test_that("get_single_file_metadata processes JSON table correctly", {
+  json_file <- withr::local_tempfile(fileext = ".JSON")
+  jsonlite::write_json(mtcars, json_file, auto_unbox = TRUE)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(json_file, test_time)
+  metadata <- get_single_file_metadata(json_file)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(json_file),
+      file_extension = "JSON",
+      file_path = json_file,
+      file_size = 4147L,
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
+      file_md5 = "a76f3e6fe44afa6a2533725659ba35a1",
+      summary_info = list(
+        nrow = 32L,
+        colnames = colnames(mtcars),
+        class = "data.frame"
+      )
+    )
+  )
+})
+

@@ -54,6 +54,8 @@ get_single_file_metadata <- function(filepath) {
     contents <- readRDS(filepath)
   } else if (tolower(tools::file_ext(filepath)) == "csv") {
     contents <- utils::read.csv(filepath)
+  } else if (tolower(tools::file_ext(filepath)) == "json") {
+    contents <- jsonlite::fromJSON(filepath)
   } else {
     logger::log_trace(
       "File not supported for summary information: \"{filepath}\"."
@@ -65,6 +67,12 @@ get_single_file_metadata <- function(filepath) {
     summary_info <- list(
       nrow = nrow(contents),
       colnames = colnames(contents),
+      class = class(contents)
+    )
+  } else if (inherits(contents, "list")) {
+    summary_info <- list(
+      length = length(contents),
+      names = names(contents),
       class = class(contents)
     )
   } else if (!is.null(contents)) {
