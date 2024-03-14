@@ -289,3 +289,19 @@ test_that("missing files raise an error", {
     regexp = "File does not exist."
   )
 })
+
+test_that("get_single_file_metadata without argument raises an error", {
+  expect_error(
+    object = get_single_file_metadata()
+  )
+})
+
+test_that("get_single_file_metadata with multiple files raises an error", {
+  first_file <- withr::local_tempfile(fileext = ".csv")
+  second_file <- withr::local_tempfile(fileext = ".csv")
+  expect_error(
+    object = get_single_file_metadata(c(first_file, second_file)),
+    regexp = "Only one file path can be passed to get_single_file_metadata."
+  )
+})
+
