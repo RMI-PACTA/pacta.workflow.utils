@@ -30,7 +30,7 @@ test_that("get_single_file_metadata processes CSV tables correctly", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
-      file_md5 = "5143f7b8ed70e91698d432d721c11a63",
+      file_md5 = digest::digest(csv_file, algo = "md5", file = TRUE),
       summary_info = list(
         nrow = 32L,
         colnames = colnames(mtcars),
@@ -57,7 +57,7 @@ test_that("get_single_file_metadata processes RDS tables correctly", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
-      file_md5 = "23d45331b5667757134959aa333240ae",
+      file_md5 = digest::digest(rds_file, algo = "md5", file = TRUE),
       summary_info = list(
         nrow = 32L,
         colnames = colnames(mtcars),
@@ -84,7 +84,7 @@ test_that("get_single_file_metadata processes RDS non-tables correctly", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
-      file_md5 = "9dbb0d8e2235c70d2d8a77b1409f1597",
+      file_md5 = digest::digest(rds_file, algo = "md5", file = TRUE),
       summary_info = list(
         class = "character"
       )
@@ -109,7 +109,7 @@ test_that("get_single_file_metadata processes txt files correctly", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
-      file_md5 = "9ac4dbbc3c0ad2429e61d0df5dc28add"
+      file_md5 = digest::digest(txt_file, algo = "md5", file = TRUE)
       # No summary info
     )
   )
@@ -140,7 +140,7 @@ test_that("get_single_file_metadata processes lists RDS correctly", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
-      file_md5 = "856a49f702cfc3e12a6eb947fff06cf3",
+      file_md5 = digest::digest(rds_file, algo = "md5", file = TRUE),
       summary_info = list(
         length = 3L,
         names = c("a", "b", "c"),
@@ -175,7 +175,7 @@ test_that("get_single_file_metadata processes named JSON list correctly", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
-      file_md5 = "6ae81bbeea491d418cfa4e3a082d7a2e",
+      file_md5 = digest::digest(json_file, algo = "md5", file = TRUE),
       summary_info = list(
         length = 3L,
         names = c("a", "b", "c"),
@@ -210,7 +210,7 @@ test_that("get_single_file_metadata processes unnamed JSON list correctly", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
-      file_md5 = "ae45a51f7004c0dde31d21078020588b",
+      file_md5 = digest::digest(json_file, algo = "md5", file = TRUE),
       summary_info = list(
         length = 3L,
         names = NULL,
@@ -245,7 +245,7 @@ test_that("get_single_file_metadata processes partially named JSON", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
-      file_md5 = "4ef0b7bf858cbc635cb2d826b23849f0",
+      file_md5 = digest::digest(json_file, algo = "md5", file = TRUE),
       summary_info = list(
         length = 3L,
         names = c("1", "b", "3"),
@@ -272,7 +272,7 @@ test_that("get_single_file_metadata processes JSON table correctly", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
-      file_md5 = "a76f3e6fe44afa6a2533725659ba35a1",
+      file_md5 = digest::digest(json_file, algo = "md5", file = TRUE),
       summary_info = list(
         nrow = 32L,
         colnames = colnames(mtcars),
