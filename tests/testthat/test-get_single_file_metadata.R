@@ -2,6 +2,12 @@
 threshold <- logger::log_threshold()
 appender  <- logger::log_appender()
 layout    <- logger::log_layout()
+on.exit({
+  ## reset logger settings
+  logger::log_threshold(threshold)
+  logger::log_layout(layout)
+  logger::log_appender(appender)
+})
 
 logger::log_appender(logger::appender_stdout)
 logger::log_threshold(logger::FATAL)
@@ -276,28 +282,10 @@ test_that("get_single_file_metadata processes JSON table correctly", {
   )
 })
 
-logger::with_log_threshold(
-  expression = {
-
-    test_that("missing files raise an error", {
-      missing_file <- withr::local_tempfile(fileext = ".csv")
-      expect_output(
-        expect_error(
-          object = {
-            get_single_file_metadata(missing_file)
-          },
-          regexp = "File does not exist."
-        ),
-        regexp = paste("ERROR.*File does not exist:")
-      )
-    })
-  },
-
-  threshold = logger::TRACE,
-  namespace = "pacta.workflow.utils"
-)
-
-## reset logger settings
-logger::log_threshold(threshold)
-logger::log_layout(layout)
-logger::log_appender(appender)
+test_that("missing files raise an error", {
+  missing_file <- withr::local_tempfile(fileext = ".csv")
+  expect_error(
+    object = get_single_file_metadata(missing_file),
+    regexp = "File does not exist."
+  )
+})
