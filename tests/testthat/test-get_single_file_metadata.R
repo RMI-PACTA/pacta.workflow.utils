@@ -5,6 +5,7 @@ layout    <- logger::log_layout()
 
 logger::log_appender(logger::appender_stdout)
 logger::log_threshold(logger::FATAL)
+logger::log_layout(logger::layout_simple)
 
 test_that("get_single_file_metadata processes CSV tables correctly", {
   csv_file <- withr::local_tempfile(fileext = ".csv")
@@ -287,7 +288,7 @@ logger::with_log_threshold(
           },
           regexp = "File does not exist."
         ),
-        regexp = paste("File does not exist:", missing_file)
+        regexp = paste("ERROR.*File does not exist:")
       )
     })
   },
