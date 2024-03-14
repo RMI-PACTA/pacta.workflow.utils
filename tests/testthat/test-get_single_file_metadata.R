@@ -304,4 +304,3 @@ test_that("get_single_file_metadata with multiple files raises an error", {
     regexp = "Only one file path can be passed to get_single_file_metadata."
   )
 })
-
