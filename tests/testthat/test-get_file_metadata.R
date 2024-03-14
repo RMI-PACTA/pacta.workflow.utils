@@ -23,7 +23,7 @@ csv_metadata <- list(
   file_name = basename(csv_file),
   file_extension = "csv",
   file_path = csv_file,
-  file_size = 1303L,
+  file_size = as.integer(file.size(csv_file)),
   file_last_modified = format(
     as.POSIXlt(test_time, tz = "UTC"),
     "%Y-%m-%dT%H:%M:%S+00:00"
