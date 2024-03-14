@@ -1,3 +1,11 @@
+## save current settings so that we can reset later
+threshold <- logger::log_threshold()
+appender  <- logger::log_appender()
+layout    <- logger::log_layout()
+
+logger::log_appender(logger::appender_stdout)
+logger::log_threshold(logger::FATAL)
+
 test_that("get_single_file_metadata processes CSV tables correctly", {
   csv_file <- withr::local_tempfile(fileext = ".csv")
   write.csv(mtcars, csv_file, row.names = FALSE)
@@ -287,3 +295,8 @@ logger::with_log_threshold(
   threshold = logger::TRACE,
   namespace = "pacta.workflow.utils"
 )
+
+## reset logger settings
+logger::log_threshold(threshold)
+logger::log_layout(layout)
+logger::log_appender(appender)
