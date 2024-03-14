@@ -33,7 +33,7 @@ get_single_file_metadata <- function(filepath) {
   file_name <- basename(filepath)
   file_extension <- tools::file_ext(filepath)
   file_path <- filepath
-  file_size <- file.info(filepath)[["size"]]
+  file_size <- as.integer(file.info(filepath)[["size"]])
   file_last_modified <- format(
     as.POSIXlt(file.info(filepath)[["mtime"]], tz = "UTC"),
     "%Y-%m-%dT%H:%M:%S+00:00"
@@ -67,13 +67,15 @@ get_single_file_metadata <- function(filepath) {
       colnames = colnames(contents),
       class = class(contents)
     )
-  } else {
+  } else if (!is.null(contents)) {
     logger::log_trace(
       "Only data.frame objects supported for summary information."
     )
     summary_info <- list(
       class = class(contents)
     )
+  } else {
+    summary_info <- NULL
   }
 
   if (exists("summary_info")) {
