@@ -25,7 +25,7 @@ test_that("get_single_file_metadata processes CSV tables correctly", {
       file_name = basename(testfile),
       file_extension = "csv",
       file_path = testfile,
-      file_size = 1303L,
+      file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
@@ -52,7 +52,7 @@ test_that("get_single_file_metadata processes RDS tables correctly", {
       file_name = basename(testfile),
       file_extension = "rds",
       file_path = testfile,
-      file_size = 1225L,
+      file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
@@ -79,7 +79,7 @@ test_that("get_single_file_metadata processes RDS non-tables correctly", {
       file_name = basename(testfile),
       file_extension = "rds",
       file_path = testfile,
-      file_size = 67L,
+      file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
@@ -104,7 +104,7 @@ test_that("get_single_file_metadata processes txt files correctly", {
       file_name = basename(testfile),
       file_extension = "txt",
       file_path = testfile,
-      file_size = 17L,
+      file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
@@ -135,7 +135,7 @@ test_that("get_single_file_metadata processes lists RDS correctly", {
       file_name = basename(testfile),
       file_extension = "rds",
       file_path = testfile,
-      file_size = 124L,
+      file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
@@ -170,7 +170,7 @@ test_that("get_single_file_metadata processes named JSON list correctly", {
       file_name = basename(testfile),
       file_extension = "JSON",
       file_path = testfile,
-      file_size = 43L,
+      file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
@@ -205,7 +205,7 @@ test_that("get_single_file_metadata processes unnamed JSON list correctly", {
       file_name = basename(testfile),
       file_extension = "JSON",
       file_path = testfile,
-      file_size = 31L,
+      file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
@@ -240,7 +240,7 @@ test_that("get_single_file_metadata processes partially named JSON", {
       file_name = basename(testfile),
       file_extension = "JSON",
       file_path = testfile,
-      file_size = 43L,
+      file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
@@ -267,7 +267,7 @@ test_that("get_single_file_metadata processes JSON table correctly", {
       file_name = basename(testfile),
       file_extension = "JSON",
       file_path = testfile,
-      file_size = 4147L,
+      file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
