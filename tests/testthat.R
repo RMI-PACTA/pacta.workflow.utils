@@ -9,4 +9,10 @@
 library(testthat)
 library(pacta.workflow.utils)
 
-test_check("pacta.workflow.utils")
+logger::with_log_threshold(
+  expression = {
+    test_check("pacta.workflow.utils")
+  },
+  threshold = "FATAL",
+  namespace = logger::log_namespaces()
+)
