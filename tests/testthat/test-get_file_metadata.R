@@ -100,10 +100,24 @@ test_that("get_file_metadata respects input order", {
   )
 })
 
+test_that("get_file_metadata returns an empty list on empty input", {
+  metadata <- get_file_metadata(c())
+  expect_identical(
+    metadata,
+    list()
+  )
+})
+
 missing_file <- withr::local_tempfile(fileext = ".foo")
 test_that("missing files raise an error", {
   expect_error(
     object = get_file_metadata(missing_file),
     regexp = "File does not exist."
+  )
+})
+
+test_that("get_single_file_metadata without argument raises an error", {
+  expect_error(
+    object = get_file_metadata()
   )
 })
