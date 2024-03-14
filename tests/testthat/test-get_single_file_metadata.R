@@ -267,3 +267,23 @@ test_that("get_single_file_metadata processes JSON table correctly", {
   )
 })
 
+logger::with_log_threshold(
+  expression = {
+
+    test_that("missing files raise an error", {
+      missing_file <- withr::local_tempfile(fileext = ".csv")
+      expect_output(
+        expect_error(
+          object = {
+            get_single_file_metadata(missing_file)
+          },
+          regexp = "File does not exist."
+        ),
+        regexp = paste("File does not exist:", missing_file)
+      )
+    })
+  },
+
+  threshold = logger::TRACE,
+  namespace = "pacta.workflow.utils"
+)

@@ -27,6 +27,10 @@ get_single_file_metadata <- function(filepath) {
     logger::log_error("get_single_file_metadata only accepts single files.")
     stop("Only one file path can be passed to get_single_file_metadata.")
   }
+  if (!file.exists(filepath)) {
+    logger::log_error("File does not exist: \"{filepath}\".")
+    stop("File does not exist.")
+  }
 
   logger::log_trace("Getting metadata for file: \"{filepath}\".")
 
