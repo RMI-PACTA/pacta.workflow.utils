@@ -27,7 +27,7 @@ csv_metadata <- list(
   file_last_modified = format(
     as.POSIXlt(test_time, tz = "UTC"),
     "%Y-%m-%dT%H:%M:%S+00:00"
-    ),
+  ),
   file_md5 = digest::digest(csv_file, algo = "md5", file = TRUE),
   summary_info = list(
     nrow = 32L,
@@ -47,7 +47,7 @@ rds_metadata <- list(
   file_last_modified = format(
     as.POSIXlt(test_time, tz = "UTC"),
     "%Y-%m-%dT%H:%M:%S+00:00"
-    ),
+  ),
   file_md5 = digest::digest(rds_file, algo = "md5", file = TRUE),
   summary_info = list(
     nrow = 32L,
@@ -101,7 +101,15 @@ test_that("get_file_metadata respects input order", {
 })
 
 test_that("get_file_metadata returns an empty list on empty input", {
-  metadata <- get_file_metadata(c())
+  metadata <- get_file_metadata(list())
+  expect_identical(
+    metadata,
+    list()
+  )
+})
+
+test_that("get_file_metadata returns an empty list on NULL input", {
+  metadata <- get_file_metadata(NULL)
   expect_identical(
     metadata,
     list()
