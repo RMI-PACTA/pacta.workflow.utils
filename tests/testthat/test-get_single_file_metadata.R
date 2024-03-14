@@ -282,6 +282,29 @@ test_that("get_single_file_metadata processes JSON table correctly", {
   )
 })
 
+test_that("get_single_file_metadata processes empty files correctly", {
+  testfile <- withr::local_tempfile(fileext = ".gitkeep")
+  file.create(testfile)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(testfile, test_time)
+  metadata <- get_single_file_metadata(testfile)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(testfile),
+      file_extension = "gitkeep",
+      file_path = testfile,
+      file_size = as.integer(file.size(testfile)),
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
+      file_md5 = digest::digest(testfile, algo = "md5", file = TRUE)
+      # No summary info
+    )
+  )
+})
+
 test_that("missing files raise an error", {
   missing_file <- withr::local_tempfile(fileext = ".csv")
   expect_error(
