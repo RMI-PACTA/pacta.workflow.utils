@@ -7,7 +7,6 @@
 get_manifest_envirionment_info <- function() {
 
   # TODO: Envvars
-  # TODO: Session
   # Todo: packages
 
 
@@ -17,11 +16,11 @@ get_manifest_envirionment_info <- function() {
 get_r_session_info <- function() {
   return(
     list(
-        R.version = utils::sessionInfo()[["R.version"]],
-        platform = utils::sessionInfo()[["platform"]],
-        running = utils::sessionInfo()[["running"]],
-        locale = utils::sessionInfo()[["locale"]],
-        tzone = utils::sessionInfo()[["tzone"]],
+      R.version = utils::sessionInfo()[["R.version"]],
+      platform = utils::sessionInfo()[["platform"]],
+      running = utils::sessionInfo()[["running"]],
+      locale = utils::sessionInfo()[["locale"]],
+      tzone = utils::sessionInfo()[["tzone"]]
     )
   )
 }
