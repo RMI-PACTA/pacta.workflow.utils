@@ -6,8 +6,7 @@
 #' @return nested list of file details, length the same as the input vector.
 get_manifest_envirionment_info <- function() {
 
-  # TODO: Envvars
-  # Todo: packages
+  #: Envvars
 
 
   return(invisible(FALSE))

@@ -13,7 +13,7 @@ logger::log_appender(logger::appender_stdout)
 logger::log_threshold(logger::FATAL)
 logger::log_layout(logger::layout_simple)
 
-test_that("get_individual_package_info collects information for CRAN packages correctly", {
+test_that("get_individual_package_info collects information for CRAN packages correctly", { #nolint: line_length_linter
   expect_identical(
     get_individual_package_info("digest"),
     list(
@@ -37,7 +37,7 @@ test_that("get_individual_package_info collects information for CRAN packages co
   )
 })
 
-test_that("get_individual_package_info collects information for local packages correctly", {
+test_that("get_individual_package_info collects information for local packages correctly", { #nolint: line_length_linter
   package_info <- get_individual_package_info("pacta.workflow.utils")
   expect_type(package_info, "list")
   expect_named(
@@ -100,7 +100,7 @@ test_that("get_individual_package_info collects information for local packages c
   )
 })
 
-test_that("get_individual_package_info collects information for GitHub packages correctly", {
+test_that("get_individual_package_info collects information for GitHub packages correctly", { #nolint: line_length_linter
   testthat::skip_on_cran()
   withr::with_temp_libpaths(action = "replace", code = {
     new_lib <- .libPaths()[1] #nolint: undesirable_function_linter

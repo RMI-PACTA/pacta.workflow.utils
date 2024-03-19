@@ -25,4 +25,3 @@ test_that("get_single_file_metadata processes CSV tables correctly", {
     )
   )
 })
-
