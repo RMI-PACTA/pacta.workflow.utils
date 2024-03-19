@@ -65,21 +65,21 @@ get_package_info <- function(
 get_individual_package_info <- function(packagename) {
   log_trace("Getting package info for {packagename}.")
   pkg_details <- as.list(
-      pak::pkg_status(packagename)[
-        c(
-          "package",
-          "version",
-          "library",
-          "repository",
-          "platform",
-          "built",
-          "remotetype",
-          "remotepkgref",
-          "remoteref",
-          "remotesha"
-        )
-      ]
-    )
+    pak::pkg_status(packagename)[
+      c(
+        "package",
+        "version",
+        "library",
+        "repository",
+        "platform",
+        "built",
+        "remotetype",
+        "remotepkgref",
+        "remoteref",
+        "remotesha"
+      )
+    ]
+  )
   output <- list()
   output[[packagename]] <- pkg_details
   return(output)
