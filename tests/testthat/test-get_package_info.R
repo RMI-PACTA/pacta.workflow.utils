@@ -99,3 +99,71 @@ test_that("get_individual_package_info collects information for local packages c
     NA_character_
   )
 })
+
+test_that("get_individual_package_info collects information for GitHub packages correctly", {
+  testthat::skip_on_cran()
+  withr::with_temp_libpaths(action = "replace", code = {
+    new_lib <- .libPaths()[1] #nolint: undesirable_function_linter
+    pak::pkg_install("yihui/rmini", dependencies = FALSE) #nolint: nonportable_path_linter
+    package_info <- get_individual_package_info("rmini")
+    expect_type(package_info, "list")
+    expect_named(
+      package_info,
+      "rmini"
+    )
+    expect_named(
+      package_info[["rmini"]],
+      c(
+        "package",
+        "version",
+        "library",
+        "repository",
+        "platform",
+        "built",
+        "remotetype",
+        "remotepkgref",
+        "remoteref",
+        "remotesha"
+      )
+    )
+    expect_identical(
+      package_info[["rmini"]][["package"]],
+      "rmini"
+    )
+    expect_identical(
+      package_info[["rmini"]][["version"]],
+      as.character(utils::packageVersion("rmini"))
+    )
+    expect_match(
+      package_info[["rmini"]][["library"]],
+      paste0(new_lib, "$")
+    )
+    expect_identical(
+      package_info[["rmini"]][["repository"]],
+      NA_character_
+    )
+    expect_identical(
+      package_info[["rmini"]][["platform"]],
+      R.version[["platform"]]
+    )
+    expect_false(
+      is.null(package_info[["rmini"]][["built"]])
+    )
+    expect_identical(
+      package_info[["rmini"]][["remotetype"]],
+      "github"
+    )
+    expect_match(
+      package_info[["rmini"]][["remotepkgref"]],
+      "yihui/rmini" #nolint: nonportable_path_linter
+    )
+    expect_identical(
+      package_info[["rmini"]][["remoteref"]],
+      "HEAD"
+    )
+    expect_identical(
+      package_info[["rmini"]][["remotesha"]],
+      "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+    )
+  })
+})
