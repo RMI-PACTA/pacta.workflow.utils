@@ -18,7 +18,8 @@ RoxygenNote: 7.3.1
 Imports: 
     digest,
     jsonlite,
-    logger
+    logger,
+    pak
 Suggests: 
     testthat (>= 3.0.0),
     withr
