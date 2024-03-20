@@ -120,9 +120,9 @@ test_that("get_individual_package_info collects information for local packages c
   testthat::skip_on_cran()
   testthat::skip_if_offline()
   dest_dir <- normalizePath(withr::local_tempdir())
-  dl <- git2r::clone(
+  dl <- gert::git_clone(
     url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
-    local_path = dest_dir,
+    path = dest_dir,
     progress = FALSE
   )
   new_lib <- normalizePath(withr::local_tempdir())
