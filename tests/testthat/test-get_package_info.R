@@ -38,66 +38,77 @@ test_that("get_individual_package_info collects information for CRAN packages co
 })
 
 test_that("get_individual_package_info collects information for local packages correctly", { #nolint: line_length_linter
-  package_info <- get_individual_package_info("pacta.workflow.utils")
-  expect_type(package_info, "list")
-  expect_named(
-    package_info,
-    "pacta.workflow.utils"
+  testthat::skip_on_cran()
+  dest_dir <- withr::local_tempdir()
+  dl <- git2r::clone(
+    url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
+    local_path = dest_dir,
+    progress = FALSE
   )
-  expect_named(
-    package_info[["pacta.workflow.utils"]],
-    c(
-      "package",
-      "version",
-      "library",
-      "repository",
-      "platform",
-      "built",
-      "remotetype",
-      "remotepkgref",
-      "remoteref",
-      "remotesha"
+  withr::with_temp_libpaths(action = "replace", code = {
+    new_lib <- .libPaths()[1] #nolint: undesirable_function_linter
+    pak::local_install(root = file.path(dest_dir), dependencies = FALSE) #nolint: nonportable_path_linter
+    package_info <- get_individual_package_info("rmini")
+    expect_type(package_info, "list")
+    expect_named(
+      package_info,
+      "rmini"
     )
-  )
-  expect_identical(
-    package_info[["pacta.workflow.utils"]][["package"]],
-    "pacta.workflow.utils"
-  )
-  expect_identical(
-    package_info[["pacta.workflow.utils"]][["version"]],
-    as.character(utils::packageVersion("pacta.workflow.utils"))
-  )
-  expect_identical(
-    package_info[["pacta.workflow.utils"]][["library"]],
-    .libPaths()[1] #nolint: undesirable_function_linter
-  )
-  expect_identical(
-    package_info[["pacta.workflow.utils"]][["repository"]],
-    NA_character_
-  )
-  expect_identical(
-    package_info[["pacta.workflow.utils"]][["platform"]],
-    "*"
-  )
-  expect_false(
-    is.null(package_info[["pacta.workflow.utils"]][["built"]])
-  )
-  expect_identical(
-    package_info[["pacta.workflow.utils"]][["remotetype"]],
-    "local"
-  )
-  expect_match(
-    package_info[["pacta.workflow.utils"]][["remotepkgref"]],
-    "^local::.*pacta\\.workflow\\.utils$"
-  )
-  expect_identical(
-    package_info[["pacta.workflow.utils"]][["remoteref"]],
-    NA_character_
-  )
-  expect_identical(
-    package_info[["pacta.workflow.utils"]][["remotesha"]],
-    NA_character_
-  )
+    expect_named(
+      package_info[["rmini"]],
+      c(
+        "package",
+        "version",
+        "library",
+        "repository",
+        "platform",
+        "built",
+        "remotetype",
+        "remotepkgref",
+        "remoteref",
+        "remotesha"
+      )
+    )
+    expect_identical(
+      package_info[["rmini"]][["package"]],
+      "rmini"
+    )
+    expect_identical(
+      package_info[["rmini"]][["version"]],
+      as.character(utils::packageVersion("rmini"))
+    )
+    expect_match(
+      package_info[["rmini"]][["library"]],
+      paste0(new_lib, "$")
+    )
+    expect_identical(
+      package_info[["rmini"]][["repository"]],
+      NA_character_
+    )
+    expect_identical(
+      package_info[["rmini"]][["platform"]],
+      R.version[["platform"]]
+    )
+    expect_false(
+      is.null(package_info[["rmini"]][["built"]])
+    )
+    expect_identical(
+      package_info[["rmini"]][["remotetype"]],
+      "local"
+    )
+    expect_match(
+      package_info[["rmini"]][["remotepkgref"]],
+      paste0("^local::/.*", basename(dest_dir))
+    )
+    expect_identical(
+      package_info[["rmini"]][["remoteref"]],
+      NA #logical
+    )
+    expect_identical(
+      package_info[["rmini"]][["remotesha"]],
+      NA #logical
+    )
+  })
 })
 
 test_that("get_individual_package_info collects information for GitHub packages correctly", { #nolint: line_length_linter
