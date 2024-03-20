@@ -37,21 +37,29 @@ test_that("get_individual_package_info collects information for CRAN packages co
   )
 })
 
+with_local_install <- function(new_lib, package, code) {
+  cache_dir <- withr::local_tempdir()
+  withr::local_envvar(.new = c(R_USER_CACHE_DIR = cache_dir))
+  withr::local_libpaths(new_lib, action = "prefix")
+  testthat::capture_output( #make pak quiet
+    pak::pak(package, lib = normalizePath(new_lib))
+  )
+  eval(code)
+}
+
 test_that("get_individual_package_info collects information for local packages correctly", { #nolint: line_length_linter
   testthat::skip_on_cran()
-  dest_dir <- withr::local_tempdir()
+  testthat::skip_if_offline()
+  dest_dir <- normalizePath(withr::local_tempdir())
   dl <- git2r::clone(
     url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
     local_path = dest_dir,
     progress = FALSE
   )
-  new_lib <- withr::local_tempdir()
-  withr::local_libpaths(new_lib, action = "prefix")
-  print(.libPaths()) #nolint
-  testthat::capture_output( #make pak quiet
-    pak::local_install(root = file.path(dest_dir), dependencies = FALSE) #nolint: nonportable_path_linter
-  )
-  package_info <- get_individual_package_info("rmini")
+  new_lib <- normalizePath(withr::local_tempdir())
+  package_info <- with_local_install(new_lib, dest_dir, {
+    get_individual_package_info("rmini")
+  })
   expect_type(package_info, "list")
   expect_named(
     package_info,
@@ -78,7 +86,7 @@ test_that("get_individual_package_info collects information for local packages c
   )
   expect_identical(
     package_info[["rmini"]][["version"]],
-    as.character(utils::packageVersion("rmini"))
+    "0.0.4"
   )
   expect_identical(
     package_info[["rmini"]][["library"]],
@@ -114,15 +122,12 @@ test_that("get_individual_package_info collects information for local packages c
 })
 
 test_that("get_individual_package_info collects information for GitHub packages correctly", { #nolint: line_length_linter
-  cache_dir <- withr::local_tempdir()
-  withr::local_envvar(.new = c(R_USER_CACHE_DIR = cache_dir))
   testthat::skip_on_cran()
-  new_lib <- withr::local_tempdir()
-  withr::local_libpaths(new_lib, action = "prefix")
-  testthat::capture_output( #make pak quiet
-    pak::pkg_install("yihui/rmini", dependencies = FALSE) #nolint: nonportable_path_linter
-  )
-  package_info <- get_individual_package_info("rmini")
+  testthat::skip_if_offline()
+  new_lib <- normalizePath(withr::local_tempdir())
+  package_info <- with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
+    get_individual_package_info("rmini")
+  })
   expect_type(package_info, "list")
   expect_named(
     package_info,
@@ -149,7 +154,7 @@ test_that("get_individual_package_info collects information for GitHub packages 
   )
   expect_identical(
     package_info[["rmini"]][["version"]],
-    as.character(utils::packageVersion("rmini"))
+    "0.0.4"
   )
   expect_identical(
     package_info[["rmini"]][["library"]],
