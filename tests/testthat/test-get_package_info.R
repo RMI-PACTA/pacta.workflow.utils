@@ -26,7 +26,7 @@ test_that("get_individual_package_info collects information for CRAN packages co
           x = utils::packageDescription("digest")[["Built"]],
           split = "; ",
           fixed = TRUE
-          )[[1L]][[2L]],
+        )[[1L]][[2L]],
         built = utils::packageDescription("digest")[["Built"]],
         remotetype = "standard",
         remotepkgref = "digest",
@@ -46,8 +46,8 @@ test_that("get_individual_package_info collects information for local packages c
     progress = FALSE
   )
   new_lib <- withr::local_tempdir()
-  withr::local_libpaths(new_lib)
-  print(.libPaths())
+  withr::local_libpaths(new_lib, action = "prefix")
+  print(.libPaths()) #nolint
   testthat::capture_output( #make pak quiet
     pak::local_install(root = file.path(dest_dir), dependencies = FALSE) #nolint: nonportable_path_linter
   )
@@ -118,7 +118,7 @@ test_that("get_individual_package_info collects information for GitHub packages 
   withr::local_envvar(.new = c(R_USER_CACHE_DIR = cache_dir))
   testthat::skip_on_cran()
   new_lib <- withr::local_tempdir()
-  withr::local_libpaths(new_lib)
+  withr::local_libpaths(new_lib, action = "prefix")
   testthat::capture_output( #make pak quiet
     pak::pkg_install("yihui/rmini", dependencies = FALSE) #nolint: nonportable_path_linter
   )
