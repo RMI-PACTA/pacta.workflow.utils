@@ -54,7 +54,8 @@ expect_package_info <- function(
   )
   testthat::expect_identical(
     package_info[[package_identical]][["library"]],
-    library_identical
+    # gsub is used to make windows path into something matching .libPaths()
+    gsub(x = library_identical, pattern = "[\\]", replacement = "/"),
   )
   if (is.na(repository_match)) {
     testthat::expect_identical(
@@ -133,7 +134,7 @@ test_that("get_individual_package_info collects information for local packages c
     package_info,
     package_identical = "rmini",
     version_identical = "0.0.4",
-    library_identical = normalizePath(new_lib),
+    library_identical = new_lib,
     repository_match = NA_character_,
     remotetype_identical = "local",
     remotepkgref_match = paste0("^local::", dest_dir, "$"),
@@ -153,7 +154,7 @@ test_that("get_individual_package_info collects information for GitHub packages 
     package_info,
     package_identical = "rmini",
     version_identical = "0.0.4",
-    library_identical = normalizePath(new_lib),
+    library_identical = new_lib,
     repository_match = NA_character_,
     remotetype_identical = "github",
     remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
