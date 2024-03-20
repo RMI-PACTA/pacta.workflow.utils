@@ -21,7 +21,7 @@ Imports:
     logger,
     pkgdepends
 Suggests: 
-    git2r,
+    gert,
     pak,
     testthat (>= 3.0.0),
     withr
