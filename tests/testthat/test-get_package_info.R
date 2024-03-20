@@ -82,7 +82,7 @@ expect_package_info <- function(
   testthat::expect_match(
     package_info[[package_identical]][["remotepkgref"]],
     # gsub is used to make windows path into something matching .libPaths()
-    gsub(x = remotepkgref_match, pattern = "[\\]", replacement = "\\\\"),
+    gsub(x = remotepkgref_match, pattern = "[\\\\]", replacement = "\\"),
   )
   testthat::expect_identical(
     package_info[[package_identical]][["remoteref"]],
@@ -166,7 +166,7 @@ test_that("get_individual_package_info collects information for GitHub packages 
 
 test_that("get_individual_package_info errors for package that doesn't exist", { #nolint: line_length_linter
   expect_error(
-    get_individual_package_info("this_package_does_not_exist"),
+    get_individual_package_info("this_package_does_not_exist")
   )
 })
 
