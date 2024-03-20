@@ -45,10 +45,11 @@ test_that("get_individual_package_info collects information for local packages c
     local_path = dest_dir,
     progress = FALSE
   )
+  local_install <- pak::local_install # copy function before we break libpaths
   withr::with_temp_libpaths(action = "replace", code = {
     new_lib <- .libPaths()[1] #nolint: undesirable_function_linter
     testthat::capture_output( #make pak quiet
-      pak::local_install(root = file.path(dest_dir), dependencies = FALSE) #nolint: nonportable_path_linter
+      local_install(root = file.path(dest_dir), dependencies = FALSE) #nolint: nonportable_path_linter
     )
     package_info <- get_individual_package_info("rmini")
     expect_type(package_info, "list")
@@ -117,10 +118,11 @@ test_that("get_individual_package_info collects information for GitHub packages 
   cache_dir <- withr::local_tempdir()
   withr::local_envvar(.new = c(R_USER_CACHE_DIR = cache_dir))
   testthat::skip_on_cran()
+  pkg_install <- pak::pkg_install # copy function before we break libpaths
   withr::with_temp_libpaths(action = "replace", code = {
     new_lib <- .libPaths()[1] #nolint: undesirable_function_linter
     testthat::capture_output( #make pak quiet
-      pak::pkg_install("yihui/rmini", dependencies = FALSE) #nolint: nonportable_path_linter
+      pkg_install("yihui/rmini", dependencies = FALSE) #nolint: nonportable_path_linter
     )
     package_info <- get_individual_package_info("rmini")
     expect_type(package_info, "list")
