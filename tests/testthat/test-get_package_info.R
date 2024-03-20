@@ -126,7 +126,7 @@ test_that("get_individual_package_info collects information for local packages c
     verbose = FALSE
   )
   new_lib <- normalizePath(withr::local_tempdir())
-  package_info <- with_local_install(new_lib, dest_dir, {
+  package_info <- with_local_install(new_lib, paste0("local::", dest_dir), {
     get_individual_package_info("rmini")
   })
   expect_package_info(
@@ -146,7 +146,7 @@ test_that("get_individual_package_info collects information for GitHub packages 
   testthat::skip_on_cran()
   testthat::skip_if_offline()
   new_lib <- normalizePath(withr::local_tempdir())
-  package_info <- with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
+  package_info <- with_local_install(new_lib, "github::yihui/rmini", { #nolint: nonportable_path_linter
     get_individual_package_info("rmini")
   })
   expect_package_info(
