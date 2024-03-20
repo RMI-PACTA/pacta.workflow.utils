@@ -13,27 +13,89 @@ logger::log_appender(logger::appender_stdout)
 logger::log_threshold(logger::FATAL)
 logger::log_layout(logger::layout_simple)
 
-test_that("get_individual_package_info collects information for CRAN packages correctly", { #nolint: line_length_linter
-  expect_identical(
-    get_individual_package_info("digest"),
-    list(
-      digest = list(
-        package = "digest",
-        version = as.character(utils::packageVersion("digest")),
-        library = .libPaths()[1], #nolint: undesirable_function_linter
-        repository = "CRAN",
-        platform = strsplit(
-          x = utils::packageDescription("digest")[["Built"]],
-          split = "; ",
-          fixed = TRUE
-        )[[1L]][[2L]],
-        built = utils::packageDescription("digest")[["Built"]],
-        remotetype = "standard",
-        remotepkgref = "digest",
-        remoteref = "digest",
-        remotesha  = as.character(utils::packageVersion("digest"))
-      )
+expect_package_info <- function(
+  package_info,
+  package_identical,
+  version_identical,
+  library_identical,
+  repository_identical,
+  remotetype_identical,
+  remotepkgref_match,
+  remoteref_identical,
+  remotesha_identical
+) {
+  testthat::expect_type(package_info, "list")
+  testthat::expect_named(
+    package_info,
+    package_identical
+  )
+  testthat::expect_named(
+    package_info[[package_identical]],
+    c(
+      "package",
+      "version",
+      "library",
+      "repository",
+      "platform",
+      "built",
+      "remotetype",
+      "remotepkgref",
+      "remoteref",
+      "remotesha"
     )
+  )
+  testthat::expect_identical(
+    package_info[[package_identical]][["package"]],
+    package_identical
+  )
+  testthat::expect_identical(
+    package_info[[package_identical]][["version"]],
+    version_identical
+  )
+  testthat::expect_identical(
+    package_info[[package_identical]][["library"]],
+    library_identical
+  )
+  testthat::expect_identical(
+    package_info[[package_identical]][["repository"]],
+    repository_identical
+  )
+  testthat::expect_identical(
+    package_info[[package_identical]][["platform"]],
+    R.version[["platform"]]
+  )
+  testthat::expect_false(
+    is.null(package_info[[package_identical]][["built"]])
+  )
+  testthat::expect_identical(
+    package_info[[package_identical]][["remotetype"]],
+    remotetype_identical
+  )
+  testthat::expect_match(
+    package_info[[package_identical]][["remotepkgref"]],
+    remotepkgref_match
+  )
+  testthat::expect_identical(
+    package_info[[package_identical]][["remoteref"]],
+    remoteref_identical
+  )
+  testthat::expect_identical(
+    package_info[[package_identical]][["remotesha"]],
+    remotesha_identical
+  )
+}
+
+test_that("get_individual_package_info collects information for CRAN packages correctly", { #nolint: line_length_linter
+  expect_package_info(
+    package_info = get_individual_package_info("digest"),
+    package_identical = "digest",
+    version_identical = as.character(utils::packageVersion("digest")),
+    library_identical = .libPaths()[1], #nolint: undesirable_function_linter
+    repository_identical = "CRAN",
+    remotetype_identical = "standard",
+    remotepkgref_match = "^digest$",
+    remoteref_identical = "digest",
+    remotesha_identical = as.character(utils::packageVersion("digest"))
   )
 })
 
@@ -60,64 +122,16 @@ test_that("get_individual_package_info collects information for local packages c
   package_info <- with_local_install(new_lib, dest_dir, {
     get_individual_package_info("rmini")
   })
-  expect_type(package_info, "list")
-  expect_named(
+  expect_package_info(
     package_info,
-    "rmini"
-  )
-  expect_named(
-    package_info[["rmini"]],
-    c(
-      "package",
-      "version",
-      "library",
-      "repository",
-      "platform",
-      "built",
-      "remotetype",
-      "remotepkgref",
-      "remoteref",
-      "remotesha"
-    )
-  )
-  expect_identical(
-    package_info[["rmini"]][["package"]],
-    "rmini"
-  )
-  expect_identical(
-    package_info[["rmini"]][["version"]],
-    "0.0.4"
-  )
-  expect_identical(
-    package_info[["rmini"]][["library"]],
-    normalizePath(new_lib)
-  )
-  expect_identical(
-    package_info[["rmini"]][["repository"]],
-    NA_character_
-  )
-  expect_identical(
-    package_info[["rmini"]][["platform"]],
-    R.version[["platform"]]
-  )
-  expect_false(
-    is.null(package_info[["rmini"]][["built"]])
-  )
-  expect_identical(
-    package_info[["rmini"]][["remotetype"]],
-    "local"
-  )
-  expect_match(
-    package_info[["rmini"]][["remotepkgref"]],
-    paste0("^local::/.*", basename(dest_dir))
-  )
-  expect_identical(
-    package_info[["rmini"]][["remoteref"]],
-    NA_character_
-  )
-  expect_identical(
-    package_info[["rmini"]][["remotesha"]],
-    NA_character_
+    package_identical = "rmini",
+    version_identical = "0.0.4",
+    library_identical = normalizePath(new_lib),
+    repository_identical = NA_character_,
+    remotetype_identical = "local",
+    remotepkgref_match = paste0("^local::", dest_dir, "$"),
+    remoteref_identical = NA_character_,
+    remotesha_identical = NA_character_
   )
 })
 
@@ -128,63 +142,15 @@ test_that("get_individual_package_info collects information for GitHub packages 
   package_info <- with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
     get_individual_package_info("rmini")
   })
-  expect_type(package_info, "list")
-  expect_named(
+  expect_package_info(
     package_info,
-    "rmini"
-  )
-  expect_named(
-    package_info[["rmini"]],
-    c(
-      "package",
-      "version",
-      "library",
-      "repository",
-      "platform",
-      "built",
-      "remotetype",
-      "remotepkgref",
-      "remoteref",
-      "remotesha"
-    )
-  )
-  expect_identical(
-    package_info[["rmini"]][["package"]],
-    "rmini"
-  )
-  expect_identical(
-    package_info[["rmini"]][["version"]],
-    "0.0.4"
-  )
-  expect_identical(
-    package_info[["rmini"]][["library"]],
-    normalizePath(new_lib)
-  )
-  expect_identical(
-    package_info[["rmini"]][["repository"]],
-    NA_character_
-  )
-  expect_identical(
-    package_info[["rmini"]][["platform"]],
-    R.version[["platform"]]
-  )
-  expect_false(
-    is.null(package_info[["rmini"]][["built"]])
-  )
-  expect_identical(
-    package_info[["rmini"]][["remotetype"]],
-    "github"
-  )
-  expect_match(
-    package_info[["rmini"]][["remotepkgref"]],
-    "yihui/rmini" #nolint: nonportable_path_linter
-  )
-  expect_identical(
-    package_info[["rmini"]][["remoteref"]],
-    "HEAD"
-  )
-  expect_identical(
-    package_info[["rmini"]][["remotesha"]],
-    "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+    package_identical = "rmini",
+    version_identical = "0.0.4",
+    library_identical = normalizePath(new_lib),
+    repository_identical = NA_character_,
+    remotetype_identical = "github",
+    remotepkgref_match = "^yihui/rmini", #nolint: nonportable_path_linter
+    remoteref_identical = "HEAD",
+    remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
   )
 })
