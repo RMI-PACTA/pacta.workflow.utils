@@ -112,6 +112,8 @@ test_that("get_individual_package_info collects information for local packages c
 })
 
 test_that("get_individual_package_info collects information for GitHub packages correctly", { #nolint: line_length_linter
+  cache_dir <- withr::local_tempdir()
+  withr::local_envvar(.new = c(R_USER_CACHE_DIR = cache_dir))
   testthat::skip_on_cran()
   withr::with_temp_libpaths(action = "replace", code = {
     new_lib <- .libPaths()[1] #nolint: undesirable_function_linter
