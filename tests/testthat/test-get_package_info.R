@@ -163,3 +163,10 @@ test_that("get_individual_package_info collects information for GitHub packages 
     remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
   )
 })
+
+test_that("get_individual_package_info errors for package that doesn't exist", { #nolint: line_length_linter
+  expect_error(
+    get_individual_package_info("this_package_does_not_exist"),
+  )
+})
+
