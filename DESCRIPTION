@@ -19,8 +19,9 @@ Imports:
     digest,
     jsonlite,
     logger,
-    pak
+    pkgdepends
 Suggests: 
+    git2r,
     testthat (>= 3.0.0),
     withr
 Config/testthat/edition: 3
