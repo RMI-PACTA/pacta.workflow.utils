@@ -64,8 +64,7 @@ get_package_info <- function(
 get_individual_package_info <- function(packagename) {
   log_trace("Getting package info for {packagename}.")
   pkg_details <- as.list(pkgdepends::lib_status(packages = packagename))
-  output <- list()
-  output[[packagename]] <- list(
+  details_list <- list(
     package = pkg_details[["package"]],
     version = pkg_details[["version"]],
     library = pkg_details[["library"]],
@@ -77,6 +76,13 @@ get_individual_package_info <- function(packagename) {
     remoteref = pkg_details[["remoteref"]],
     remotesha = pkg_details[["remotesha"]]
   )
-  output[[packagename]] <- pkg_details
+  clean_details_list <- lapply(
+    X = details_list,
+    FUN = function(x) {
+      ifelse(is.null(x), NA_character_, x)
+    }
+  )
+  output <- list()
+  output[[packagename]] <- clean_details_list
   return(output)
 }

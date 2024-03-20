@@ -104,11 +104,11 @@ test_that("get_individual_package_info collects information for local packages c
     )
     expect_identical(
       package_info[["rmini"]][["remoteref"]],
-      NA #logical
+      NA_character_
     )
     expect_identical(
       package_info[["rmini"]][["remotesha"]],
-      NA #logical
+      NA_character_
     )
   })
 })
