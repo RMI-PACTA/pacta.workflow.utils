@@ -123,7 +123,7 @@ test_that("get_individual_package_info collects information for local packages c
   dl <- gert::git_clone(
     url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
     path = dest_dir,
-    progress = FALSE
+    verbose = FALSE
   )
   new_lib <- normalizePath(withr::local_tempdir())
   package_info <- with_local_install(new_lib, dest_dir, {
