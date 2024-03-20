@@ -22,7 +22,7 @@ test_that("get_single_file_metadata processes CSV tables correctly", {
       running = utils::sessionInfo()[["running"]],
       locale = utils::sessionInfo()[["locale"]],
       tzone = utils::sessionInfo()[["tzone"]],
-      libPaths = .libPaths()
+      libPaths = .libPaths() # nolint: undesirable_function_linter
     )
   )
 })
