@@ -146,7 +146,7 @@ test_that("get_individual_package_info collects information for GitHub packages 
   testthat::skip_on_cran()
   testthat::skip_if_offline()
   new_lib <- normalizePath(withr::local_tempdir())
-  package_info <- with_local_install(new_lib, "github::yihui/rmini", { #nolint: nonportable_path_linter
+  package_info <- with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
     get_individual_package_info("rmini")
   })
   expect_package_info(
@@ -156,7 +156,7 @@ test_that("get_individual_package_info collects information for GitHub packages 
     library_identical = normalizePath(new_lib),
     repository_match = NA_character_,
     remotetype_identical = "github",
-    remotepkgref_match = "^yihui/rmini", #nolint: nonportable_path_linter
+    remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
     remoteref_identical = "HEAD",
     remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
   )
