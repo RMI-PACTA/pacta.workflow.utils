@@ -47,6 +47,7 @@ test_that("get_individual_package_info collects information for local packages c
   )
   new_lib <- withr::local_tempdir()
   withr::local_libpaths(new_lib)
+  print(.libPaths())
   testthat::capture_output( #make pak quiet
     pak::local_install(root = file.path(dest_dir), dependencies = FALSE) #nolint: nonportable_path_linter
   )
