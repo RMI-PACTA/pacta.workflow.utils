@@ -18,7 +18,7 @@ expect_package_info <- function(
   package_identical,
   version_identical,
   library_identical,
-  repository_identical,
+  repository_match,
   remotetype_identical,
   remotepkgref_match,
   remoteref_identical,
@@ -56,10 +56,17 @@ expect_package_info <- function(
     package_info[[package_identical]][["library"]],
     library_identical
   )
-  testthat::expect_identical(
-    package_info[[package_identical]][["repository"]],
-    repository_identical
-  )
+  if (is.na(repository_match)) {
+    testthat::expect_identical(
+      package_info[[package_identical]][["repository"]],
+      repository_match
+    )
+  } else {
+    testthat::expect_match(
+      package_info[[package_identical]][["repository"]],
+      repository_match
+    )
+  }
   testthat::expect_identical(
     package_info[[package_identical]][["platform"]],
     R.version[["platform"]]
@@ -91,7 +98,7 @@ test_that("get_individual_package_info collects information for CRAN packages co
     package_identical = "digest",
     version_identical = as.character(utils::packageVersion("digest")),
     library_identical = .libPaths()[1], #nolint: undesirable_function_linter
-    repository_identical = "CRAN",
+    repository_match = "^(CRAN|RSPM)$", #GH Actions installs from RSPM, not CRAN
     remotetype_identical = "standard",
     remotepkgref_match = "^digest$",
     remoteref_identical = "digest",
@@ -127,7 +134,7 @@ test_that("get_individual_package_info collects information for local packages c
     package_identical = "rmini",
     version_identical = "0.0.4",
     library_identical = normalizePath(new_lib),
-    repository_identical = NA_character_,
+    repository_match = NA_character_,
     remotetype_identical = "local",
     remotepkgref_match = paste0("^local::", dest_dir, "$"),
     remoteref_identical = NA_character_,
@@ -147,7 +154,7 @@ test_that("get_individual_package_info collects information for GitHub packages 
     package_identical = "rmini",
     version_identical = "0.0.4",
     library_identical = normalizePath(new_lib),
-    repository_identical = NA_character_,
+    repository_match = NA_character_,
     remotetype_identical = "github",
     remotepkgref_match = "^yihui/rmini", #nolint: nonportable_path_linter
     remoteref_identical = "HEAD",
