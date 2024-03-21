@@ -5,11 +5,8 @@
 #'
 #' @return nested list of file details, length the same as the input vector.
 get_manifest_envirionment_info <- function() {
-
   #: Envvars
-
-
-  return(invisible(FALSE))
+  return(invisible(NULL))
 }
 
 get_r_session_info <- function() {
