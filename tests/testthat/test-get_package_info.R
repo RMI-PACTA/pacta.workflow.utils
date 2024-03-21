@@ -169,25 +169,25 @@ test_that("get_individual_package_info collects information for GitHub packages 
   )
 })
 
-test_that("get_individual_package_info errors for multiple packages", { #nolint: line_length_linter
+test_that("get_individual_package_info errors for multiple packages", {
   expect_error(
     get_individual_package_info(c("digest", "jsonlite"))
   )
 })
 
-test_that("get_individual_package_info errors for package that doesn't exist", { #nolint: line_length_linter
+test_that("get_individual_package_info errors for package that doesn't exist", {
   expect_error(
     get_individual_package_info("this_package_does_not_exist")
   )
 })
 
-test_that("get_individual_package_info errors for empty string", { #nolint: line_length_linter
+test_that("get_individual_package_info errors for empty string", {
   expect_error(
     get_individual_package_info("")
   )
 })
 
-test_that("get_individual_package_info errors for no arguments", { #nolint: line_length_linter
+test_that("get_individual_package_info errors for no arguments", {
   expect_error(
     get_individual_package_info(),
     "^argument \"packagename\" is missing, with no default$"
