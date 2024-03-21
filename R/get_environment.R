@@ -20,7 +20,7 @@ get_r_session_info <- function() {
       running = utils::sessionInfo()[["running"]],
       locale = utils::sessionInfo()[["locale"]],
       tzone = utils::sessionInfo()[["tzone"]],
-      libPaths = .libPaths()
+      libPaths = .libPaths() # nolint: undesirable_function_linter
     )
   )
 }
