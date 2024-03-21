@@ -181,3 +181,16 @@ test_that("get_individual_package_info errors for package that doesn't exist", {
   )
 })
 
+test_that("get_individual_package_info errors for empty string", { #nolint: line_length_linter
+  expect_error(
+    get_individual_package_info("")
+  )
+})
+
+test_that("get_individual_package_info errors for no arguments", { #nolint: line_length_linter
+  expect_error(
+    get_individual_package_info(),
+    "^argument \"packagename\" is missing, with no default$"
+  )
+})
+
