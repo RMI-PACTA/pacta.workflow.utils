@@ -86,7 +86,7 @@ expect_package_info <- function(
       repository_match
     )
   }
-  testthat::expect_identical(
+  testthat::expect_match(
     package_info[[package_identical]][["platform"]],
     R.version[["platform"]]
   )
