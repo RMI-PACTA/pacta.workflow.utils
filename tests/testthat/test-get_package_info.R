@@ -56,7 +56,12 @@ expect_package_info <- function(
   testthat::expect_identical(
     package_info[[package_identical]][["library"]],
     # gsub is used to make windows path into something matching .libPaths()
-    gsub(x = library_identical, pattern = "[\\]", replacement = "/"),
+    gsub(
+      x = library_identical,
+      pattern = "\\",
+      replacement = "/",
+      fixed = TRUE
+    )
   )
   testthat::expect_type(
     package_info[[package_identical]][["library_index"]],
@@ -90,13 +95,7 @@ expect_package_info <- function(
   )
   testthat::expect_match(
     package_info[[package_identical]][["remotepkgref"]],
-    # gsub is used to make windows path into something matching .libPaths()
-    gsub(
-      x = remotepkgref_match,
-      pattern = "[\\\\]",
-      replacement = "\\",
-      fixed = TRUE
-      ),
+      remotepkgref_match,
   )
   testthat::expect_identical(
     package_info[[package_identical]][["remoteref"]],
