@@ -68,10 +68,19 @@ get_individual_package_info <- function(packagename) {
     stop("packagename must be a single string.")
   } else {
     if (packagename %in% installed.packages()[, "Package"]) {
-      log_trace(
-        "Package \"{packagename}\" is installed at",
-        "{installed.packages()[packagename, \"LibPath\"]}."
-      )
+      installed_index <- which(installed.packages()[, "Package"] == packagename)
+      installed_path <- installed.packages()[installed_index, "LibPath"]
+      if (length(installed_path) > 1L) {
+        log_warn(
+          "Multiple installations of package \"{packagename}\" found: ",
+          "{installed_path}"
+        )
+        log_warn("Using installation first on the search path.")
+        warning("Multiple installations of package found.")
+      }
+      lib_index <- min(which(.libPaths() == installed_path))
+      lib <- .libPaths()[lib_index] #nolint: undesirable_function_linter
+      log_trace("Package \"{packagename}\" is installed at {lib}")
     } else {
       log_error("Package \"{packagename}\" is not installed.")
       stop("Package is not installed.")
@@ -83,6 +92,7 @@ get_individual_package_info <- function(packagename) {
     package = pkg_details[["package"]],
     version = pkg_details[["version"]],
     library = pkg_details[["library"]],
+    library_index = lib_index,
     repository = pkg_details[["repository"]],
     platform = pkg_details[["platform"]],
     built = pkg_details[["built"]],

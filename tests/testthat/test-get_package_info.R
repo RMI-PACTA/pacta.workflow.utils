@@ -194,3 +194,21 @@ test_that("get_individual_package_info errors for no arguments", {
   )
 })
 
+logger::with_log_threshold({
+
+test_that("get_individual_package_info gets correct libpath for multiple installs", { #nolint: line_length_linter
+  testthat::skip_on_cran()
+  testthat::skip_if_offline()
+  new_lib <- normalizePath(withr::local_tempdir())
+  newer_lib <- normalizePath(withr::local_tempdir())
+  package_info <- with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
+    with_local_install(newer_lib, "yihui/rmini", { #nolint: nonportable_path_linter
+      expect_warning(
+        get_individual_package_info("rmini"),
+        "^Multiple installations of package found.$"
+      )
+})
+  })
+})
+
+}, threshold = logger::TRACE)
