@@ -1,3 +1,15 @@
+#' Get package information for active packages
+#'
+#' This function takes 3 vectors of package names and returns a nested list of
+#' package details, suitable for inclusion in manifest export.
+#'
+#' @param base vector of package names. Best left as default, which includes the loaded base packages.
+#' @param attached vector of package names. Best left as default, which includes the attached packages.
+#' @param loaded vector of package names. Best left as default, which includes the loaded packages.
+#'
+#' @return nested list of file details, length 3, with top level keys being `base`, `attached`, and `loaded`.
+#' Underneath those keys are lists of package details, with the package names as keys, and further details as returned by [get_individual_package_info()].
+#' @seealso [get_individual_package_info()]
 get_package_info <- function(
   base = utils::sessionInfo()[["basePkgs"]],
   attached = names(utils::sessionInfo()[["otherPkgs"]]),
@@ -35,6 +47,28 @@ get_package_info <- function(
   )
 }
 
+#' Get package information for a package
+#'
+#' This function takes a single package name and returns a list of package
+#' details, suitable for inclusion in manifest export.
+#'
+#' @param Singular charater string of package name
+#'
+#' @return nested list of file details, length 1, with the top-level key being
+#' the `packagename` passed as an argument. underneath that key are:
+#' - `package`: The name of the package
+#' - `version`: The version of the package
+#' - `library`: The path of the library the package is installed in
+#' - `library_index`: The index of the library in the `.libPaths()` vector
+#' - `repository`: The repository the package was pulled from
+#' - `platform`: The platform the package was built for
+#' - `built`: Information about the packages build (relevant for binary packages)
+#' - `remotetype`: The type of remote repository the package was pulled from
+#' - `remotepkgref`: The reference used by `pak` to install the package
+#' - `remoteref`: The reference of the package when it was pulled from REPO
+#' - `remotesha`: the SHA-1 hash of the reference (if applicable)
+#' @examples
+#' get_individual_package_info("digest")
 get_individual_package_info <- function(packagename) {
   if (length(packagename) != 1L || !is.character(packagename)) {
     log_error("packagename must be a single string.")
