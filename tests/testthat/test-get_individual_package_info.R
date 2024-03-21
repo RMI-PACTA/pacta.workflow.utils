@@ -26,11 +26,11 @@ expect_package_info <- function(
   testthat::expect_type(package_info, "list")
   testthat::expect_named(
     package_info,
-    package_identical
+    expected = package_identical
   )
   testthat::expect_named(
     package_info[[package_identical]],
-    c(
+    expected = c(
       "package",
       "version",
       "library",
@@ -45,59 +45,59 @@ expect_package_info <- function(
     )
   )
   testthat::expect_identical(
-    package_info[[package_identical]][["package"]],
-    package_identical
+    object = package_info[[package_identical]][["package"]],
+    expected = package_identical
   )
   testthat::expect_identical(
-    package_info[[package_identical]][["version"]],
-    version_identical
+    object = package_info[[package_identical]][["version"]],
+    expected = version_identical
   )
   testthat::expect_in(
-    package_info[[package_identical]][["library"]],
+    object = package_info[[package_identical]][["library"]],
     .libPaths() #nolint: undesirable_function_linter
   )
   testthat::expect_identical(
-    package_info[[package_identical]][["library"]],
-    .libPaths()[package_info[[package_identical]][["library_index"]]] #nolint: undesirable_function_linter
+    object = package_info[[package_identical]][["library"]],
+    expected = .libPaths()[package_info[[package_identical]][["library_index"]]] #nolint: undesirable_function_linter
   )
   testthat::expect_type(
-    package_info[[package_identical]][["library_index"]],
-    "integer"
+    object = package_info[[package_identical]][["library_index"]],
+    type = "integer"
   )
   testthat::expect_gt(
-    package_info[[package_identical]][["library_index"]],
-    0L
+    object = package_info[[package_identical]][["library_index"]],
+    expected = 0L
   )
   testthat::expect_lte(
-    package_info[[package_identical]][["library_index"]],
-    length(.libPaths()) #nolint: undesirable_function_linter
+    object = package_info[[package_identical]][["library_index"]],
+    expected = length(.libPaths()) #nolint: undesirable_function_linter
   )
   if (is.na(repository_match)) {
     testthat::expect_identical(
       package_info[[package_identical]][["repository"]],
-      repository_match
+      expected = repository_match
     )
   } else {
     testthat::expect_match(
-      package_info[[package_identical]][["repository"]],
-      repository_match
+      object = package_info[[package_identical]][["repository"]],
+      regexp = repository_match
     )
   }
   testthat::expect_match(
-    package_info[[package_identical]][["platform"]],
-    R.version[["platform"]]
+    object = package_info[[package_identical]][["platform"]],
+    regexp = R.version[["platform"]]
   )
   testthat::expect_false(
-    is.null(package_info[[package_identical]][["built"]])
+    is.null(x = package_info[[package_identical]][["built"]])
   )
   testthat::expect_identical(
-    package_info[[package_identical]][["remotetype"]],
-    remotetype_identical
+    object = package_info[[package_identical]][["remotetype"]],
+    expected = remotetype_identical
   )
   testthat::expect_match(
-    package_info[[package_identical]][["remotepkgref"]],
+    object = package_info[[package_identical]][["remotepkgref"]],
     # gsub is used to make windows path work
-    gsub(
+    regexp = gsub(
       x = remotepkgref_match,
       pattern = "\\",
       replacement = "\\\\",
@@ -105,11 +105,11 @@ expect_package_info <- function(
     )
   )
   testthat::expect_identical(
-    package_info[[package_identical]][["remoteref"]],
+    object = package_info[[package_identical]][["remoteref"]],
     remoteref_identical
   )
   testthat::expect_identical(
-    package_info[[package_identical]][["remotesha"]],
+    object = package_info[[package_identical]][["remotesha"]],
     remotesha_identical
   )
 }
