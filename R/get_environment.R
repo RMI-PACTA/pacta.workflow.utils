@@ -78,7 +78,7 @@ get_individual_package_info <- function(packagename) {
         log_warn("Using installation first on the search path.")
         warning("Multiple installations of package found.")
       }
-      lib_index <- min(which(.libPaths() == installed_path))
+      lib_index <- min(which(.libPaths() == installed_path)) #nolint: undesirable_function_linter
       lib <- .libPaths()[lib_index] #nolint: undesirable_function_linter
       log_trace("Package \"{packagename}\" is installed at {lib}")
     } else {
@@ -87,7 +87,12 @@ get_individual_package_info <- function(packagename) {
     }
   }
   log_trace("Getting package info for {packagename}.")
-  pkg_details <- as.list(pkgdepends::lib_status(packages = packagename))
+  pkg_details <- as.list(
+    pkgdepends::lib_status(
+      library = lib,
+      packages = packagename
+    )
+  )
   details_list <- list(
     package = pkg_details[["package"]],
     version = pkg_details[["version"]],

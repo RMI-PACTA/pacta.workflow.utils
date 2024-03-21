@@ -203,35 +203,34 @@ test_that("get_individual_package_info errors for no arguments", {
   )
   })
 
-# test_that("get_individual_package_info gets correct libpath for multiple installs", { #nolint: line_length_linter
-#   testthat::skip_on_cran()
-#   testthat::skip_if_offline()
-#   new_lib <- normalizePath(withr::local_tempdir())
-#   newer_lib <- normalizePath(withr::local_tempdir())
-#   package_info <- with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
-#     with_local_install(newer_lib, "yihui/rmini", { #nolint: nonportable_path_linter
-#       expect_warning(
-#         get_individual_package_info("rmini"),
-#         "^Multiple installations of package found.$"
-#       )
-#     })
-#   })
-#   expect_package_info(
-#     package_info,
-#     package_identical = "rmini",
-#     version_identical = "0.0.4",
-#     library_identical = newer_lib,
-#     repository_match = NA_character_,
-#     remotetype_identical = "github",
-#     remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
-#     remoteref_identical = "HEAD",
-#     remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
-#   )
-#   # expect_identical(
-#   #   package_info[["rmini"]][["library_index"]],
-#   #   1L
-#   # )
-#   })
+test_that("get_individual_package_info gets correct libpath for multiple installs", { #nolint: line_length_linter
+  testthat::skip_on_cran()
+  testthat::skip_if_offline()
+  new_lib <- normalizePath(withr::local_tempdir())
+  newer_lib <- normalizePath(withr::local_tempdir())
+  expect_warning(
+    package_info <- with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
+      with_local_install(newer_lib, "yihui/rmini", { #nolint: nonportable_path_linter
+        get_individual_package_info("rmini")
+      })
+    })
+  )
+  expect_package_info(
+    package_info,
+    package_identical = "rmini",
+    version_identical = "0.0.4",
+    library_identical = newer_lib,
+    repository_match = NA_character_,
+    remotetype_identical = "github",
+    remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
+    remoteref_identical = "HEAD",
+    remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+  )
+  expect_identical(
+    package_info[["rmini"]][["library_index"]],
+    1L
+  )
+  })
 
 test_that("get_individual_package_info gets correct libpath for lower search priority", { #nolint: line_length_linter
   testthat::skip_on_cran()
@@ -247,7 +246,7 @@ test_that("get_individual_package_info gets correct libpath for lower search pri
     package_info,
     package_identical = "rmini",
     version_identical = "0.0.4",
-    library_identical = newer_lib,
+    library_identical = new_lib,
     repository_match = NA_character_,
     remotetype_identical = "github",
     remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
