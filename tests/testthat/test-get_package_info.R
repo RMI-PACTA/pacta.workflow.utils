@@ -99,7 +99,13 @@ expect_package_info <- function(
   )
   testthat::expect_match(
     package_info[[package_identical]][["remotepkgref"]],
-    remotepkgref_match
+    # gsub is used to make windows path work
+    gsub(
+      x = remotepkgref_match,
+      pattern = "\\",
+      replacement = "\\\\",
+      fixed = TRUE
+    )
   )
   testthat::expect_identical(
     package_info[[package_identical]][["remoteref"]],
