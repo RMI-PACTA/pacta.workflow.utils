@@ -4,9 +4,11 @@
 #' package details, suitable for inclusion in manifest export.
 #'
 #' @param base vector of package names. Best left as default, which includes
-#' the loaded base packages. @param attached vector of package names. Best left
-#' as default, which includes the attached packages. @param loaded vector of
-#' package names. Best left as default, which includes the loaded packages.
+#' the loaded base packages.
+#' @param attached vector of package names. Best left as default, which
+#' includes the attached packages.
+#' @param loaded vector of package names. Best left as default, which includes
+#' the loaded packages.
 #'
 #' @return nested list of file details, length 3, with top level keys being
 #' `base`, `attached`, and `loaded`. Underneath those keys are lists of package
