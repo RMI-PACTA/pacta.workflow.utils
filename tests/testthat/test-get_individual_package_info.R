@@ -94,16 +94,23 @@ expect_package_info <- function(
     object = package_info[[package_identical]][["remotetype"]],
     expected = remotetype_identical
   )
-  testthat::expect_match(
-    object = package_info[[package_identical]][["remotepkgref"]],
-    # gsub is used to make windows path work
-    regexp = gsub(
-      x = remotepkgref_match,
-      pattern = "\\",
-      replacement = "\\\\",
-      fixed = TRUE
+  if (is.na(remotepkgref_match)) {
+    testthat::expect_identical(
+      package_info[[package_identical]][["remotepkgref"]],
+      expected = remotepkgref_match
     )
-  )
+  } else {
+    testthat::expect_match(
+      object = package_info[[package_identical]][["remotepkgref"]],
+      # gsub is used to make windows path work
+      regexp = gsub(
+        x = remotepkgref_match,
+        pattern = "\\",
+        replacement = "\\\\",
+        fixed = TRUE
+      )
+    )
+  }
   testthat::expect_identical(
     object = package_info[[package_identical]][["remoteref"]],
     remoteref_identical
@@ -124,6 +131,23 @@ test_that("get_individual_package_info collects information for CRAN packages co
     remotepkgref_match = "^digest$",
     remoteref_identical = "digest",
     remotesha_identical = as.character(utils::packageVersion("digest"))
+  )
+})
+
+test_that("get_individual_package_info collects information for base packages correctly", { #nolint: line_length_linter
+  expect_package_info(
+    package_info = get_individual_package_info("utils"),
+    package_identical = "utils",
+    version_identical = paste(
+      R.version[["major"]],
+      R.version[["minor"]],
+      sep = "."
+    ),
+    repository_match = NA_character_, #GH Actions installs from RSPM, not CRAN
+    remotetype_identical = NA_character_,
+    remotepkgref_match = NA_character_,
+    remoteref_identical = NA_character_,
+    remotesha_identical = NA_character_
   )
 })
 
