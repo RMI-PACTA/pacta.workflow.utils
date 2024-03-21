@@ -9,6 +9,13 @@ get_manifest_envirionment_info <- function() {
   return(invisible(NULL))
 }
 
+#' Get session information for manifest
+#'
+#' This function takes no arguments and returns a list, suitable for
+#' inclusion in manifest export.
+#'
+#' @return list of session details, including R Version, platform, OS
+#' (`running`), locale, timezone, and library paths.
 get_r_session_info <- function() {
   return(
     list(
