@@ -206,14 +206,14 @@ test_that("get_individual_package_info errors for no arguments", {
   )
 })
 
-test_that("get_individual_package_info gets correct libpath for multiple installs", { #nolint: line_length_linter
+test_that("get_individual_package_info gets correct libpath fdn version or multiple installs", { #nolint: line_length_linter
   testthat::skip_on_cran()
   testthat::skip_if_offline()
   new_lib <- normalizePath(withr::local_tempdir())
   newer_lib <- normalizePath(withr::local_tempdir())
   expect_warning(
     package_info <- with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
-      with_local_install(newer_lib, "yihui/rmini", { #nolint: nonportable_path_linter
+      with_local_install(newer_lib, "yihui/rmini@308d27d", { #nolint: nonportable_path_linter
         get_individual_package_info("rmini")
       })
     })
@@ -221,13 +221,13 @@ test_that("get_individual_package_info gets correct libpath for multiple install
   expect_package_info(
     package_info,
     package_identical = "rmini",
-    version_identical = "0.0.4",
+    version_identical = "0.0.3", # Note: not latest version
     library_identical = newer_lib,
     repository_match = NA_character_,
     remotetype_identical = "github",
-    remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
-    remoteref_identical = "HEAD",
-    remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+    remotepkgref_match = "^yihui/rmini@308d27d$", #nolint: nonportable_path_linter
+    remoteref_identical = "308d27d",
+    remotesha_identical = "308d27ddb0b45fda34fc259492145834d72849a9"
   )
   expect_identical(
     package_info[["rmini"]][["library_index"]],
