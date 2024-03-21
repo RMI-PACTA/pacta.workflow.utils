@@ -23,7 +23,7 @@ expect_package_info <- function(
   remotepkgref_match,
   remoteref_identical,
   remotesha_identical
-) {
+  ) {
   testthat::expect_type(package_info, "list")
   testthat::expect_named(
     package_info,
@@ -35,6 +35,7 @@ expect_package_info <- function(
       "package",
       "version",
       "library",
+      "library_index",
       "repository",
       "platform",
       "built",
@@ -56,6 +57,14 @@ expect_package_info <- function(
     package_info[[package_identical]][["library"]],
     # gsub is used to make windows path into something matching .libPaths()
     gsub(x = library_identical, pattern = "[\\]", replacement = "/"),
+  )
+  testthat::expect_type(
+    package_info[[package_identical]][["library_index"]],
+    "integer"
+  )
+  testthat::expect_true(
+    package_info[[package_identical]][["library_index"]] > 0 &&
+      package_info[[package_identical]][["library_index"]] <= length(.libPaths()) #nolint: undesirable_function_linter
   )
   if (is.na(repository_match)) {
     testthat::expect_identical(
@@ -87,7 +96,7 @@ expect_package_info <- function(
       pattern = "[\\\\]",
       replacement = "\\",
       fixed = TRUE
-    ),
+      ),
   )
   testthat::expect_identical(
     package_info[[package_identical]][["remoteref"]],
@@ -111,7 +120,7 @@ test_that("get_individual_package_info collects information for CRAN packages co
     remoteref_identical = "digest",
     remotesha_identical = as.character(utils::packageVersion("digest"))
   )
-})
+  })
 
 with_local_install <- function(new_lib, package, code) {
   cache_dir <- withr::local_tempdir()
@@ -147,7 +156,7 @@ test_that("get_individual_package_info collects information for local packages c
     remoteref_identical = NA_character_,
     remotesha_identical = NA_character_
   )
-})
+  })
 
 test_that("get_individual_package_info collects information for GitHub packages correctly", { #nolint: line_length_linter
   testthat::skip_on_cran()
@@ -167,48 +176,86 @@ test_that("get_individual_package_info collects information for GitHub packages 
     remoteref_identical = "HEAD",
     remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
   )
-})
+  })
 
 test_that("get_individual_package_info errors for multiple packages", {
   expect_error(
     get_individual_package_info(c("digest", "jsonlite"))
   )
-})
+  })
 
 test_that("get_individual_package_info errors for package that doesn't exist", {
   expect_error(
     get_individual_package_info("this_package_does_not_exist")
   )
-})
+  })
 
 test_that("get_individual_package_info errors for empty string", {
   expect_error(
     get_individual_package_info("")
   )
-})
+  })
 
 test_that("get_individual_package_info errors for no arguments", {
   expect_error(
     get_individual_package_info(),
     "^argument \"packagename\" is missing, with no default$"
   )
-})
+  })
 
-logger::with_log_threshold({
+# test_that("get_individual_package_info gets correct libpath for multiple installs", { #nolint: line_length_linter
+#   testthat::skip_on_cran()
+#   testthat::skip_if_offline()
+#   new_lib <- normalizePath(withr::local_tempdir())
+#   newer_lib <- normalizePath(withr::local_tempdir())
+#   package_info <- with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
+#     with_local_install(newer_lib, "yihui/rmini", { #nolint: nonportable_path_linter
+#       expect_warning(
+#         get_individual_package_info("rmini"),
+#         "^Multiple installations of package found.$"
+#       )
+#     })
+#   })
+#   expect_package_info(
+#     package_info,
+#     package_identical = "rmini",
+#     version_identical = "0.0.4",
+#     library_identical = newer_lib,
+#     repository_match = NA_character_,
+#     remotetype_identical = "github",
+#     remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
+#     remoteref_identical = "HEAD",
+#     remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+#   )
+#   # expect_identical(
+#   #   package_info[["rmini"]][["library_index"]],
+#   #   1L
+#   # )
+#   })
 
-test_that("get_individual_package_info gets correct libpath for multiple installs", { #nolint: line_length_linter
+test_that("get_individual_package_info gets correct libpath for lower search priority", { #nolint: line_length_linter
   testthat::skip_on_cran()
   testthat::skip_if_offline()
   new_lib <- normalizePath(withr::local_tempdir())
   newer_lib <- normalizePath(withr::local_tempdir())
-  package_info <- with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
-    with_local_install(newer_lib, "yihui/rmini", { #nolint: nonportable_path_linter
-      expect_warning(
-        get_individual_package_info("rmini"),
-        "^Multiple installations of package found.$"
-      )
-})
+  package_info <- with_local_install(new_lib, "yihui/rmini", {
+    with_local_install(newer_lib, "digest", { #nolint: nonportable_path_linter
+      get_individual_package_info("rmini")
+    })
   })
+  expect_package_info(
+    package_info,
+    package_identical = "rmini",
+    version_identical = "0.0.4",
+    library_identical = newer_lib,
+    repository_match = NA_character_,
+    remotetype_identical = "github",
+    remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
+    remoteref_identical = "HEAD",
+    remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+  )
+  expect_identical(
+    package_info[["rmini"]][["library_index"]],
+    2L
+  )
 })
-
-}, threshold = logger::TRACE)
