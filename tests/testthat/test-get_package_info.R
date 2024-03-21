@@ -68,7 +68,8 @@ expect_package_info <- function(
     "integer"
   )
   testthat::expect_gt(
-    package_info[[package_identical]][["library_index"]] > 0L
+    package_info[[package_identical]][["library_index"]],
+    0L
   )
   testthat::expect_lte(
     package_info[[package_identical]][["library_index"]],
