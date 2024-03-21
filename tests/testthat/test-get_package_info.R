@@ -68,13 +68,19 @@ test_that("get_package_info outputs correct structure", {
   )
 })
 
-# test_that("get_package_info with empty args returns empty lists", {
-#   expect_identical(
-#     object = get_package_info(),
-#     expected = list(
-#       base = list(),
-#       attached = list(),
-#       loaded = list()
-#     )
-#   )
-# })
+test_that("get_package_info with empty args returns empty lists", {
+  empty_named_list <- list()
+  names(empty_named_list) <- character(0L)
+  expect_identical(
+    object = get_package_info(
+      base = character(),
+      attached = character(),
+      loaded = character()
+    ),
+    expected = list(
+      base = empty_named_list,
+      attached = empty_named_list,
+      loaded = empty_named_list
+    )
+  )
+})
