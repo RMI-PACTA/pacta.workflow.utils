@@ -67,9 +67,9 @@ get_individual_package_info <- function(packagename) {
     log_error("packagename must be a single string.")
     stop("packagename must be a single string.")
   } else {
-    if (packagename %in% installed.packages()[, "Package"]) {
-      installed_index <- which(installed.packages()[, "Package"] == packagename)
-      installed_path <- installed.packages()[installed_index, "LibPath"]
+    if (packagename %in% utils::installed.packages()[, "Package"]) {
+      installed_index <- which(utils::installed.packages()[, "Package"] == packagename)
+      installed_path <- utils::installed.packages()[installed_index, "LibPath"]
       if (length(installed_path) > 1L) {
         log_warn(
           "Multiple installations of package \"{packagename}\" found: ",
