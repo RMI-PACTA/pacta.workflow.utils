@@ -149,20 +149,20 @@ test_that("get_individual_package_info collects information for local packages c
   new_lib <- normalizePath(withr::local_tempdir())
   with_local_install(new_lib, paste0("local::", dest_dir), {
     package_info <- get_individual_package_info("rmini")
-  expect_package_info(
-    package_info,
-    package_identical = "rmini",
-    version_identical = "0.0.4",
-    repository_match = NA_character_,
-    remotetype_identical = "local",
-    remotepkgref_match = paste0("^local::", dest_dir, "$"),
-    remoteref_identical = NA_character_,
-    remotesha_identical = NA_character_
-  )
-  expect_identical(
-    package_info[["rmini"]][["library"]],
-    new_lib
-  )
+    expect_package_info(
+      package_info,
+      package_identical = "rmini",
+      version_identical = "0.0.4",
+      repository_match = NA_character_,
+      remotetype_identical = "local",
+      remotepkgref_match = paste0("^local::", dest_dir, "$"),
+      remoteref_identical = NA_character_,
+      remotesha_identical = NA_character_
+    )
+    expect_identical(
+      package_info[["rmini"]][["library"]],
+      new_lib
+    )
   })
 })
 
@@ -172,20 +172,20 @@ test_that("get_individual_package_info collects information for GitHub packages 
   new_lib <- normalizePath(withr::local_tempdir())
   package_info <- with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
     package_info <- get_individual_package_info("rmini")
-  expect_package_info(
-    package_info,
-    package_identical = "rmini",
-    version_identical = "0.0.4",
-    repository_match = NA_character_,
-    remotetype_identical = "github",
-    remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
-    remoteref_identical = "HEAD",
-    remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
-  )
-  expect_identical(
-    package_info[["rmini"]][["library"]],
-    new_lib
-  )
+    expect_package_info(
+      package_info,
+      package_identical = "rmini",
+      version_identical = "0.0.4",
+      repository_match = NA_character_,
+      remotetype_identical = "github",
+      remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
+      remoteref_identical = "HEAD",
+      remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+    )
+    expect_identical(
+      package_info[["rmini"]][["library"]],
+      new_lib
+    )
   })
 })
 
@@ -223,24 +223,24 @@ test_that("get_individual_package_info gets correct libpath and version of multi
     with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
       with_local_install(newer_lib, "yihui/rmini@308d27d", { #nolint: nonportable_path_linter
         package_info <- get_individual_package_info("rmini")
-  expect_package_info(
-    package_info,
-    package_identical = "rmini",
-    version_identical = "0.0.3", # Note: not latest version
-    repository_match = NA_character_,
-    remotetype_identical = "github",
-    remotepkgref_match = "^yihui/rmini@308d27d$", #nolint: nonportable_path_linter
-    remoteref_identical = "308d27d",
-    remotesha_identical = "308d27ddb0b45fda34fc259492145834d72849a9"
-  )
-  expect_identical(
-    package_info[["rmini"]][["library"]],
-    newer_lib
-  )
-  expect_identical(
-    package_info[["rmini"]][["library_index"]],
-    1L
-  )
+        expect_package_info(
+          package_info,
+          package_identical = "rmini",
+          version_identical = "0.0.3", # Note: not latest version
+          repository_match = NA_character_,
+          remotetype_identical = "github",
+          remotepkgref_match = "^yihui/rmini@308d27d$", #nolint: nonportable_path_linter
+          remoteref_identical = "308d27d",
+          remotesha_identical = "308d27ddb0b45fda34fc259492145834d72849a9"
+        )
+        expect_identical(
+          package_info[["rmini"]][["library"]],
+          newer_lib
+        )
+        expect_identical(
+          package_info[["rmini"]][["library_index"]],
+          1L
+        )
       })
     })
   )
@@ -254,24 +254,24 @@ test_that("get_individual_package_info gets correct libpath for lower search pri
   with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
     with_local_install(newer_lib, "digest", {
       package_info <- get_individual_package_info("rmini")
-  expect_package_info(
-    package_info,
-    package_identical = "rmini",
-    version_identical = "0.0.4",
-    repository_match = NA_character_,
-    remotetype_identical = "github",
-    remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
-    remoteref_identical = "HEAD",
-    remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
-  )
-  expect_identical(
-    package_info[["rmini"]][["library"]],
-    new_lib
-  )
-  expect_identical(
-    package_info[["rmini"]][["library_index"]],
-    2L
-  )
+      expect_package_info(
+        package_info,
+        package_identical = "rmini",
+        version_identical = "0.0.4",
+        repository_match = NA_character_,
+        remotetype_identical = "github",
+        remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
+        remoteref_identical = "HEAD",
+        remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+      )
+      expect_identical(
+        package_info[["rmini"]][["library"]],
+        new_lib
+      )
+      expect_identical(
+        package_info[["rmini"]][["library_index"]],
+        2L
+      )
     })
   })
 })
