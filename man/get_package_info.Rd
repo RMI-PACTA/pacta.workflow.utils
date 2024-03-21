@@ -11,15 +11,16 @@ get_package_info(
 )
 }
 \arguments{
-\item{base}{vector of package names. Best left as default, which includes the loaded base packages.}
-
-\item{attached}{vector of package names. Best left as default, which includes the attached packages.}
-
-\item{loaded}{vector of package names. Best left as default, which includes the loaded packages.}
+\item{base}{vector of package names. Best left as default, which includes
+the loaded base packages. @param attached vector of package names. Best left
+as default, which includes the attached packages. @param loaded vector of
+package names. Best left as default, which includes the loaded packages.}
 }
 \value{
-nested list of file details, length 3, with top level keys being \code{base}, \code{attached}, and \code{loaded}.
-Underneath those keys are lists of package details, with the package names as keys, and further details as returned by \code{\link[=get_individual_package_info]{get_individual_package_info()}}.
+nested list of file details, length 3, with top level keys being
+\code{base}, \code{attached}, and \code{loaded}. Underneath those keys are lists of package
+details, with the package names as keys, and further details as returned by
+\code{\link[=get_individual_package_info]{get_individual_package_info()}}.
 }
 \description{
 This function takes 3 vectors of package names and returns a nested list of

@@ -7,7 +7,7 @@
 get_individual_package_info(packagename)
 }
 \arguments{
-\item{Singular}{charater string of package name}
+\item{packagename}{Singular charater string of package name}
 }
 \value{
 nested list of file details, length 1, with the top-level key being
@@ -19,7 +19,7 @@ the \code{packagename} passed as an argument. underneath that key are:
 \item \code{library_index}: The index of the library in the \code{.libPaths()} vector
 \item \code{repository}: The repository the package was pulled from
 \item \code{platform}: The platform the package was built for
-\item \code{built}: Information about the packages build (relevant for binary packages)
+\item \code{built}: Information about package build (relevant for binary packages)
 \item \code{remotetype}: The type of remote repository the package was pulled from
 \item \code{remotepkgref}: The reference used by \code{pak} to install the package
 \item \code{remoteref}: The reference of the package when it was pulled from REPO
@@ -29,7 +29,4 @@ the \code{packagename} passed as an argument. underneath that key are:
 \description{
 This function takes a single package name and returns a list of package
 details, suitable for inclusion in manifest export.
-}
-\examples{
-get_individual_package_info("digest")
 }
