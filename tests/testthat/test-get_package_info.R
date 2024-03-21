@@ -161,7 +161,7 @@ test_that("get_individual_package_info collects information for local packages c
     )
     expect_identical(
       package_info[["rmini"]][["library"]],
-      new_lib
+      normalizePath(new_lib, winslash = "/")
     )
   })
 })
@@ -184,7 +184,7 @@ test_that("get_individual_package_info collects information for GitHub packages 
     )
     expect_identical(
       package_info[["rmini"]][["library"]],
-      new_lib
+      normalizePath(new_lib, winslash = "/")
     )
   })
 })
@@ -235,7 +235,7 @@ test_that("get_individual_package_info gets correct libpath and version of multi
         )
         expect_identical(
           package_info[["rmini"]][["library"]],
-          newer_lib
+          normalizePath(newer_lib, winslash = "/")
         )
         expect_identical(
           package_info[["rmini"]][["library_index"]],
@@ -266,7 +266,7 @@ test_that("get_individual_package_info gets correct libpath for lower search pri
       )
       expect_identical(
         package_info[["rmini"]][["library"]],
-        new_lib
+        normalizePath(new_lib, winslash = "/")
       )
       expect_identical(
         package_info[["rmini"]][["library_index"]],
