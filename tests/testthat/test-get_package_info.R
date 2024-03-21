@@ -68,9 +68,10 @@ test_that("get_package_info outputs correct structure", {
   )
 })
 
-test_that("get_package_info with empty args returns empty lists", {
-  empty_named_list <- list()
-  names(empty_named_list) <- character(0L)
+empty_named_list <- list()
+names(empty_named_list) <- character(0L)
+
+test_that("get_package_info with empty character args returns empty named lists", { #nolint: line_length_linter
   expect_identical(
     object = get_package_info(
       base = character(),
@@ -80,6 +81,60 @@ test_that("get_package_info with empty args returns empty lists", {
     expected = list(
       base = empty_named_list,
       attached = empty_named_list,
+      loaded = empty_named_list
+    )
+  )
+})
+
+test_that("get_package_info with empty args returns empty lists", {
+  expect_identical(
+    object = get_package_info(
+      base = c(),
+      attached = c(),
+      loaded = c()
+    ),
+    expected = list(
+      base = list(),
+      attached = list(),
+      loaded = list()
+    )
+  )
+})
+
+test_that("get_package_info accepts length 1 arguments", {
+  digest_info <- get_individual_package_info("digest")
+  expect_identical(
+    object = get_package_info(
+      base = "digest",
+      attached = "digest",
+      loaded = "digest"
+    ),
+    expected = list(
+      base = digest_info,
+      attached = digest_info,
+      loaded = digest_info
+    )
+  )
+})
+
+test_that("get_package_info respects order", {
+  digest_info <- get_individual_package_info("digest")
+  utils_info <- get_individual_package_info("utils")
+  expect_identical(
+    object = get_package_info(
+      base = c("digest", "utils"),
+      attached = c("utils", "digest"),
+      loaded = character()
+    ),
+    expected = list(
+      base = c( # using c(), to concatenate already named lists)
+        digest_info,
+        utils_info
+      ),
+      attached = c(
+        utils_info,
+        digest_info
+      ),
       loaded = empty_named_list
     )
   )
