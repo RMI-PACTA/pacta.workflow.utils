@@ -23,7 +23,7 @@ get_package_info <- function(
   base_pkgs <- vapply(
     X = base,
     FUN = get_individual_package_info,
-    FUN.VALUE = list(10L),
+    FUN.VALUE = list(1L),
     USE.NAMES = TRUE
   )
   log_trace("Attached packages: {attached}")
@@ -37,7 +37,7 @@ get_package_info <- function(
   loaded_pkgs <- vapply(
     X = loaded,
     FUN = get_individual_package_info,
-    FUN.VALUE = list(10L),
+    FUN.VALUE = list(1L),
     USE.NAMES = TRUE
   )
   log_debug("Done fetching package info.")
@@ -55,7 +55,7 @@ get_package_info <- function(
 #' This function takes a single package name and returns a list of package
 #' details, suitable for inclusion in manifest export.
 #'
-#' @param Singular charater string of package name
+#' @param packagename Singular charater string of package name
 #'
 #' @return nested list of file details, length 1, with the top-level key being
 #' the `packagename` passed as an argument. underneath that key are:
@@ -70,8 +70,6 @@ get_package_info <- function(
 #' - `remotepkgref`: The reference used by `pak` to install the package
 #' - `remoteref`: The reference of the package when it was pulled from REPO
 #' - `remotesha`: the SHA-1 hash of the reference (if applicable)
-#' @examples
-#' get_individual_package_info("digest")
 get_individual_package_info <- function(packagename) {
   if (length(packagename) != 1L || !is.character(packagename)) {
     log_error("packagename must be a single string.")
