@@ -82,7 +82,12 @@ expect_package_info <- function(
   testthat::expect_match(
     package_info[[package_identical]][["remotepkgref"]],
     # gsub is used to make windows path into something matching .libPaths()
-    gsub(x = remotepkgref_match, pattern = "[\\\\]", replacement = "\\"),
+    gsub(
+      x = remotepkgref_match,
+      pattern = "[\\\\]",
+      replacement = "\\",
+      fixed = TRUE
+    ),
   )
   testthat::expect_identical(
     package_info[[package_identical]][["remoteref"]],
@@ -161,6 +166,12 @@ test_that("get_individual_package_info collects information for GitHub packages 
     remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
     remoteref_identical = "HEAD",
     remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+  )
+})
+
+test_that("get_individual_package_info errors for multiple packages", { #nolint: line_length_linter
+  expect_error(
+    get_individual_package_info(c("digest", "jsonlite"))
   )
 })
 
