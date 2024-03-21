@@ -68,7 +68,9 @@ get_individual_package_info <- function(packagename) {
     stop("packagename must be a single string.")
   } else {
     if (packagename %in% utils::installed.packages()[, "Package"]) {
-      installed_index <- which(utils::installed.packages()[, "Package"] == packagename)
+      installed_index <- which(
+        utils::installed.packages()[, "Package"] == packagename
+      )
       installed_path <- utils::installed.packages()[installed_index, "LibPath"]
       if (length(installed_path) > 1L) {
         log_warn(

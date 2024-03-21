@@ -23,7 +23,7 @@ expect_package_info <- function(
   remotepkgref_match,
   remoteref_identical,
   remotesha_identical
-  ) {
+) {
   testthat::expect_type(package_info, "list")
   testthat::expect_named(
     package_info,
@@ -67,9 +67,12 @@ expect_package_info <- function(
     package_info[[package_identical]][["library_index"]],
     "integer"
   )
-  testthat::expect_true(
-    package_info[[package_identical]][["library_index"]] > 0 &&
-      package_info[[package_identical]][["library_index"]] <= length(.libPaths()) #nolint: undesirable_function_linter
+  testthat::expect_gt(
+    package_info[[package_identical]][["library_index"]] > 0L
+  )
+  testthat::expect_lte(
+    package_info[[package_identical]][["library_index"]],
+    length(.libPaths()) #nolint: undesirable_function_linter
   )
   if (is.na(repository_match)) {
     testthat::expect_identical(
@@ -95,7 +98,7 @@ expect_package_info <- function(
   )
   testthat::expect_match(
     package_info[[package_identical]][["remotepkgref"]],
-      remotepkgref_match,
+    remotepkgref_match
   )
   testthat::expect_identical(
     package_info[[package_identical]][["remoteref"]],
@@ -119,7 +122,7 @@ test_that("get_individual_package_info collects information for CRAN packages co
     remoteref_identical = "digest",
     remotesha_identical = as.character(utils::packageVersion("digest"))
   )
-  })
+})
 
 with_local_install <- function(new_lib, package, code) {
   cache_dir <- withr::local_tempdir()
@@ -155,7 +158,7 @@ test_that("get_individual_package_info collects information for local packages c
     remoteref_identical = NA_character_,
     remotesha_identical = NA_character_
   )
-  })
+})
 
 test_that("get_individual_package_info collects information for GitHub packages correctly", { #nolint: line_length_linter
   testthat::skip_on_cran()
@@ -175,32 +178,32 @@ test_that("get_individual_package_info collects information for GitHub packages 
     remoteref_identical = "HEAD",
     remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
   )
-  })
+})
 
 test_that("get_individual_package_info errors for multiple packages", {
   expect_error(
     get_individual_package_info(c("digest", "jsonlite"))
   )
-  })
+})
 
 test_that("get_individual_package_info errors for package that doesn't exist", {
   expect_error(
     get_individual_package_info("this_package_does_not_exist")
   )
-  })
+})
 
 test_that("get_individual_package_info errors for empty string", {
   expect_error(
     get_individual_package_info("")
   )
-  })
+})
 
 test_that("get_individual_package_info errors for no arguments", {
   expect_error(
     get_individual_package_info(),
     "^argument \"packagename\" is missing, with no default$"
   )
-  })
+})
 
 test_that("get_individual_package_info gets correct libpath for multiple installs", { #nolint: line_length_linter
   testthat::skip_on_cran()
@@ -229,15 +232,15 @@ test_that("get_individual_package_info gets correct libpath for multiple install
     package_info[["rmini"]][["library_index"]],
     1L
   )
-  })
+})
 
 test_that("get_individual_package_info gets correct libpath for lower search priority", { #nolint: line_length_linter
   testthat::skip_on_cran()
   testthat::skip_if_offline()
   new_lib <- normalizePath(withr::local_tempdir())
   newer_lib <- normalizePath(withr::local_tempdir())
-  package_info <- with_local_install(new_lib, "yihui/rmini", {
-    with_local_install(newer_lib, "digest", { #nolint: nonportable_path_linter
+  package_info <- with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
+    with_local_install(newer_lib, "digest", {
       get_individual_package_info("rmini")
     })
   })
