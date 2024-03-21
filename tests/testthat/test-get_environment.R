@@ -26,3 +26,7 @@ test_that("get_single_file_metadata processes CSV tables correctly", {
     )
   )
 })
+
+testthat::expect_null(
+  get_manifest_envirionment_info()
+)
