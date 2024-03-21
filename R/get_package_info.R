@@ -3,12 +3,15 @@
 #' This function takes 3 vectors of package names and returns a nested list of
 #' package details, suitable for inclusion in manifest export.
 #'
-#' @param base vector of package names. Best left as default, which includes the loaded base packages.
-#' @param attached vector of package names. Best left as default, which includes the attached packages.
-#' @param loaded vector of package names. Best left as default, which includes the loaded packages.
+#' @param base vector of package names. Best left as default, which includes
+#' the loaded base packages. @param attached vector of package names. Best left
+#' as default, which includes the attached packages. @param loaded vector of
+#' package names. Best left as default, which includes the loaded packages.
 #'
-#' @return nested list of file details, length 3, with top level keys being `base`, `attached`, and `loaded`.
-#' Underneath those keys are lists of package details, with the package names as keys, and further details as returned by [get_individual_package_info()].
+#' @return nested list of file details, length 3, with top level keys being
+#' `base`, `attached`, and `loaded`. Underneath those keys are lists of package
+#' details, with the package names as keys, and further details as returned by
+#' [get_individual_package_info()].
 #' @seealso [get_individual_package_info()]
 get_package_info <- function(
   base = utils::sessionInfo()[["basePkgs"]],
@@ -62,7 +65,7 @@ get_package_info <- function(
 #' - `library_index`: The index of the library in the `.libPaths()` vector
 #' - `repository`: The repository the package was pulled from
 #' - `platform`: The platform the package was built for
-#' - `built`: Information about the packages build (relevant for binary packages)
+#' - `built`: Information about package build (relevant for binary packages)
 #' - `remotetype`: The type of remote repository the package was pulled from
 #' - `remotepkgref`: The reference used by `pak` to install the package
 #' - `remoteref`: The reference of the package when it was pulled from REPO
@@ -125,4 +128,3 @@ get_individual_package_info <- function(packagename) {
   output[[packagename]] <- clean_details_list
   return(output)
 }
-
