@@ -89,9 +89,24 @@ test_that("get_package_info with empty character args returns empty named lists"
 test_that("get_package_info with empty args returns empty lists", {
   expect_identical(
     object = get_package_info(
-      base = c(),
-      attached = c(),
-      loaded = c()
+      base = c(), # nolint: unnecessary_concatenation_linter
+      attached = c(), # nolint: unnecessary_concatenation_linter
+      loaded = c() # nolint: unnecessary_concatenation_linter
+    ),
+    expected = list(
+      base = list(),
+      attached = list(),
+      loaded = list()
+    )
+  )
+})
+
+test_that("get_package_info with NULL args returns empty lists", {
+  expect_identical(
+    object = get_package_info(
+      base = NULL,
+      attached = NULL,
+      loaded = NULL
     ),
     expected = list(
       base = list(),
