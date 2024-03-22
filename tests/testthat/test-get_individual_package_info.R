@@ -26,10 +26,6 @@ expect_package_info <- function(
   testthat::expect_type(package_info, "list")
   testthat::expect_named(
     package_info,
-    expected = package_identical
-  )
-  testthat::expect_named(
-    package_info[[package_identical]],
     expected = c(
       "package",
       "version",
@@ -45,63 +41,63 @@ expect_package_info <- function(
     )
   )
   testthat::expect_identical(
-    object = package_info[[package_identical]][["package"]],
+    object = package_info[["package"]],
     expected = package_identical
   )
   testthat::expect_identical(
-    object = package_info[[package_identical]][["version"]],
+    object = package_info[["version"]],
     expected = version_identical
   )
   testthat::expect_in(
-    object = package_info[[package_identical]][["library"]],
+    object = package_info[["library"]],
     .libPaths() #nolint: undesirable_function_linter
   )
   testthat::expect_identical(
-    object = package_info[[package_identical]][["library"]],
-    expected = .libPaths()[package_info[[package_identical]][["library_index"]]] #nolint: undesirable_function_linter
+    object = package_info[["library"]],
+    expected = .libPaths()[package_info[["library_index"]]] #nolint: undesirable_function_linter
   )
   testthat::expect_type(
-    object = package_info[[package_identical]][["library_index"]],
+    object = package_info[["library_index"]],
     type = "integer"
   )
   testthat::expect_gt(
-    object = package_info[[package_identical]][["library_index"]],
+    object = package_info[["library_index"]],
     expected = 0L
   )
   testthat::expect_lte(
-    object = package_info[[package_identical]][["library_index"]],
+    object = package_info[["library_index"]],
     expected = length(.libPaths()) #nolint: undesirable_function_linter
   )
   if (is.na(repository_match)) {
     testthat::expect_identical(
-      package_info[[package_identical]][["repository"]],
+      package_info[["repository"]],
       expected = repository_match
     )
   } else {
     testthat::expect_match(
-      object = package_info[[package_identical]][["repository"]],
+      object = package_info[["repository"]],
       regexp = repository_match
     )
   }
   testthat::expect_match(
-    object = package_info[[package_identical]][["platform"]],
+    object = package_info[["platform"]],
     regexp = R.version[["platform"]]
   )
   testthat::expect_false(
-    is.null(x = package_info[[package_identical]][["built"]])
+    is.null(x = package_info[["built"]])
   )
   testthat::expect_identical(
-    object = package_info[[package_identical]][["remotetype"]],
+    object = package_info[["remotetype"]],
     expected = remotetype_identical
   )
   if (is.na(remotepkgref_match)) {
     testthat::expect_identical(
-      package_info[[package_identical]][["remotepkgref"]],
+      package_info[["remotepkgref"]],
       expected = remotepkgref_match
     )
   } else {
     testthat::expect_match(
-      object = package_info[[package_identical]][["remotepkgref"]],
+      object = package_info[["remotepkgref"]],
       # gsub is used to make windows path work
       regexp = gsub(
         x = remotepkgref_match,
@@ -112,11 +108,11 @@ expect_package_info <- function(
     )
   }
   testthat::expect_identical(
-    object = package_info[[package_identical]][["remoteref"]],
+    object = package_info[["remoteref"]],
     remoteref_identical
   )
   testthat::expect_identical(
-    object = package_info[[package_identical]][["remotesha"]],
+    object = package_info[["remotesha"]],
     remotesha_identical
   )
 }
@@ -184,7 +180,7 @@ test_that("get_individual_package_info collects information for local packages c
       remotesha_identical = NA_character_
     )
     expect_identical(
-      package_info[["rmini"]][["library"]],
+      package_info[["library"]],
       normalizePath(new_lib, winslash = "/")
     )
   })
@@ -207,7 +203,7 @@ test_that("get_individual_package_info collects information for GitHub packages 
       remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
     )
     expect_identical(
-      package_info[["rmini"]][["library"]],
+      package_info[["library"]],
       normalizePath(new_lib, winslash = "/")
     )
   })
@@ -258,11 +254,11 @@ test_that("get_individual_package_info gets correct libpath and version of multi
           remotesha_identical = "308d27ddb0b45fda34fc259492145834d72849a9"
         )
         expect_identical(
-          package_info[["rmini"]][["library"]],
+          package_info[["library"]],
           normalizePath(newer_lib, winslash = "/")
         )
         expect_identical(
-          package_info[["rmini"]][["library_index"]],
+          package_info[["library_index"]],
           1L
         )
       })
@@ -289,11 +285,11 @@ test_that("get_individual_package_info gets correct libpath for lower search pri
         remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
       )
       expect_identical(
-        package_info[["rmini"]][["library"]],
+        package_info[["library"]],
         normalizePath(new_lib, winslash = "/")
       )
       expect_identical(
-        package_info[["rmini"]][["library_index"]],
+        package_info[["library_index"]],
         2L
       )
     })

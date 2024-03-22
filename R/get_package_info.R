@@ -124,7 +124,5 @@ get_individual_package_info <- function(packagename) {
       ifelse(is.null(x), NA_character_, x)
     }
   )
-  output <- list()
-  output[[packagename]] <- clean_details_list
-  return(output)
+  return(clean_details_list)
 }
