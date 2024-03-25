@@ -19,7 +19,8 @@ Imports:
     digest,
     jsonlite,
     logger,
-    pkgdepends
+    pkgdepends,
+    pkgload
 Suggests: 
     gert,
     pak,
