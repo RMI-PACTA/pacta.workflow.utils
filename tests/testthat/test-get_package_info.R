@@ -122,7 +122,7 @@ test_that("get_package_info outputs expected value for simple named list", {
   )
 })
 
-test_that("get_package_info outputs expected value for list with mixed nesting", {
+test_that("get_package_info outputs expected value for list with mixed nesting", { #nolint: line_length_linter
   package_info <- get_package_info(
     list(
       foo = list(list("digest")),
