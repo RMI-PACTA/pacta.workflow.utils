@@ -22,6 +22,7 @@ Imports:
     pkgdepends,
     pkgload
 Suggests: 
+    devtools,
     gert,
     pak,
     testthat (>= 3.0.0),
