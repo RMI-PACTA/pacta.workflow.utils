@@ -13,8 +13,20 @@ logger::log_appender(logger::appender_stdout)
 logger::log_threshold(logger::FATAL)
 logger::log_layout(logger::layout_simple)
 
+expect_warning_if_not_cran <- function(object, regexp) {
+  on_cran <- (
+    !interactive() &&
+      !isTRUE(as.logical(Sys.getenv("NOT_CRAN", "false")))
+  )
+  if (on_cran) {
+    object
+  } else {
+    testthat::expect_warning(object = object, regexp = regexp)
+  }
+}
+
 test_that("get_package_info outputs correct structure for defaults", {
-  testthat::expect_warning(
+  expect_warning_if_not_cran(
     object = {
       package_info <- get_package_info()
       expect_named(
