@@ -242,7 +242,45 @@ test_that("get_individual_package_info collects information for packages loaded 
     verbose = FALSE
   )
   loaded <- pkgload::load_all(dest_dir, quiet = TRUE)
-  withr::defer({devtools::unload(package = "rmini")})
+  withr::defer({
+    pkgload::unload(package = "rmini")
+  })
+  testthat::expect_warning(
+    object = {
+      package_info <- get_individual_package_info("rmini")
+      expect_package_info(
+        package_info,
+        package_identical = "rmini",
+        version_identical = "DEV 0.0.4",
+        dev_version_identical = TRUE,
+        repository_match = NA_character_,
+        remotetype_identical = "pkgload",
+        remotepkgref_match = paste0("^", dest_dir, "$"),
+        remoteref_identical = NA_character_,
+        remotesha_identical = NA_character_
+      )
+      expect_identical(
+        package_info[["remotepkgref"]],
+        normalizePath(dest_dir)
+      )
+    },
+    "^Identifying development packages may not be accurate.$"
+  )
+})
+
+test_that("get_individual_package_info collects information for packages loaded with devtools correctly", { #nolint: line_length_linter
+  testthat::skip_on_cran()
+  testthat::skip_if_offline()
+  dest_dir <- normalizePath(withr::local_tempdir())
+  dl <- gert::git_clone(
+    url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
+    path = dest_dir,
+    verbose = FALSE
+  )
+  loaded <- devtools::load_all(dest_dir, quiet = TRUE)
+  withr::defer({
+    devtools::unload(package = "rmini")
+  })
   testthat::expect_warning(
     object = {
       package_info <- get_individual_package_info("rmini")
