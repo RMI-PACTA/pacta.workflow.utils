@@ -114,14 +114,14 @@ get_individual_package_info <- function(packagename) {
       log_error("Package \"{packagename}\" is not installed.")
       stop("Package is not installed.")
     }
-  log_trace("Getting package info for {packagename}.")
-  pkg_details <- as.list(
-    pkgdepends::lib_status(
-      library = lib,
-      packages = packagename
+    log_trace("Getting package info for {packagename}.")
+    pkg_details <- as.list(
+      pkgdepends::lib_status(
+        library = lib,
+        packages = packagename
+      )
     )
-  )
-  pkg_details[["library_index"]] <- lib_index
+    pkg_details[["library_index"]] <- lib_index
   }
   details_list <- list(
     package = pkg_details[["package"]],
