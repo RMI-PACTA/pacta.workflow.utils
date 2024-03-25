@@ -14,57 +14,62 @@ logger::log_threshold(logger::FATAL)
 logger::log_layout(logger::layout_simple)
 
 test_that("get_package_info outputs correct structure for defaults", {
-  package_info <- get_package_info()
-  expect_named(
-    object = package_info,
-    expected = c("base", "attached", "loaded")
-  )
-  expect_named(
-    object = package_info[["base"]],
-    expected = utils::sessionInfo()[["basePkgs"]]
-  )
-  expect_named(
-    object = package_info[["attached"]],
-    expected = names(utils::sessionInfo()[["otherPkgs"]])
-  )
-  expect_named(
-    object = package_info[["loaded"]],
-    expected = names(utils::sessionInfo()[["loadedOnly"]])
-  )
-  # Check that the structure of the package_info is correct
-  expect_true(
-    object = all(
-      vapply(
-        X = package_info,
-        FUN = function(x) {
-          all(
-            vapply(
-              X = x,
-              FUN = function(x) {
-                all(
-                  names(x) == c(
-                    "package",
-                    "version",
-                    "library",
-                    "library_index",
-                    "repository",
-                    "platform",
-                    "built",
-                    "remotetype",
-                    "remotepkgref",
-                    "remoteref",
-                    "remotesha"
-                  )
-                )
-              },
-              FUN.VALUE = logical(1L)
-            )
-          )
-        },
-        FUN.VALUE = logical(1L)
+  testthat::expect_warning(
+    object = {
+      package_info <- get_package_info()
+      expect_named(
+        object = package_info,
+        expected = c("base", "attached", "loaded")
       )
-    )
-
+      expect_named(
+        object = package_info[["base"]],
+        expected = utils::sessionInfo()[["basePkgs"]]
+      )
+      expect_named(
+        object = package_info[["attached"]],
+        expected = names(utils::sessionInfo()[["otherPkgs"]])
+      )
+      expect_named(
+        object = package_info[["loaded"]],
+        expected = names(utils::sessionInfo()[["loadedOnly"]])
+      )
+      # Check that the structure of the package_info is correct
+      expect_true(
+        object = all(
+          vapply(
+            X = package_info,
+            FUN = function(x) {
+              all(
+                vapply(
+                  X = x,
+                  FUN = function(x) {
+                    all(
+                      names(x) == c(
+                        "package",
+                        "version",
+                        "dev_version",
+                        "library",
+                        "library_index",
+                        "repository",
+                        "platform",
+                        "built",
+                        "remotetype",
+                        "remotepkgref",
+                        "remoteref",
+                        "remotesha"
+                      )
+                    )
+                  },
+                  FUN.VALUE = logical(1L)
+                )
+              )
+            },
+            FUN.VALUE = logical(1L)
+          )
+        )
+      )
+    },
+    "^Identifying development packages may not be accurate.$"
   )
 })
 

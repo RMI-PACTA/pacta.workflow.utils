@@ -55,6 +55,8 @@ get_package_info <- function(
 #' @return nested list of file details, length 11, with keys:
 #' - `package`: The name of the package
 #' - `version`: The version of the package
+#' - `dev_version`: Is this version a development version (loaded with
+#' `pkgload`)?
 #' - `library`: The path of the library the package is installed in
 #' - `library_index`: The index of the library in the `.libPaths()` vector
 #' - `repository`: The repository the package was pulled from
@@ -67,7 +69,30 @@ get_package_info <- function(
 get_individual_package_info <- function(packagename) {
   if (length(packagename) != 1L || !is.character(packagename)) {
     log_error("packagename must be a single string.")
+    # Early return
     stop("packagename must be a single string.")
+  }
+  dev_package <- pkgload::is_dev_package(packagename)
+  if (dev_package) {
+    log_warn("Package \"{packagename}\" is a development package.")
+    log_warn("Package information may not be accurate.")
+    warning("Identifying development packages may not be accurate.")
+    package_dev_dir <- pkgload::pkg_path(
+      path = dirname(system.file("DESCRIPTION", package = packagename))
+    )
+    pkg_details <- list(
+      package = pkgload::pkg_name(package_dev_dir),
+      version = paste("DEV", pkgload::pkg_version(package_dev_dir)),
+      library = NA_character_,
+      library_index = NA_integer_,
+      repository = NA_character_,
+      platform = NA_character_,
+      built = NA_character_,
+      remotetype = "pkgload",
+      remotepkgref = package_dev_dir,
+      remoteref = NA_character_,
+      remotesha = NA_character_
+    )
   } else {
     if (packagename %in% utils::installed.packages()[, "Package"]) {
       installed_index <- which(
@@ -89,7 +114,6 @@ get_individual_package_info <- function(packagename) {
       log_error("Package \"{packagename}\" is not installed.")
       stop("Package is not installed.")
     }
-  }
   log_trace("Getting package info for {packagename}.")
   pkg_details <- as.list(
     pkgdepends::lib_status(
@@ -97,11 +121,14 @@ get_individual_package_info <- function(packagename) {
       packages = packagename
     )
   )
+  pkg_details[["library_index"]] <- lib_index
+  }
   details_list <- list(
     package = pkg_details[["package"]],
     version = pkg_details[["version"]],
+    dev_version = dev_package,
     library = pkg_details[["library"]],
-    library_index = lib_index,
+    library_index = pkg_details[["library_index"]],
     repository = pkg_details[["repository"]],
     platform = pkg_details[["platform"]],
     built = pkg_details[["built"]],

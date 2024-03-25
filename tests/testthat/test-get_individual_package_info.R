@@ -21,7 +21,8 @@ expect_package_info <- function(
   remotetype_identical,
   remotepkgref_match,
   remoteref_identical,
-  remotesha_identical
+  remotesha_identical,
+  dev_version_identical = FALSE
 ) {
   testthat::expect_type(package_info, "list")
   testthat::expect_named(
@@ -29,6 +30,7 @@ expect_package_info <- function(
     expected = c(
       "package",
       "version",
+      "dev_version",
       "library",
       "library_index",
       "repository",
@@ -48,10 +50,43 @@ expect_package_info <- function(
     object = package_info[["version"]],
     expected = version_identical
   )
-  testthat::expect_in(
-    object = package_info[["library"]],
-    .libPaths() #nolint: undesirable_function_linter
+  testthat::expect_identical(
+    object = package_info[["dev_version"]],
+    expected = dev_version_identical
   )
+
+  if (dev_version_identical) {
+    testthat::expect_identical(
+      object = package_info[["library"]],
+      expected = NA_character_
+    )
+    testthat::expect_identical(
+      object = package_info[["library_index"]],
+      expected = NA_integer_
+    )
+    testthat::expect_identical(
+      object = package_info[["platform"]],
+      expected = NA_character_
+    )
+  } else {
+    testthat::expect_in(
+      object = package_info[["library"]],
+      .libPaths() #nolint: undesirable_function_linter
+    )
+    testthat::expect_gt(
+      object = package_info[["library_index"]],
+      expected = 0L
+    )
+    testthat::expect_lte(
+      object = package_info[["library_index"]],
+      expected = length(.libPaths()) #nolint: undesirable_function_linter
+    )
+    testthat::expect_match(
+      object = package_info[["platform"]],
+      regexp = R.version[["platform"]]
+    )
+  }
+
   testthat::expect_identical(
     object = package_info[["library"]],
     expected = .libPaths()[package_info[["library_index"]]] #nolint: undesirable_function_linter
@@ -59,14 +94,6 @@ expect_package_info <- function(
   testthat::expect_type(
     object = package_info[["library_index"]],
     type = "integer"
-  )
-  testthat::expect_gt(
-    object = package_info[["library_index"]],
-    expected = 0L
-  )
-  testthat::expect_lte(
-    object = package_info[["library_index"]],
-    expected = length(.libPaths()) #nolint: undesirable_function_linter
   )
   if (is.na(repository_match)) {
     testthat::expect_identical(
@@ -79,10 +106,6 @@ expect_package_info <- function(
       regexp = repository_match
     )
   }
-  testthat::expect_match(
-    object = package_info[["platform"]],
-    regexp = R.version[["platform"]]
-  )
   testthat::expect_false(
     is.null(x = package_info[["built"]])
   )
@@ -207,6 +230,40 @@ test_that("get_individual_package_info collects information for GitHub packages 
       normalizePath(new_lib, winslash = "/")
     )
   })
+})
+
+test_that("get_individual_package_info collects information for packages loaded with pkgload correctly", { #nolint: line_length_linter
+  testthat::skip_on_cran()
+  testthat::skip_if_offline()
+  dest_dir <- normalizePath(withr::local_tempdir())
+  dl <- gert::git_clone(
+    url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
+    path = dest_dir,
+    verbose = FALSE
+  )
+  loaded <- pkgload::load_all(dest_dir, quiet = TRUE)
+  withr::defer({devtools::unload(package = "rmini")})
+  testthat::expect_warning(
+    object = {
+      package_info <- get_individual_package_info("rmini")
+      expect_package_info(
+        package_info,
+        package_identical = "rmini",
+        version_identical = "DEV 0.0.4",
+        dev_version_identical = TRUE,
+        repository_match = NA_character_,
+        remotetype_identical = "pkgload",
+        remotepkgref_match = paste0("^", dest_dir, "$"),
+        remoteref_identical = NA_character_,
+        remotesha_identical = NA_character_
+      )
+      expect_identical(
+        package_info[["remotepkgref"]],
+        normalizePath(dest_dir)
+      )
+    },
+    "^Identifying development packages may not be accurate.$"
+  )
 })
 
 test_that("get_individual_package_info errors for multiple packages", {
