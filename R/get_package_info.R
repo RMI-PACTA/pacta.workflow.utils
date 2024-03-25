@@ -89,7 +89,7 @@ get_individual_package_info <- function(packagename) {
       platform = NA_character_,
       built = NA_character_,
       remotetype = "pkgload",
-      remotepkgref = package_dev_dir,
+      remotepkgref = normalizePath(package_dev_dir),
       remoteref = NA_character_,
       remotesha = NA_character_
     )
