@@ -122,6 +122,24 @@ test_that("get_package_info outputs expected value for simple named list", {
   )
 })
 
+test_that("get_package_info outputs expected value for list with mixed nesting", {
+  package_info <- get_package_info(
+    list(
+      foo = list(list("digest")),
+      bar = list("digest"),
+      baz = "utils"
+    )
+  )
+  expect_identical(
+    package_info,
+    list(
+      foo = list(list(list(digest = get_individual_package_info("digest")))),
+      bar = list(list(digest = get_individual_package_info("digest"))),
+      baz = list(utils = get_individual_package_info("utils"))
+    )
+  )
+})
+
 empty_named_list <- list()
 names(empty_named_list) <- character(0L)
 
