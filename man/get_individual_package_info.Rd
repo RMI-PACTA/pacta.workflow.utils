@@ -10,8 +10,7 @@ get_individual_package_info(packagename)
 \item{packagename}{Singular charater string of package name}
 }
 \value{
-nested list of file details, length 1, with the top-level key being
-the \code{packagename} passed as an argument. underneath that key are:
+nested list of file details, length 11, with keys:
 \itemize{
 \item \code{package}: The name of the package
 \item \code{version}: The version of the package

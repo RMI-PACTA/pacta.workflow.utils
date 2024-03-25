@@ -5,20 +5,15 @@
 \title{Get package information for active packages}
 \usage{
 get_package_info(
-  base = utils::sessionInfo()[["basePkgs"]],
-  attached = names(utils::sessionInfo()[["otherPkgs"]]),
-  loaded = names(utils::sessionInfo()[["loadedOnly"]])
+  packagelist = list(base = utils::sessionInfo()[["basePkgs"]], attached =
+    names(utils::sessionInfo()[["otherPkgs"]]), loaded =
+    names(utils::sessionInfo()[["loadedOnly"]]))
 )
 }
 \arguments{
-\item{base}{vector of package names. Best left as default, which includes
-the loaded base packages.}
-
-\item{attached}{vector of package names. Best left as default, which
-includes the attached packages.}
-
-\item{loaded}{vector of package names. Best left as default, which includes
-the loaded packages.}
+\item{packagelist}{vector or list of package names. Best left as default,
+which includes the currently loaded and attached namespaces separated into
+useful categories.}
 }
 \value{
 nested list of file details, length 3, with top level keys being
@@ -27,8 +22,9 @@ details, with the package names as keys, and further details as returned by
 \code{\link[=get_individual_package_info]{get_individual_package_info()}}.
 }
 \description{
-This function takes 3 vectors of package names and returns a nested list of
-package details, suitable for inclusion in manifest export.
+This function takes a vector or (possibly nested) list of package names and
+returns a nested list of package details, suitable for inclusion in manifest
+export.
 }
 \seealso{
 \code{\link[=get_individual_package_info]{get_individual_package_info()}}
