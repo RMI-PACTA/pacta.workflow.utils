@@ -1,14 +1,12 @@
 #' Get package information for active packages
 #'
-#' This function takes 3 vectors of package names and returns a nested list of
-#' package details, suitable for inclusion in manifest export.
+#' This function takes a vector or (possibly nested) list of package names and
+#' returns a nested list of package details, suitable for inclusion in manifest
+#' export.
 #'
-#' @param base vector of package names. Best left as default, which includes
-#' the loaded base packages.
-#' @param attached vector of package names. Best left as default, which
-#' includes the attached packages.
-#' @param loaded vector of package names. Best left as default, which includes
-#' the loaded packages.
+#' @param packagelist vector or list of package names. Best left as default,
+#' which includes the currently loaded and attached namespaces separated into
+#' useful categories.
 #'
 #' @return nested list of file details, length 3, with top level keys being
 #' `base`, `attached`, and `loaded`. Underneath those keys are lists of package
@@ -16,40 +14,35 @@
 #' [get_individual_package_info()].
 #' @seealso [get_individual_package_info()]
 get_package_info <- function(
-  base = utils::sessionInfo()[["basePkgs"]],
-  attached = names(utils::sessionInfo()[["otherPkgs"]]),
-  loaded = names(utils::sessionInfo()[["loadedOnly"]])
+  packagelist = list(
+    base = utils::sessionInfo()[["basePkgs"]],
+    attached = names(utils::sessionInfo()[["otherPkgs"]]),
+    loaded = names(utils::sessionInfo()[["loadedOnly"]])
+  )
 ) {
   log_debug("Getting package info.")
-  log_trace("Base packages: {base}")
-  base_pkgs <- vapply(
-    X = base,
-    FUN = get_individual_package_info,
-    FUN.VALUE = list(1L),
-    USE.NAMES = TRUE
-  )
-  log_trace("Attached packages: {attached}")
-  attached_pkgs <- vapply(
-    X = attached,
-    FUN = get_individual_package_info,
-    FUN.VALUE = list(1L),
-    USE.NAMES = TRUE
-  )
-  log_trace("Loaded packages: {loaded}")
-  loaded_pkgs <- vapply(
-    X = loaded,
-    FUN = get_individual_package_info,
-    FUN.VALUE = list(1L),
-    USE.NAMES = TRUE
-  )
-  log_debug("Done fetching package info.")
-  return(
-    list(
-      base = base_pkgs,
-      attached = attached_pkgs,
-      loaded = loaded_pkgs
+  if (inherits(packagelist, "character")) {
+    out <- vapply(
+      X = packagelist,
+      FUN = function(x) {
+        list(x = get_individual_package_info(x))
+      },
+      FUN.VALUE = list(1L),
+      USE.NAMES = TRUE
     )
-  )
+  } else {
+    out <- vapply(
+      X = packagelist,
+      FUN = function(x) {
+        list(
+          x = get_package_info(x)
+        )
+      },
+      FUN.VALUE = list(1L),
+      USE.NAMES = TRUE
+    )
+  }
+  return(out)
 }
 
 #' Get package information for a package
@@ -59,8 +52,7 @@ get_package_info <- function(
 #'
 #' @param packagename Singular charater string of package name
 #'
-#' @return nested list of file details, length 1, with the top-level key being
-#' the `packagename` passed as an argument. underneath that key are:
+#' @return nested list of file details, length 11, with keys:
 #' - `package`: The name of the package
 #' - `version`: The version of the package
 #' - `library`: The path of the library the package is installed in
