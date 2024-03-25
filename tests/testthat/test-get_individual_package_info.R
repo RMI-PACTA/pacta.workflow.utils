@@ -235,6 +235,7 @@ test_that("get_individual_package_info collects information for GitHub packages 
 test_that("get_individual_package_info collects information for packages loaded with pkgload correctly", { #nolint: line_length_linter
   testthat::skip_on_cran()
   testthat::skip_if_offline()
+  testthat::skip_if_not_installed("pkgload")
   dest_dir <- normalizePath(withr::local_tempdir())
   dl <- gert::git_clone(
     url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
@@ -271,6 +272,7 @@ test_that("get_individual_package_info collects information for packages loaded 
 test_that("get_individual_package_info collects information for packages loaded with devtools correctly", { #nolint: line_length_linter
   testthat::skip_on_cran()
   testthat::skip_if_offline()
+  testthat::skip_if_not_installed("devtools")
   dest_dir <- normalizePath(withr::local_tempdir())
   dl <- gert::git_clone(
     url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
