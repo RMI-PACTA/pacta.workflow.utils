@@ -14,8 +14,8 @@ nested list of file details, length 11, with keys:
 \itemize{
 \item \code{package}: The name of the package
 \item \code{version}: The version of the package
-\item \code{dev_version}: Is this version a development version (loaded with
-\code{pkgload})?
+\item \code{loaded_with_pkgload}: Is this package loaded with \code{pkgload}? (logical).
+Useful for identifying local development versions
 \item \code{library}: The path of the library the package is installed in
 \item \code{library_index}: The index of the library in the \code{.libPaths()} vector
 \item \code{repository}: The repository the package was pulled from

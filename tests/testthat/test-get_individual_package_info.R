@@ -22,7 +22,7 @@ expect_package_info <- function(
   remotepkgref_match,
   remoteref_identical,
   remotesha_identical,
-  dev_version_identical = FALSE
+  loaded_with_pkgload_identical = FALSE
 ) {
   testthat::expect_type(package_info, "list")
   testthat::expect_named(
@@ -30,7 +30,7 @@ expect_package_info <- function(
     expected = c(
       "package",
       "version",
-      "dev_version",
+      "loaded_with_pkgload",
       "library",
       "library_index",
       "repository",
@@ -51,11 +51,11 @@ expect_package_info <- function(
     expected = version_identical
   )
   testthat::expect_identical(
-    object = package_info[["dev_version"]],
-    expected = dev_version_identical
+    object = package_info[["loaded_with_pkgload"]],
+    expected = loaded_with_pkgload_identical
   )
 
-  if (dev_version_identical) {
+  if (loaded_with_pkgload_identical) {
     testthat::expect_identical(
       object = package_info[["library"]],
       expected = NA_character_
@@ -253,7 +253,7 @@ test_that("get_individual_package_info collects information for packages loaded 
         package_info,
         package_identical = "rmini",
         version_identical = "DEV 0.0.4",
-        dev_version_identical = TRUE,
+        loaded_with_pkgload_identical = TRUE,
         repository_match = NA_character_,
         remotetype_identical = "pkgload",
         remotepkgref_match = paste0("^", dest_dir, "$"),
@@ -290,7 +290,7 @@ test_that("get_individual_package_info collects information for packages loaded 
         package_info,
         package_identical = "rmini",
         version_identical = "DEV 0.0.4",
-        dev_version_identical = TRUE,
+        loaded_with_pkgload_identical = TRUE,
         repository_match = NA_character_,
         remotetype_identical = "pkgload",
         remotepkgref_match = paste0("^", dest_dir, "$"),

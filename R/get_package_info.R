@@ -55,8 +55,8 @@ get_package_info <- function(
 #' @return nested list of file details, length 11, with keys:
 #' - `package`: The name of the package
 #' - `version`: The version of the package
-#' - `dev_version`: Is this version a development version (loaded with
-#' `pkgload`)?
+#' - `loaded_with_pkgload`: Is this package loaded with `pkgload`? (logical).
+#' Useful for identifying local development versions
 #' - `library`: The path of the library the package is installed in
 #' - `library_index`: The index of the library in the `.libPaths()` vector
 #' - `repository`: The repository the package was pulled from
@@ -126,7 +126,7 @@ get_individual_package_info <- function(packagename) {
   details_list <- list(
     package = pkg_details[["package"]],
     version = pkg_details[["version"]],
-    dev_version = dev_package,
+    loaded_with_pkgload = dev_package,
     library = pkg_details[["library"]],
     library_index = pkg_details[["library_index"]],
     repository = pkg_details[["repository"]],

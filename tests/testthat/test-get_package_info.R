@@ -66,7 +66,7 @@ test_that("get_package_info outputs correct structure for defaults", {
                       names(x) == c(
                         "package",
                         "version",
-                        "dev_version",
+                        "loaded_with_pkgload",
                         "library",
                         "library_index",
                         "repository",
