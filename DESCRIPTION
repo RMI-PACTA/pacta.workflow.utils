@@ -1,6 +1,6 @@
 Package: pacta.workflow.utils
 Title: Utility functions for PACTA workflows
-Version: 0.0.0.9001
+Version: 0.0.0.9002
 Authors@R: 
     c(person(given = "Alex",
              family = "Axthelm",
@@ -18,8 +18,13 @@ RoxygenNote: 7.3.1
 Imports: 
     digest,
     jsonlite,
-    logger
+    logger,
+    pkgdepends,
+    pkgload
 Suggests: 
+    devtools,
+    gert,
+    pak,
     testthat (>= 3.0.0),
     withr
 Config/testthat/edition: 3
