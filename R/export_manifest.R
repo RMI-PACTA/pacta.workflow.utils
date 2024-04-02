@@ -39,7 +39,13 @@ create_manifest <- function(
   logger::log_debug("Creating metadata manifest")
   manifest_list <- list(
     input_files = get_file_metadata(input_files),
-    output_files = get_file_metadata(output_files)
+    output_files = get_file_metadata(output_files),
+    manifest_creation_datetime = format.POSIXct(
+      x = Sys.time(),
+      format = "%F %R",
+      tz = "UTC",
+      usetz = TRUE
+    )
   )
   return(manifest_list)
 }
