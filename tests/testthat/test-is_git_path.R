@@ -57,19 +57,3 @@ test_that("is_git_path processes file in git-repo correctly", {
   saveRDS(mtcars, test_file)
   expect_true(is_git_path(path = test_file))
 })
-
-
-
-# # TESTS BEGIN
-# test_that("get_git_info processes simple git-repo correctly", {
-#   test_dir <- withr::local_tempdir()
-#   gert::git_init(repo = test_dir)
-#   metadata <- get_file_metadata(csv_file)
-#   expect_identical(
-#     metadata,
-#     list(
-#       csv_metadata
-#     )
-#   )
-# })
-
