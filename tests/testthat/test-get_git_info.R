@@ -13,6 +13,15 @@ logger::log_appender(logger::appender_stdout)
 logger::log_threshold(logger::FATAL)
 logger::log_layout(logger::layout_simple)
 
+testing_git_config <- function(repo) {
+  gert::git_config_set(repo = repo, name = "user.name", value = "testthat")
+  gert::git_config_set(
+    repo = repo,
+    name = "user.email",
+    value = "PACTATesting@rmi.org"
+  )
+}
+
 # TESTS BEGIN
 test_that("get_git_info processes non-git-repo correctly", {
   test_dir <- withr::local_tempdir()
@@ -70,6 +79,7 @@ test_that("get_git_info processes git repo with a single commit correctly", {
   test_file <- file.path(test_dir, "foo.txt")
   writeLines("Hello, world!", con = test_file)
   gert::git_init(path = test_dir)
+  testing_git_config(repo = test_dir)
   gert::git_add(files = basename(test_file), repo = normalizePath(test_dir))
   commit_sha <- gert::git_commit(repo = test_dir, message = "Initial commit")
   metadata <- get_git_info(repo = test_dir)
@@ -99,6 +109,7 @@ test_that("get_git_info processes git repo with dirty index correctly", {
   test_file <- file.path(test_dir, "foo.txt")
   writeLines("Hello, world!", con = test_file)
   gert::git_init(path = test_dir)
+  testing_git_config(repo = test_dir)
   gert::git_add(files = basename(test_file), repo = normalizePath(test_dir))
   commit_sha <- gert::git_commit(repo = test_dir, message = "Initial commit")
   writeLines("Hello, Testing!", con = test_file)
@@ -131,6 +142,7 @@ test_that("get_git_info processes git repo with conflicts correctly", {
   test_file <- file.path(test_dir, "foo.txt")
   writeLines("Hello, world!", con = test_file)
   gert::git_init(path = test_dir)
+  testing_git_config(repo = test_dir)
   gert::git_add(files = basename(test_file), repo = normalizePath(test_dir))
   gert::git_commit(repo = test_dir, message = "Initial commit")
 
@@ -178,6 +190,7 @@ test_that("get_git_info processes git repo with tags correctly", {
   test_file <- file.path(test_dir, "foo.txt")
   writeLines("Hello, world!", con = test_file)
   gert::git_init(path = test_dir)
+  testing_git_config(repo = test_dir)
   gert::git_add(files = basename(test_file), repo = normalizePath(test_dir))
   commit_sha <- gert::git_commit(repo = test_dir, message = "Initial commit")
   foo_sha <- gert::git_tag_create(
