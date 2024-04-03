@@ -226,7 +226,7 @@ test_that("get_individual_package_info collects information for local packages c
           remote_url = "https://github.com/yihui/rmini.git",
           up_to_date = TRUE,
           upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
-          ),
+        ),
         changed_files = list(),
         tags = list()
       )
@@ -414,7 +414,7 @@ test_that("get_individual_package_info collects information for altered packages
           ),
           changed_files = list(
             foo.txt = "modified"
-            ),
+          ),
           tags = list()
         )
       )

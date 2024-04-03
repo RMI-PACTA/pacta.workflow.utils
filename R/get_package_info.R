@@ -137,7 +137,8 @@ get_individual_package_info <- function(packagename) {
         repo = gsub(
           x = pkg_details[["remotepkgref"]],
           pattern = "local::",
-          replacement = ""
+          replacement = "",
+          fixed = TRUE
         )
       )
       pkg_details[["git"]] <- git_info
