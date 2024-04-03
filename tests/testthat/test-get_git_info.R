@@ -140,7 +140,9 @@ test_that("get_git_info processes git repo with conflicts correctly", {
   gert::git_add(files = basename(test_file), repo = normalizePath(test_dir))
   commit_sha <- gert::git_commit(repo = test_dir, message = "Master commit")
 
-  gert::git_merge(repo = test_dir, ref = "feature")
+  suppressMessages(
+    gert::git_merge(repo = test_dir, ref = "feature")
+  )
 
   metadata <- get_git_info(repo = test_dir)
   expect_identical(
