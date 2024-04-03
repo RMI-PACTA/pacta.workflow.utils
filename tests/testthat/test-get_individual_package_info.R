@@ -213,7 +213,23 @@ test_that("get_individual_package_info collects information for local packages c
       remotetype_identical = "local",
       remotepkgref_match = paste0("^local::", dest_dir, "$"),
       remoteref_identical = NA_character_,
-      remotesha_identical = NA_character_
+      remotesha_identical = NA_character_,
+      git = list(
+        repo = normalizePath(dest_dir),
+        is_git = TRUE,
+        commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
+        clean = TRUE,
+        branch = list(
+          name = "master",
+          commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
+          upstream = "refs/remotes/origin/master", #nolint: nonportable_path_linter
+          remote_url = "https://github.com/yihui/rmini.git",
+          up_to_date = TRUE,
+          upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+          ),
+        changed_files = list(),
+        tags = list()
+      )
     )
     expect_identical(
       package_info[["library"]],

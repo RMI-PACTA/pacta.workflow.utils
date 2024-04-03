@@ -124,6 +124,24 @@ get_individual_package_info <- function(packagename) {
       )
     )
     pkg_details[["library_index"]] <- lib_index
+    if (is.null(pkg_details[["remotepkgref"]])) {
+      is_local_pkg <- FALSE
+    } else {
+      is_local_pkg <- grepl(
+        x = pkg_details[["remotepkgref"]],
+        pattern = "^local::"
+      )
+    }
+    if (is_local_pkg) {
+      git_info <- get_git_info(
+        repo = gsub(
+          x = pkg_details[["remotepkgref"]],
+          pattern = "local::",
+          replacement = ""
+        )
+      )
+      pkg_details[["git"]] <- git_info
+    }
   }
   details_list <- list(
     package = pkg_details[["package"]],
