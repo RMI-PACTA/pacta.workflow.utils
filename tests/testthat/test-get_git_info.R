@@ -122,7 +122,45 @@ test_that("get_git_info processes git repo with dirty index correctly", {
   )
 })
 
-# TODO: dirty/clean
-# TODO: Diffs
+test_that("get_git_info processes git repo with conflicts correctly", {
+  test_dir <- withr::local_tempdir()
+  test_file <- file.path(test_dir, "foo.txt")
+  writeLines("Hello, world!", con = test_file)
+  gert::git_init(path = test_dir)
+  gert::git_add(files = basename(test_file), repo = normalizePath(test_dir))
+  gert::git_commit(repo = test_dir, message = "Initial commit")
 
-# moved file
+  gert::git_branch_create(repo = test_dir, branch = "feature")
+  writeLines("Hello, feature!", con = test_file)
+  gert::git_add(files = basename(test_file), repo = normalizePath(test_dir))
+  gert::git_commit(repo = test_dir, message = "Feature commit")
+
+  gert::git_branch_checkout(repo = test_dir, branch = "master")
+  writeLines("Hello, Testing!", con = test_file)
+  gert::git_add(files = basename(test_file), repo = normalizePath(test_dir))
+  commit_sha <- gert::git_commit(repo = test_dir, message = "Master commit")
+
+  gert::git_merge(repo = test_dir, ref = "feature")
+
+  metadata <- get_git_info(repo = test_dir)
+  expect_identical(
+    metadata,
+    list(
+      repo = normalizePath(test_dir),
+      is_git = TRUE,
+      commit = commit_sha,
+      clean = FALSE,
+      branch = list(
+        name = "master",
+        commit = commit_sha,
+        upstream = NULL,
+        remote_url = NULL,
+        up_to_date = NULL,
+        upstream_commit = NULL
+      ),
+      changed_files = list(
+        foo.txt = "conflicted"
+      )
+    )
+  )
+})

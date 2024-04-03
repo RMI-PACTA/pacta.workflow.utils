@@ -113,6 +113,3 @@ git_changed_files <- function(repo) {
     return(NULL)
   }
 }
-
-
-# TODO: Conflicted Repos https://github.com/r-lib/gert/pull/40
