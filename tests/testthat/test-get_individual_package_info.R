@@ -377,6 +377,7 @@ test_that("get_individual_package_info collects information for altered packages
     path = dest_dir,
     verbose = FALSE
   )
+  testing_git_config(repo = dest_dir)
   test_file <- file.path(dest_dir, "foo.txt")
   writeLines("Hello, world!", con = test_file)
   gert::git_add(files = basename(test_file), repo = normalizePath(dest_dir))
