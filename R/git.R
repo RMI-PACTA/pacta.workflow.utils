@@ -9,8 +9,15 @@ get_git_info <- function(repo) {
       latest_commit <- NULL
     }
     changed_files <- git_changed_files(repo = git_repo)
+    # cleaning path for older versions of R on windows
+    repo_path <- gsub(
+      x = normalizePath(info[["path"]]),
+      pattern = "\\\\$",
+      replacement = "",
+      fixed = TRUE
+    )
     out <- list(
-      repo = normalizePath(info[["path"]]),
+      repo = repo_path,
       is_git = TRUE,
       commit = latest_commit,
       clean = (length(changed_files) == 0L),
