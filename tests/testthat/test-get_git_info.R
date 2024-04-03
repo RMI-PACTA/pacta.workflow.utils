@@ -237,3 +237,106 @@ test_that("get_git_info processes git repo with tags correctly", {
     )
   )
 })
+
+test_that("get_git_info processes cloned git repo", {
+  testthat::skip_on_cran()
+  testthat::skip_if_offline()
+  test_dir <- normalizePath(withr::local_tempdir())
+  dl <- gert::git_clone(
+    url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
+    path = test_dir,
+    verbose = FALSE
+  )
+  metadata <- get_git_info(repo = test_dir)
+  expect_identical(
+    metadata,
+    list(
+      repo = normalizePath(test_dir),
+      is_git = TRUE,
+      commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
+      clean = TRUE,
+      branch = list(
+        name = "master",
+        commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
+        upstream = "refs/remotes/origin/master",
+        remote_url = "https://github.com/yihui/rmini.git",
+        up_to_date = TRUE,
+        upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+      ),
+      changed_files = list(),
+      tags = list()
+    )
+  )
+})
+
+test_that("get_git_info processes cloned git repo with local dirty", {
+  testthat::skip_on_cran()
+  testthat::skip_if_offline()
+  test_dir <- normalizePath(withr::local_tempdir())
+  dl <- gert::git_clone(
+    url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
+    path = test_dir,
+    verbose = FALSE
+  )
+  test_file <- file.path(test_dir, "foo.txt")
+  writeLines("Hello, world!", con = test_file)
+  metadata <- get_git_info(repo = test_dir)
+  expect_identical(
+    metadata,
+    list(
+      repo = normalizePath(test_dir),
+      is_git = TRUE,
+      commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
+      clean = FALSE,
+      branch = list(
+        name = "master",
+        commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
+        upstream = "refs/remotes/origin/master",
+        remote_url = "https://github.com/yihui/rmini.git",
+        up_to_date = TRUE,
+        upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+      ),
+      changed_files = list(
+        foo.txt = "new"
+      ),
+      tags = list()
+    )
+  )
+})
+
+test_that("get_git_info processes cloned git repo with local commit", {
+  testthat::skip_on_cran()
+  testthat::skip_if_offline()
+  test_dir <- normalizePath(withr::local_tempdir())
+  dl <- gert::git_clone(
+    url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
+    path = test_dir,
+    verbose = FALSE
+  )
+  testing_git_config(repo = test_dir)
+  test_file <- file.path(test_dir, "foo.txt")
+  writeLines("Hello, world!", con = test_file)
+  gert::git_add(files = basename(test_file), repo = normalizePath(test_dir))
+  commit_sha <- gert::git_commit(repo = test_dir, message = "Initial commit")
+  metadata <- get_git_info(repo = test_dir)
+  expect_identical(
+    metadata,
+    list(
+      repo = normalizePath(test_dir),
+      is_git = TRUE,
+      commit = commit_sha,
+      clean = TRUE,
+      branch = list(
+        name = "master",
+        commit = commit_sha,
+        upstream = "refs/remotes/origin/master",
+        remote_url = "https://github.com/yihui/rmini.git",
+        up_to_date = FALSE,
+        upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+      ),
+      changed_files = list(),
+      tags = list()
+    )
+  )
+})
+
