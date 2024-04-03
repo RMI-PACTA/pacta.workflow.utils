@@ -37,7 +37,8 @@ test_that("get_git_info processes fresh git repo correctly", {
       commit = NULL,
       clean = TRUE,
       branch = NULL,
-      changed_files = list()
+      changed_files = list(),
+      tags = list()
     )
   )
 })
@@ -58,7 +59,8 @@ test_that("get_git_info processes fresh git repo with new file correctly", {
       branch = NULL,
       changed_files = list(
         foo.txt = "new"
-      )
+      ),
+      tags = list()
     )
   )
 })
@@ -86,7 +88,8 @@ test_that("get_git_info processes git repo with a single commit correctly", {
         up_to_date = NULL,
         upstream_commit = NULL
       ),
-      changed_files = list()
+      changed_files = list(),
+      tags = list()
     )
   )
 })
@@ -117,7 +120,8 @@ test_that("get_git_info processes git repo with dirty index correctly", {
       ),
       changed_files = list(
         foo.txt = "modified"
-      )
+      ),
+      tags = list()
     )
   )
 })
@@ -162,6 +166,60 @@ test_that("get_git_info processes git repo with conflicts correctly", {
       ),
       changed_files = list(
         foo.txt = "conflicted"
+      ),
+      tags = list()
+
+    )
+  )
+})
+
+test_that("get_git_info processes git repo with tags correctly", {
+  test_dir <- withr::local_tempdir()
+  test_file <- file.path(test_dir, "foo.txt")
+  writeLines("Hello, world!", con = test_file)
+  gert::git_init(path = test_dir)
+  gert::git_add(files = basename(test_file), repo = normalizePath(test_dir))
+  commit_sha <- gert::git_commit(repo = test_dir, message = "Initial commit")
+  foo_sha <- gert::git_tag_create(
+    repo = test_dir,
+    name = "foo",
+    message = "foo",
+    ref = commit_sha
+  )
+  bar_sha <- gert::git_tag_create(
+    repo = test_dir,
+    name = "bar",
+    message = "bar",
+    ref = commit_sha
+  )
+  metadata <- get_git_info(repo = test_dir)
+  expect_identical(
+    metadata,
+    list(
+      repo = normalizePath(test_dir),
+      is_git = TRUE,
+      commit = commit_sha,
+      clean = TRUE,
+      branch = list(
+        name = "master",
+        commit = commit_sha,
+        upstream = NULL,
+        remote_url = NULL,
+        up_to_date = NULL,
+        upstream_commit = NULL
+      ),
+      changed_files = list(),
+      tags = list(
+        bar = list(
+          name = "bar",
+          commit = bar_sha,
+          points_to = commit_sha
+        ),
+        foo = list(
+          name = "foo",
+          commit = foo_sha,
+          points_to = commit_sha
+        )
       )
     )
   )

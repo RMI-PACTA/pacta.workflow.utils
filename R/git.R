@@ -14,8 +14,9 @@ get_git_info <- function(repo) {
       is_git = TRUE,
       commit = latest_commit,
       clean = (length(changed_files) == 0L),
-      branch = git_branch_info(repo = repo),
-      changed_files = changed_files
+      branch = git_branch_info(repo = git_repo),
+      changed_files = changed_files,
+      tags = git_tag_info(repo = git_repo)
     )
   } else {
     log_warn("Directory \"{repo}\" is not a git repository.")
@@ -120,6 +121,29 @@ git_changed_files <- function(repo) {
       changed_files[[f]] <- status[["status"]][status[["file"]] == f]
     }
     return(changed_files)
+  } else {
+    log_debug("Specified path is not in a git repository.")
+    return(NULL)
+  }
+}
+
+git_tag_info <- function(repo) {
+  log_trace("checking for tags in repo \"{repo}\".")
+  if (is_git_path(repo)) {
+    git_repo <- gert::git_find(path = repo)
+    tags_df <- gert::git_tag_list(repo = git_repo)
+    tags <- list()
+    for (i in seq_along(tags_df[["name"]])) {
+      tag_name <- tags_df[["name"]][i]
+      tag_commit <- tags_df[["commit"]][i]
+      tag_pointer <- gert::git_commit_info(repo = git_repo, ref = tag_commit)
+      tags[[tag_name]] <- list(
+        name = tag_name,
+        commit = tag_commit,
+        points_to = tag_pointer[["id"]]
+      )
+    }
+    return(tags)
   } else {
     log_debug("Specified path is not in a git repository.")
     return(NULL)
