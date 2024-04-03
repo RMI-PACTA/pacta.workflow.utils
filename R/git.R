@@ -13,7 +13,7 @@ get_git_info <- function(repo) {
       repo = normalizePath(info[["path"]]),
       is_git = TRUE,
       commit = latest_commit,
-      clean = (length(changed_files) == 0),
+      clean = (length(changed_files) == 0L),
       branch = git_branch_info(repo = repo),
       changed_files = changed_files
     )
@@ -69,17 +69,29 @@ git_branch_info <- function(repo) {
       active_upstream <- NULL
       up_to_date <- NULL
       upstream_commit <- NULL
-      remote_url = NULL
+      remote_url <- NULL
     } else {
-      log_trace("Branch \"{active_branch}\" has an upstream: \"{active_upstream}\".")
-      active_upstream <- gsub("refs/heads/", "", active_upstream)
+      log_trace(
+        "Branch \"{active_branch}\" has an upstream: \"{active_upstream}\"."
+      )
+      active_upstream <- gsub(
+        pattern = "refs/heads/", # nolint: nonportable_path_linter
+        replacement = "",
+        x = active_upstream
+      )
       upstream_index <- which(branch_list[["ref"]] == active_upstream)
       upstream_commit <- branch_list[[upstream_index, "commit"]]
       up_to_date <- active_commit == upstream_commit
-      remote_list <- gert::git_remote_list(repo = git_repo)
-      # refs/remotes/origin/branch
-      remote_name <- strsplit(x = active_upstream, split = "/")[[1]][3]
-      remote_info <- gert::git_remote_info(repo = git_repo, remote = remote_name)
+      # format of remote ref: refs/remotes/origin/branch
+      remote_name <- strsplit(
+        x = active_upstream,
+        split = "/",
+        fixed = TRUE
+      )[[1L]][[3L]]
+      remote_info <- gert::git_remote_info(
+        repo = git_repo,
+        remote = remote_name
+      )
       remote_url <- remote_info[["url"]]
     }
     out <- list(
