@@ -75,7 +75,8 @@ test_that("get_package_info outputs correct structure for defaults", {
                         "remotetype",
                         "remotepkgref",
                         "remoteref",
-                        "remotesha"
+                        "remotesha",
+                        "git"
                       )
                     )
                   },
