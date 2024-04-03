@@ -8,11 +8,14 @@ get_git_info <- function(repo) {
       log_debug("No commits found in repo.")
       latest_commit <- NULL
     }
+    changed_files <- git_changed_files(repo = git_repo)
     out <- list(
       repo = normalizePath(info[["path"]]),
       is_git = TRUE,
+      commit = latest_commit,
+      clean = (length(changed_files) == 0),
       branch = git_branch_info(repo = repo),
-      commit = latest_commit
+      changed_files = changed_files
     )
   } else {
     log_warn("Directory \"{repo}\" is not a git repository.")
@@ -94,5 +97,22 @@ git_branch_info <- function(repo) {
   }
   return(out)
 }
+
+git_changed_files <- function(repo) {
+  log_trace("checking for changed files in repo \"{repo}\".")
+  if (is_git_path(repo)) {
+    git_repo <- gert::git_find(path = repo)
+    status <- gert::git_status(repo = git_repo)
+    changed_files <- list()
+    for (f in status[["file"]]) {
+      changed_files[[f]] <- status[["status"]][status[["file"]] == f]
+    }
+    return(changed_files)
+  } else {
+    log_debug("Specified path is not in a git repository.")
+    return(NULL)
+  }
+}
+
 
 # TODO: Conflicted Repos https://github.com/r-lib/gert/pull/40
