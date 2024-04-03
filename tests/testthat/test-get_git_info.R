@@ -258,7 +258,7 @@ test_that("get_git_info processes cloned git repo", {
       branch = list(
         name = "master",
         commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
-        upstream = "refs/remotes/origin/master",
+        upstream = "refs/remotes/origin/master", #nolint: nonportable_path_linter
         remote_url = "https://github.com/yihui/rmini.git",
         up_to_date = TRUE,
         upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
@@ -291,7 +291,7 @@ test_that("get_git_info processes cloned git repo with local dirty", {
       branch = list(
         name = "master",
         commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
-        upstream = "refs/remotes/origin/master",
+        upstream = "refs/remotes/origin/master", #nolint: nonportable_path_linter
         remote_url = "https://github.com/yihui/rmini.git",
         up_to_date = TRUE,
         upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
@@ -329,7 +329,7 @@ test_that("get_git_info processes cloned git repo with local commit", {
       branch = list(
         name = "master",
         commit = commit_sha,
-        upstream = "refs/remotes/origin/master",
+        upstream = "refs/remotes/origin/master", #nolint: nonportable_path_linter
         remote_url = "https://github.com/yihui/rmini.git",
         up_to_date = FALSE,
         upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
@@ -339,4 +339,3 @@ test_that("get_git_info processes cloned git repo with local commit", {
     )
   )
 })
-
