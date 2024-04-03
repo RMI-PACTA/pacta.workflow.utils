@@ -22,7 +22,8 @@ expect_package_info <- function(
   remotepkgref_match,
   remoteref_identical,
   remotesha_identical,
-  loaded_with_pkgload_identical = FALSE
+  loaded_with_pkgload_identical = FALSE,
+  git = NULL
 ) {
   testthat::expect_type(package_info, "list")
   testthat::expect_named(
@@ -39,7 +40,8 @@ expect_package_info <- function(
       "remotetype",
       "remotepkgref",
       "remoteref",
-      "remotesha"
+      "remotesha",
+      "git"
     )
   )
   testthat::expect_identical(
@@ -138,6 +140,17 @@ expect_package_info <- function(
     object = package_info[["remotesha"]],
     remotesha_identical
   )
+  if (is.null(git)) {
+    testthat::expect_identical(
+      object = package_info[["git"]],
+      expected = NA_character_
+    )
+  } else {
+    testthat::expect_identical(
+      object = package_info[["git"]],
+      expected = git
+    )
+  }
 }
 
 test_that("get_individual_package_info collects information for CRAN packages correctly", { #nolint: line_length_linter
@@ -258,7 +271,23 @@ test_that("get_individual_package_info collects information for packages loaded 
         remotetype_identical = "pkgload",
         remotepkgref_match = paste0("^", dest_dir, "$"),
         remoteref_identical = NA_character_,
-        remotesha_identical = NA_character_
+        remotesha_identical = NA_character_,
+        git = list(
+          repo = normalizePath(dest_dir),
+          is_git = TRUE,
+          commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
+          clean = TRUE,
+          branch = list(
+            name = "master",
+            commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
+            upstream = "refs/remotes/origin/master", #nolint: nonportable_path_linter
+            remote_url = "https://github.com/yihui/rmini.git",
+            up_to_date = TRUE,
+            upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+          ),
+          changed_files = list(),
+          tags = list()
+        )
       )
       expect_identical(
         package_info[["remotepkgref"]],
@@ -295,7 +324,83 @@ test_that("get_individual_package_info collects information for packages loaded 
         remotetype_identical = "pkgload",
         remotepkgref_match = paste0("^", dest_dir, "$"),
         remoteref_identical = NA_character_,
-        remotesha_identical = NA_character_
+        remotesha_identical = NA_character_,
+        git = list(
+          repo = normalizePath(dest_dir),
+          is_git = TRUE,
+          commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
+          clean = TRUE,
+          branch = list(
+            name = "master",
+            commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
+            upstream = "refs/remotes/origin/master", #nolint: nonportable_path_linter
+            remote_url = "https://github.com/yihui/rmini.git",
+            up_to_date = TRUE,
+            upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+          ),
+          changed_files = list(),
+          tags = list()
+        )
+      )
+      expect_identical(
+        package_info[["remotepkgref"]],
+        normalizePath(dest_dir)
+      )
+    },
+    "^Identifying development packages may not be accurate.$"
+  )
+})
+
+test_that("get_individual_package_info collects information for altered packages loaded with devtools correctly", { #nolint: line_length_linter
+  testthat::skip_on_cran()
+  testthat::skip_if_offline()
+  testthat::skip_if_not_installed("devtools")
+  dest_dir <- normalizePath(withr::local_tempdir())
+  dl <- gert::git_clone(
+    url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
+    path = dest_dir,
+    verbose = FALSE
+  )
+  test_file <- file.path(dest_dir, "foo.txt")
+  writeLines("Hello, world!", con = test_file)
+  gert::git_add(files = basename(test_file), repo = normalizePath(dest_dir))
+  commit_sha <- gert::git_commit(repo = dest_dir, message = "Initial commit")
+  writeLines("Hello, testing!", con = test_file)
+  loaded <- devtools::load_all(dest_dir, quiet = TRUE)
+  withr::defer({
+    devtools::unload(package = "rmini")
+  })
+  testthat::expect_warning(
+    object = {
+      package_info <- get_individual_package_info("rmini")
+      expect_package_info(
+        package_info,
+        package_identical = "rmini",
+        version_identical = "DEV 0.0.4",
+        loaded_with_pkgload_identical = TRUE,
+        repository_match = NA_character_,
+        remotetype_identical = "pkgload",
+        remotepkgref_match = paste0("^", dest_dir, "$"),
+        remoteref_identical = NA_character_,
+        remotesha_identical = NA_character_,
+        git = list(
+          repo = normalizePath(dest_dir),
+          is_git = TRUE,
+          commit = commit_sha,
+          clean = FALSE,
+          branch = list(
+            name = "master",
+            commit = commit_sha,
+            upstream = "refs/remotes/origin/master", #nolint: nonportable_path_linter
+            remote_url = "https://github.com/yihui/rmini.git",
+            up_to_date = FALSE,
+            upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+          ),
+          changed_files = list(
+            foo.txt = "modified"
+            ),
+          tags = list()
+        )
       )
       expect_identical(
         package_info[["remotepkgref"]],

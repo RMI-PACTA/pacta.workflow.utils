@@ -80,6 +80,7 @@ get_individual_package_info <- function(packagename) {
     package_dev_dir <- pkgload::pkg_path(
       path = dirname(system.file("DESCRIPTION", package = packagename))
     )
+    git_info <- get_git_info(repo = package_dev_dir)
     pkg_details <- list(
       package = pkgload::pkg_name(package_dev_dir),
       version = paste("DEV", pkgload::pkg_version(package_dev_dir)),
@@ -91,7 +92,8 @@ get_individual_package_info <- function(packagename) {
       remotetype = "pkgload",
       remotepkgref = normalizePath(package_dev_dir),
       remoteref = NA_character_,
-      remotesha = NA_character_
+      remotesha = NA_character_,
+      git = git_info
     )
   } else {
     if (packagename %in% utils::installed.packages()[, "Package"]) {
@@ -135,12 +137,17 @@ get_individual_package_info <- function(packagename) {
     remotetype = pkg_details[["remotetype"]],
     remotepkgref = pkg_details[["remotepkgref"]],
     remoteref = pkg_details[["remoteref"]],
-    remotesha = pkg_details[["remotesha"]]
+    remotesha = pkg_details[["remotesha"]],
+    git = pkg_details[["git"]]
   )
   clean_details_list <- lapply(
     X = details_list,
     FUN = function(x) {
-      ifelse(is.null(x), NA_character_, x)
+      if (is.null(x)) {
+        NA_character_
+      } else {
+        x
+      }
     }
   )
   return(clean_details_list)
