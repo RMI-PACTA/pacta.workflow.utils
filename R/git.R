@@ -12,7 +12,7 @@ get_git_info <- function(repo) {
     # cleaning path for older versions of R on windows
     repo_path <- gsub(
       x = normalizePath(info[["path"]]),
-      pattern = "\\$",
+      pattern = "[\\/]+$",
       replacement = "",
       fixed = TRUE
     )
