@@ -73,7 +73,7 @@ expect_package_info <- function(
   } else {
     testthat::expect_in(
       object = package_info[["library"]],
-      .libPaths() #nolint: undesirable_function_linter
+      .libPaths() # nolint: undesirable_function_linter
     )
     testthat::expect_gt(
       object = package_info[["library_index"]],
@@ -81,7 +81,7 @@ expect_package_info <- function(
     )
     testthat::expect_lte(
       object = package_info[["library_index"]],
-      expected = length(.libPaths()) #nolint: undesirable_function_linter
+      expected = length(.libPaths()) # nolint: undesirable_function_linter
     )
     testthat::expect_match(
       object = package_info[["platform"]],
@@ -91,7 +91,7 @@ expect_package_info <- function(
 
   testthat::expect_identical(
     object = package_info[["library"]],
-    expected = .libPaths()[package_info[["library_index"]]] #nolint: undesirable_function_linter
+    expected = .libPaths()[package_info[["library_index"]]] # nolint: undesirable_function_linter
   )
   testthat::expect_type(
     object = package_info[["library_index"]],
@@ -198,7 +198,7 @@ test_that("get_individual_package_info collects information for local packages c
   testthat::skip_if_offline()
   dest_dir <- normalizePath(withr::local_tempdir())
   dl <- gert::git_clone(
-    url = remote_package[["url"]], #nolint: nonportable_path_linter
+    url = remote_package[["url"]],
     path = dest_dir,
     verbose = FALSE
   )
@@ -222,7 +222,7 @@ test_that("get_individual_package_info collects information for local packages c
         branch = list(
           name = remote_package[["branch"]],
           commit = remote_package[["sha"]],
-          upstream = remote_package[["upstream"]], #nolint: nonportable_path_linter
+          upstream = remote_package[["upstream"]],
           remote_url = remote_package[["url"]],
           up_to_date = TRUE,
           upstream_commit = remote_package[["sha"]]
@@ -242,7 +242,7 @@ test_that("get_individual_package_info collects information for GitHub packages 
   testthat::skip_on_cran()
   testthat::skip_if_offline()
   new_lib <- normalizePath(withr::local_tempdir())
-  package_info <- with_local_install(new_lib, remote_package[["gh_repo"]], { #nolint: nonportable_path_linter
+  package_info <- with_local_install(new_lib, remote_package[["gh_repo"]], {
     package_info <- get_individual_package_info(remote_package[["name"]])
     expect_package_info(
       package_info,
@@ -250,7 +250,7 @@ test_that("get_individual_package_info collects information for GitHub packages 
       version_identical = remote_package[["version"]],
       repository_match = NA_character_,
       remotetype_identical = "github",
-      remotepkgref_match = paste0("^", remote_package[["gh_repo"]], "$"), #nolint: nonportable_path_linter
+      remotepkgref_match = paste0("^", remote_package[["gh_repo"]], "$"),
       remoteref_identical = "HEAD",
       remotesha_identical = remote_package[["sha"]]
     )
@@ -267,7 +267,7 @@ test_that("get_individual_package_info collects information for packages loaded 
   testthat::skip_if_not_installed("pkgload")
   dest_dir <- normalizePath(withr::local_tempdir())
   dl <- gert::git_clone(
-    url = remote_package[["url"]], #nolint: nonportable_path_linter
+    url = remote_package[["url"]],
     path = dest_dir,
     verbose = FALSE
   )
@@ -296,7 +296,7 @@ test_that("get_individual_package_info collects information for packages loaded 
           branch = list(
             name = remote_package[["branch"]],
             commit = remote_package[["sha"]],
-            upstream = remote_package[["upstream"]], #nolint: nonportable_path_linter
+            upstream = remote_package[["upstream"]],
             remote_url = remote_package[["url"]],
             up_to_date = TRUE,
             upstream_commit = remote_package[["sha"]]
@@ -320,7 +320,7 @@ test_that("get_individual_package_info collects information for packages loaded 
   testthat::skip_if_not_installed("devtools")
   dest_dir <- normalizePath(withr::local_tempdir())
   dl <- gert::git_clone(
-    url = remote_package[["url"]], #nolint: nonportable_path_linter
+    url = remote_package[["url"]],
     path = dest_dir,
     verbose = FALSE
   )
@@ -349,7 +349,7 @@ test_that("get_individual_package_info collects information for packages loaded 
           branch = list(
             name = remote_package[["branch"]],
             commit = remote_package[["sha"]],
-            upstream = remote_package[["upstream"]], #nolint: nonportable_path_linter
+            upstream = remote_package[["upstream"]],
             remote_url = remote_package[["url"]],
             up_to_date = TRUE,
             upstream_commit = remote_package[["sha"]]
@@ -373,7 +373,7 @@ test_that("get_individual_package_info collects information for altered packages
   testthat::skip_if_not_installed("devtools")
   dest_dir <- normalizePath(withr::local_tempdir())
   dl <- gert::git_clone(
-    url = remote_package[["url"]], #nolint: nonportable_path_linter
+    url = remote_package[["url"]],
     path = dest_dir,
     verbose = FALSE
   )
@@ -408,7 +408,7 @@ test_that("get_individual_package_info collects information for altered packages
           branch = list(
             name = remote_package[["branch"]],
             commit = commit_sha,
-            upstream = remote_package[["upstream"]], #nolint: nonportable_path_linter
+            upstream = remote_package[["upstream"]],
             remote_url = remote_package[["url"]],
             up_to_date = FALSE,
             upstream_commit = remote_package[["sha"]]
@@ -459,8 +459,8 @@ test_that("get_individual_package_info gets correct libpath and version of multi
   new_lib <- normalizePath(withr::local_tempdir())
   newer_lib <- normalizePath(withr::local_tempdir())
   expect_warning(
-    with_local_install(new_lib, remote_package[["gh_repo"]], { #nolint: nonportable_path_linter
-      with_local_install(newer_lib, remote_package[["gh_repo_old"]], { #nolint: nonportable_path_linter
+    with_local_install(new_lib, remote_package[["gh_repo"]], {
+      with_local_install(newer_lib, remote_package[["gh_repo_old"]], {
         package_info <- get_individual_package_info(remote_package[["name"]])
         expect_package_info(
           package_info,
@@ -468,7 +468,9 @@ test_that("get_individual_package_info gets correct libpath and version of multi
           version_identical = remote_package[["old_version"]],
           repository_match = NA_character_,
           remotetype_identical = "github",
-          remotepkgref_match = paste0("^", remote_package[["gh_repo_old"]], "$"),
+          remotepkgref_match = paste0(
+            "^", remote_package[["gh_repo_old"]], "$"
+          ),
           remoteref_identical = "28c716f",
           remotesha_identical = remote_package[["old_sha"]]
         )
@@ -490,7 +492,7 @@ test_that("get_individual_package_info gets correct libpath for lower search pri
   testthat::skip_if_offline()
   new_lib <- normalizePath(withr::local_tempdir())
   newer_lib <- normalizePath(withr::local_tempdir())
-  with_local_install(new_lib, remote_package[["gh_repo"]], { #nolint: nonportable_path_linter
+  with_local_install(new_lib, remote_package[["gh_repo"]], {
     with_local_install(newer_lib, "digest", {
       package_info <- get_individual_package_info(remote_package[["name"]])
       expect_package_info(
@@ -499,7 +501,7 @@ test_that("get_individual_package_info gets correct libpath for lower search pri
         version_identical = remote_package[["version"]],
         repository_match = NA_character_,
         remotetype_identical = "github",
-        remotepkgref_match = paste0("^", remote_package[["gh_repo"]], "$"), #nolint: nonportable_path_linter
+        remotepkgref_match = paste0("^", remote_package[["gh_repo"]], "$"),
         remoteref_identical = "HEAD",
         remotesha_identical = remote_package[["sha"]]
       )
