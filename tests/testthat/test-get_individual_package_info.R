@@ -22,7 +22,8 @@ expect_package_info <- function(
   remotepkgref_match,
   remoteref_identical,
   remotesha_identical,
-  loaded_with_pkgload_identical = FALSE
+  loaded_with_pkgload_identical = FALSE,
+  git = NULL
 ) {
   testthat::expect_type(package_info, "list")
   testthat::expect_named(
@@ -39,7 +40,8 @@ expect_package_info <- function(
       "remotetype",
       "remotepkgref",
       "remoteref",
-      "remotesha"
+      "remotesha",
+      "git"
     )
   )
   testthat::expect_identical(
@@ -71,7 +73,7 @@ expect_package_info <- function(
   } else {
     testthat::expect_in(
       object = package_info[["library"]],
-      .libPaths() #nolint: undesirable_function_linter
+      .libPaths() # nolint: undesirable_function_linter
     )
     testthat::expect_gt(
       object = package_info[["library_index"]],
@@ -79,17 +81,17 @@ expect_package_info <- function(
     )
     testthat::expect_lte(
       object = package_info[["library_index"]],
-      expected = length(.libPaths()) #nolint: undesirable_function_linter
+      expected = length(.libPaths()) # nolint: undesirable_function_linter
     )
     testthat::expect_match(
       object = package_info[["platform"]],
-      regexp = R.version[["platform"]]
+      regexp = paste0(R.version[["platform"]], "|\\*")
     )
   }
 
   testthat::expect_identical(
     object = package_info[["library"]],
-    expected = .libPaths()[package_info[["library_index"]]] #nolint: undesirable_function_linter
+    expected = .libPaths()[package_info[["library_index"]]] # nolint: undesirable_function_linter
   )
   testthat::expect_type(
     object = package_info[["library_index"]],
@@ -138,6 +140,17 @@ expect_package_info <- function(
     object = package_info[["remotesha"]],
     remotesha_identical
   )
+  if (is.null(git)) {
+    testthat::expect_identical(
+      object = package_info[["git"]],
+      expected = NA_character_
+    )
+  } else {
+    testthat::expect_identical(
+      object = package_info[["git"]],
+      expected = git
+    )
+  }
 }
 
 test_that("get_individual_package_info collects information for CRAN packages correctly", { #nolint: line_length_linter
@@ -185,22 +198,38 @@ test_that("get_individual_package_info collects information for local packages c
   testthat::skip_if_offline()
   dest_dir <- normalizePath(withr::local_tempdir())
   dl <- gert::git_clone(
-    url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
+    url = remote_package[["url"]],
     path = dest_dir,
     verbose = FALSE
   )
   new_lib <- normalizePath(withr::local_tempdir())
   with_local_install(new_lib, paste0("local::", dest_dir), {
-    package_info <- get_individual_package_info("rmini")
+    package_info <- get_individual_package_info(remote_package[["name"]])
     expect_package_info(
       package_info,
-      package_identical = "rmini",
-      version_identical = "0.0.4",
+      package_identical = remote_package[["name"]],
+      version_identical = remote_package[["version"]],
       repository_match = NA_character_,
       remotetype_identical = "local",
       remotepkgref_match = paste0("^local::", dest_dir, "$"),
       remoteref_identical = NA_character_,
-      remotesha_identical = NA_character_
+      remotesha_identical = NA_character_,
+      git = list(
+        repo = normalizePath(dest_dir),
+        is_git = TRUE,
+        commit = remote_package[["sha"]],
+        clean = TRUE,
+        branch = list(
+          name = remote_package[["branch"]],
+          commit = remote_package[["sha"]],
+          upstream = remote_package[["upstream"]],
+          remote_url = remote_package[["url"]],
+          up_to_date = TRUE,
+          upstream_commit = remote_package[["sha"]]
+        ),
+        changed_files = list(),
+        tags = list()
+      )
     )
     expect_identical(
       package_info[["library"]],
@@ -213,17 +242,17 @@ test_that("get_individual_package_info collects information for GitHub packages 
   testthat::skip_on_cran()
   testthat::skip_if_offline()
   new_lib <- normalizePath(withr::local_tempdir())
-  package_info <- with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
-    package_info <- get_individual_package_info("rmini")
+  package_info <- with_local_install(new_lib, remote_package[["gh_repo"]], {
+    package_info <- get_individual_package_info(remote_package[["name"]])
     expect_package_info(
       package_info,
-      package_identical = "rmini",
-      version_identical = "0.0.4",
+      package_identical = remote_package[["name"]],
+      version_identical = remote_package[["version"]],
       repository_match = NA_character_,
       remotetype_identical = "github",
-      remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
+      remotepkgref_match = paste0("^", remote_package[["gh_repo"]], "$"),
       remoteref_identical = "HEAD",
-      remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+      remotesha_identical = remote_package[["sha"]]
     )
     expect_identical(
       package_info[["library"]],
@@ -238,27 +267,43 @@ test_that("get_individual_package_info collects information for packages loaded 
   testthat::skip_if_not_installed("pkgload")
   dest_dir <- normalizePath(withr::local_tempdir())
   dl <- gert::git_clone(
-    url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
+    url = remote_package[["url"]],
     path = dest_dir,
     verbose = FALSE
   )
   loaded <- pkgload::load_all(dest_dir, quiet = TRUE)
   withr::defer({
-    pkgload::unload(package = "rmini")
+    pkgload::unload(package = remote_package[["name"]])
   })
   testthat::expect_warning(
     object = {
-      package_info <- get_individual_package_info("rmini")
+      package_info <- get_individual_package_info(remote_package[["name"]])
       expect_package_info(
         package_info,
-        package_identical = "rmini",
-        version_identical = "DEV 0.0.4",
+        package_identical = remote_package[["name"]],
+        version_identical = paste("DEV", remote_package[["version"]]),
         loaded_with_pkgload_identical = TRUE,
         repository_match = NA_character_,
         remotetype_identical = "pkgload",
         remotepkgref_match = paste0("^", dest_dir, "$"),
         remoteref_identical = NA_character_,
-        remotesha_identical = NA_character_
+        remotesha_identical = NA_character_,
+        git = list(
+          repo = normalizePath(dest_dir),
+          is_git = TRUE,
+          commit = remote_package[["sha"]],
+          clean = TRUE,
+          branch = list(
+            name = remote_package[["branch"]],
+            commit = remote_package[["sha"]],
+            upstream = remote_package[["upstream"]],
+            remote_url = remote_package[["url"]],
+            up_to_date = TRUE,
+            upstream_commit = remote_package[["sha"]]
+          ),
+          changed_files = list(),
+          tags = list()
+        )
       )
       expect_identical(
         package_info[["remotepkgref"]],
@@ -275,27 +320,104 @@ test_that("get_individual_package_info collects information for packages loaded 
   testthat::skip_if_not_installed("devtools")
   dest_dir <- normalizePath(withr::local_tempdir())
   dl <- gert::git_clone(
-    url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
+    url = remote_package[["url"]],
     path = dest_dir,
     verbose = FALSE
   )
   loaded <- devtools::load_all(dest_dir, quiet = TRUE)
   withr::defer({
-    devtools::unload(package = "rmini")
+    devtools::unload(package = remote_package[["name"]])
   })
   testthat::expect_warning(
     object = {
-      package_info <- get_individual_package_info("rmini")
+      package_info <- get_individual_package_info(remote_package[["name"]])
       expect_package_info(
         package_info,
-        package_identical = "rmini",
-        version_identical = "DEV 0.0.4",
+        package_identical = remote_package[["name"]],
+        version_identical = paste("DEV", remote_package[["version"]]),
         loaded_with_pkgload_identical = TRUE,
         repository_match = NA_character_,
         remotetype_identical = "pkgload",
         remotepkgref_match = paste0("^", dest_dir, "$"),
         remoteref_identical = NA_character_,
-        remotesha_identical = NA_character_
+        remotesha_identical = NA_character_,
+        git = list(
+          repo = normalizePath(dest_dir),
+          is_git = TRUE,
+          commit = remote_package[["sha"]],
+          clean = TRUE,
+          branch = list(
+            name = remote_package[["branch"]],
+            commit = remote_package[["sha"]],
+            upstream = remote_package[["upstream"]],
+            remote_url = remote_package[["url"]],
+            up_to_date = TRUE,
+            upstream_commit = remote_package[["sha"]]
+          ),
+          changed_files = list(),
+          tags = list()
+        )
+      )
+      expect_identical(
+        package_info[["remotepkgref"]],
+        normalizePath(dest_dir)
+      )
+    },
+    "^Identifying development packages may not be accurate.$"
+  )
+})
+
+test_that("get_individual_package_info collects information for altered packages loaded with devtools correctly", { #nolint: line_length_linter
+  testthat::skip_on_cran()
+  testthat::skip_if_offline()
+  testthat::skip_if_not_installed("devtools")
+  dest_dir <- normalizePath(withr::local_tempdir())
+  dl <- gert::git_clone(
+    url = remote_package[["url"]],
+    path = dest_dir,
+    verbose = FALSE
+  )
+  testing_git_config(repo = dest_dir)
+  test_file <- file.path(dest_dir, "foo.txt")
+  writeLines("Hello, world!", con = test_file)
+  gert::git_add(files = basename(test_file), repo = normalizePath(dest_dir))
+  commit_sha <- gert::git_commit(repo = dest_dir, message = "Initial commit")
+  writeLines("Hello, testing!", con = test_file)
+  loaded <- devtools::load_all(dest_dir, quiet = TRUE)
+  withr::defer({
+    devtools::unload(package = remote_package[["name"]])
+  })
+  testthat::expect_warning(
+    object = {
+      package_info <- get_individual_package_info(remote_package[["name"]])
+      expect_package_info(
+        package_info,
+        package_identical = remote_package[["name"]],
+        version_identical = paste("DEV", remote_package[["version"]]),
+        loaded_with_pkgload_identical = TRUE,
+        repository_match = NA_character_,
+        remotetype_identical = "pkgload",
+        remotepkgref_match = paste0("^", dest_dir, "$"),
+        remoteref_identical = NA_character_,
+        remotesha_identical = NA_character_,
+        git = list(
+          repo = normalizePath(dest_dir),
+          is_git = TRUE,
+          commit = commit_sha,
+          clean = FALSE,
+          branch = list(
+            name = remote_package[["branch"]],
+            commit = commit_sha,
+            upstream = remote_package[["upstream"]],
+            remote_url = remote_package[["url"]],
+            up_to_date = FALSE,
+            upstream_commit = remote_package[["sha"]]
+          ),
+          changed_files = list(
+            foo.txt = "modified"
+          ),
+          tags = list()
+        )
       )
       expect_identical(
         package_info[["remotepkgref"]],
@@ -337,18 +459,20 @@ test_that("get_individual_package_info gets correct libpath and version of multi
   new_lib <- normalizePath(withr::local_tempdir())
   newer_lib <- normalizePath(withr::local_tempdir())
   expect_warning(
-    with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
-      with_local_install(newer_lib, "yihui/rmini@308d27d", { #nolint: nonportable_path_linter
-        package_info <- get_individual_package_info("rmini")
+    with_local_install(new_lib, remote_package[["gh_repo"]], {
+      with_local_install(newer_lib, remote_package[["gh_repo_old"]], {
+        package_info <- get_individual_package_info(remote_package[["name"]])
         expect_package_info(
           package_info,
-          package_identical = "rmini",
-          version_identical = "0.0.3", # Note: not latest version
+          package_identical = remote_package[["name"]],
+          version_identical = remote_package[["old_version"]],
           repository_match = NA_character_,
           remotetype_identical = "github",
-          remotepkgref_match = "^yihui/rmini@308d27d$", #nolint: nonportable_path_linter
-          remoteref_identical = "308d27d",
-          remotesha_identical = "308d27ddb0b45fda34fc259492145834d72849a9"
+          remotepkgref_match = paste0(
+            "^", remote_package[["gh_repo_old"]], "$"
+          ),
+          remoteref_identical = "28c716f",
+          remotesha_identical = remote_package[["old_sha"]]
         )
         expect_identical(
           package_info[["library"]],
@@ -368,18 +492,18 @@ test_that("get_individual_package_info gets correct libpath for lower search pri
   testthat::skip_if_offline()
   new_lib <- normalizePath(withr::local_tempdir())
   newer_lib <- normalizePath(withr::local_tempdir())
-  with_local_install(new_lib, "yihui/rmini", { #nolint: nonportable_path_linter
+  with_local_install(new_lib, remote_package[["gh_repo"]], {
     with_local_install(newer_lib, "digest", {
-      package_info <- get_individual_package_info("rmini")
+      package_info <- get_individual_package_info(remote_package[["name"]])
       expect_package_info(
         package_info,
-        package_identical = "rmini",
-        version_identical = "0.0.4",
+        package_identical = remote_package[["name"]],
+        version_identical = remote_package[["version"]],
         repository_match = NA_character_,
         remotetype_identical = "github",
-        remotepkgref_match = "^yihui/rmini$", #nolint: nonportable_path_linter
+        remotepkgref_match = paste0("^", remote_package[["gh_repo"]], "$"),
         remoteref_identical = "HEAD",
-        remotesha_identical = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+        remotesha_identical = remote_package[["sha"]]
       )
       expect_identical(
         package_info[["library"]],
