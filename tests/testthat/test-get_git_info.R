@@ -13,15 +13,6 @@ logger::log_appender(logger::appender_stdout)
 logger::log_threshold(logger::FATAL)
 logger::log_layout(logger::layout_simple)
 
-testing_git_config <- function(repo) {
-  gert::git_config_set(repo = repo, name = "user.name", value = "testthat")
-  gert::git_config_set(
-    repo = repo,
-    name = "user.email",
-    value = "PACTATesting@rmi.org"
-  )
-}
-
 # TESTS BEGIN
 test_that("get_git_info processes non-git-repo correctly", {
   test_dir <- withr::local_tempdir()
@@ -243,7 +234,7 @@ test_that("get_git_info processes cloned git repo", {
   testthat::skip_if_offline()
   test_dir <- normalizePath(withr::local_tempdir())
   dl <- gert::git_clone(
-    url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
+    url = remote_package[["url"]], #nolint: nonportable_path_linter
     path = test_dir,
     verbose = FALSE
   )
@@ -253,15 +244,15 @@ test_that("get_git_info processes cloned git repo", {
     list(
       repo = normalizePath(test_dir),
       is_git = TRUE,
-      commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
+      commit = remote_package[["sha"]],
       clean = TRUE,
       branch = list(
-        name = "master",
-        commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
-        upstream = "refs/remotes/origin/master", #nolint: nonportable_path_linter
-        remote_url = "https://github.com/yihui/rmini.git",
+        name = remote_package[["branch"]],
+        commit = remote_package[["sha"]],
+        upstream = remote_package[["upstream"]],
+        remote_url = remote_package[["url"]],
         up_to_date = TRUE,
-        upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+        upstream_commit = remote_package[["sha"]]
       ),
       changed_files = list(),
       tags = list()
@@ -274,7 +265,7 @@ test_that("get_git_info processes cloned git repo with local dirty", {
   testthat::skip_if_offline()
   test_dir <- normalizePath(withr::local_tempdir())
   dl <- gert::git_clone(
-    url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
+    url = remote_package[["url"]], #nolint: nonportable_path_linter
     path = test_dir,
     verbose = FALSE
   )
@@ -286,15 +277,15 @@ test_that("get_git_info processes cloned git repo with local dirty", {
     list(
       repo = normalizePath(test_dir),
       is_git = TRUE,
-      commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
+      commit = remote_package[["sha"]],
       clean = FALSE,
       branch = list(
-        name = "master",
-        commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2",
-        upstream = "refs/remotes/origin/master", #nolint: nonportable_path_linter
-        remote_url = "https://github.com/yihui/rmini.git",
+        name = remote_package[["branch"]],
+        commit = remote_package[["sha"]],
+        upstream = remote_package[["upstream"]],
+        remote_url = remote_package[["url"]],
         up_to_date = TRUE,
-        upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+        upstream_commit = remote_package[["sha"]]
       ),
       changed_files = list(
         foo.txt = "new"
@@ -309,7 +300,7 @@ test_that("get_git_info processes cloned git repo with local commit", {
   testthat::skip_if_offline()
   test_dir <- normalizePath(withr::local_tempdir())
   dl <- gert::git_clone(
-    url = "https://github.com/yihui/rmini.git", #nolint: nonportable_path_linter
+    url = remote_package[["url"]], #nolint: nonportable_path_linter
     path = test_dir,
     verbose = FALSE
   )
@@ -327,12 +318,12 @@ test_that("get_git_info processes cloned git repo with local commit", {
       commit = commit_sha,
       clean = TRUE,
       branch = list(
-        name = "master",
+        name = remote_package[["branch"]],
         commit = commit_sha,
-        upstream = "refs/remotes/origin/master", #nolint: nonportable_path_linter
-        remote_url = "https://github.com/yihui/rmini.git",
+        upstream = remote_package[["upstream"]],
+        remote_url = remote_package[["url"]],
         up_to_date = FALSE,
-        upstream_commit = "f839b7327c4cb422705b9f3b7c5ffc87555d98e2"
+        upstream_commit = remote_package[["sha"]]
       ),
       changed_files = list(),
       tags = list()
