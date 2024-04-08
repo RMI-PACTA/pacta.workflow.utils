@@ -271,7 +271,12 @@ test_that("get_individual_package_info collects information for packages loaded 
     path = dest_dir,
     verbose = FALSE
   )
-  loaded <- pkgload::load_all(dest_dir, quiet = TRUE, compile = FALSE)
+  withr::with_envvar(
+    c("_R_SHLIB_BUILD_OBJECTS_SYMBOL_TABLES_" = FALSE),
+    {
+      loaded <- pkgload::load_all(dest_dir, quiet = TRUE)
+    }
+  )
   withr::defer({
     pkgload::unload(package = "rmini")
   })
@@ -324,7 +329,7 @@ test_that("get_individual_package_info collects information for packages loaded 
     path = dest_dir,
     verbose = FALSE
   )
-  loaded <- devtools::load_all(dest_dir, quiet = TRUE, compile = FALSE)
+  loaded <- devtools::load_all(dest_dir, quiet = TRUE)
   withr::defer({
     devtools::unload(package = "rmini")
   })
