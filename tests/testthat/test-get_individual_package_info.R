@@ -329,7 +329,12 @@ test_that("get_individual_package_info collects information for packages loaded 
     path = dest_dir,
     verbose = FALSE
   )
-  loaded <- devtools::load_all(dest_dir, quiet = TRUE)
+  withr::with_envvar(
+    c("_R_SHLIB_BUILD_OBJECTS_SYMBOL_TABLES_" = FALSE),
+    {
+      loaded <- devtools::load_all(dest_dir, quiet = TRUE)
+    }
+  )
   withr::defer({
     devtools::unload(package = "rmini")
   })
@@ -388,7 +393,12 @@ test_that("get_individual_package_info collects information for altered packages
   gert::git_add(files = basename(test_file), repo = normalizePath(dest_dir))
   commit_sha <- gert::git_commit(repo = dest_dir, message = "Initial commit")
   writeLines("Hello, testing!", con = test_file)
-  loaded <- devtools::load_all(dest_dir, quiet = TRUE)
+  withr::with_envvar(
+    c("_R_SHLIB_BUILD_OBJECTS_SYMBOL_TABLES_" = FALSE),
+    {
+      loaded <- devtools::load_all(dest_dir, quiet = TRUE)
+    }
+  )
   withr::defer({
     devtools::unload(package = "rmini")
   })
