@@ -44,6 +44,7 @@ create_manifest <- function(
     input_files = get_file_metadata(input_files),
     output_files = get_file_metadata(output_files),
     params = params,
+    envirionment = get_manifest_envirionment_info(),
     manifest_creation_datetime = format.POSIXct(
       x = Sys.time(),
       format = "%F %R",
