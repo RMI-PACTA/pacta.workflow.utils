@@ -7,6 +7,6 @@ remote_package <- list(
   branch = "main",
   upstream = "refs/remotes/origin/main", #nolint: nonportable_path_linter
   url = "https://github.com/RMI-PACTA/minimal.r.package.git",
-  sha = "f31fa0e5675b675fb778e15fcf1501aecec8cf94",
+  sha = "93c4ff251bf4b4f0fe560cfe82cf5e836cdbab0d",
   old_sha = "28c716face8bbf8787c32ae392f246177f111c00"
 )
