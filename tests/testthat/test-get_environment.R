@@ -13,7 +13,7 @@ logger::log_appender(logger::appender_stdout)
 logger::log_threshold(logger::FATAL)
 logger::log_layout(logger::layout_simple)
 
-test_that("get_single_file_metadata processes CSV tables correctly", {
+test_that("get_r_session_info returns expected values", {
   expect_identical(
     get_r_session_info(),
     list(
@@ -27,6 +27,44 @@ test_that("get_single_file_metadata processes CSV tables correctly", {
   )
 })
 
-testthat::expect_null(
-  get_manifest_envirionment_info()
-)
+test_that("get_environment_info returns expected structure", {
+  suppressWarnings({ # warnings from `load_all` are expected
+    env_info <- get_manifest_envirionment_info()
+  })
+  expect_type(env_info, "list")
+  expect_named(
+    object = env_info,
+    expected = c("session", "packages")
+  )
+  expect_named(
+    object = env_info[["session"]],
+    expected = c(
+      "R.version",
+      "platform",
+      "running",
+      "locale",
+      "tzone",
+      "libPaths"
+    )
+  )
+  expect_named(
+    object = env_info[["packages"]],
+    expected = c(
+      "base",
+      "attached",
+      "loaded"
+    )
+  )
+  expect_named(
+    object = env_info[["packages"]][["base"]],
+    expected = utils::sessionInfo()[["basePkgs"]]
+  )
+  expect_named(
+    object = env_info[["packages"]][["attached"]],
+    expected = names(utils::sessionInfo()[["otherPkgs"]])
+  )
+  expect_named(
+    object = env_info[["packages"]][["loaded"]],
+    expected = names(utils::sessionInfo()[["loadedOnly"]])
+  )
+})

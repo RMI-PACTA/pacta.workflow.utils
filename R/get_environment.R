@@ -5,8 +5,11 @@
 #'
 #' @return nested list of file details, length the same as the input vector.
 get_manifest_envirionment_info <- function() {
-  #: Envvars
-  return(invisible(NULL))
+  environment_list <- list(
+    session = get_r_session_info(),
+    packages = get_package_info()
+  )
+  return(environment_list)
 }
 
 #' Get session information for manifest
