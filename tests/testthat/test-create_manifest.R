@@ -14,25 +14,6 @@ logger::log_threshold(logger::FATAL)
 logger::log_layout(logger::layout_simple)
 
 test_that("create_manifest with minimal arguments", {
-  csv_file <- withr::local_tempfile(fileext = ".csv")
-  write.csv(mtcars, csv_file, row.names = FALSE)
-  csv_info <- list(
-    file_name = basename(csv_file),
-    file_extension = "csv",
-    file_path = csv_file,
-    file_size = as.integer(file.size(csv_file)),
-    file_last_modified = format(
-      as.POSIXlt(file.mtime(csv_file), tz = "UTC"),
-      "%Y-%m-%dT%H:%M:%S+00:00"
-    ),
-    file_md5 = digest::digest(file = csv_file, algo = "md5"),
-    summary_info = list(
-      nrow = nrow(mtcars),
-      colnames = colnames(mtcars),
-      class = "data.frame"
-    )
-  )
-
   suppressWarnings({
     manifest <- create_manifest(
       input_files = NULL,
@@ -410,4 +391,3 @@ test_that("create_manifest fails with unnamed in nesting of ... arguments", {
     )
   )
 })
-

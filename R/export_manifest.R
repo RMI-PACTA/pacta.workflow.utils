@@ -25,7 +25,9 @@ export_manifest <- function(
   manifest_json <- jsonlite::toJSON(
     manifest_list,
     pretty = TRUE,
-    auto_unbox = TRUE
+    auto_unbox = TRUE,
+    null = "null",
+    na = "string"
   )
 
   logger::log_debug("Writing metadata to file: ", manifest_path)

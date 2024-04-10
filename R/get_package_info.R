@@ -84,15 +84,15 @@ get_individual_package_info <- function(packagename) {
     pkg_details <- list(
       package = pkgload::pkg_name(package_dev_dir),
       version = paste("DEV", pkgload::pkg_version(package_dev_dir)),
-      library = NA_character_,
-      library_index = NA_integer_,
-      repository = NA_character_,
-      platform = NA_character_,
-      built = NA_character_,
+      library = NULL,
+      library_index = NULL,
+      repository = NULL,
+      platform = NULL,
+      built = NULL,
       remotetype = "pkgload",
       remotepkgref = normalizePath(package_dev_dir),
-      remoteref = NA_character_,
-      remotesha = NA_character_,
+      remoteref = NULL,
+      remotesha = NULL,
       git = git_info
     )
   } else {
@@ -122,6 +122,16 @@ get_individual_package_info <- function(packagename) {
         library = lib,
         packages = packagename
       )
+    )
+    pkg_details <- lapply(
+      X = pkg_details,
+      FUN = function(x) {
+        if (is.na(x)) {
+          return(NULL)
+        } else {
+          return(x)
+        }
+      }
     )
     pkg_details[["library_index"]] <- lib_index
     if (is.null(pkg_details[["remotepkgref"]])) {
@@ -159,15 +169,5 @@ get_individual_package_info <- function(packagename) {
     remotesha = pkg_details[["remotesha"]],
     git = pkg_details[["git"]]
   )
-  clean_details_list <- lapply(
-    X = details_list,
-    FUN = function(x) {
-      if (is.null(x)) {
-        NA_character_
-      } else {
-        x
-      }
-    }
-  )
-  return(clean_details_list)
+  return(details_list)
 }
