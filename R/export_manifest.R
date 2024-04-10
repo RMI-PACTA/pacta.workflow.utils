@@ -18,7 +18,8 @@ export_manifest <- function(
   manifest_list <- create_manifest(
     input_files = input_files,
     output_files = output_files,
-    params = params
+    params = params,
+    ...
   )
 
   manifest_json <- jsonlite::toJSON(
