@@ -4,7 +4,7 @@
 \alias{export_manifest}
 \title{Export manifest file with metadata}
 \usage{
-export_manifest(manifest_path, input_files, output_files)
+export_manifest(manifest_path, input_files, output_files, params, ...)
 }
 \arguments{
 \item{manifest_path}{Path to the manifest file.}
@@ -12,6 +12,11 @@ export_manifest(manifest_path, input_files, output_files)
 \item{input_files}{List of files that are inputs to the workflow.}
 
 \item{output_files}{List of files that are outputs from the workflow.}
+
+\item{params}{List parameters used to define the workflow.}
+
+\item{...}{Nested list to be included in manifest. Passed on to
+\code{create_manifest}.}
 }
 \value{
 (invisible) JSON string with metadata manifest.

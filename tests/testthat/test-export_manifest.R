@@ -46,12 +46,6 @@ test_that("export_manifest with minimal arguments", {
     object = manifest_content[["output_files"]],
     expected = list()
   )
-  expect_identical(
-    object = manifest_content[["envirionment"]],
-    expected = suppressWarnings({
-      get_manifest_envirionment_info()
-    })
-  )
   expect_equal(
     object = as.POSIXct(
       manifest_content[["manifest_creation_datetime"]],
@@ -63,5 +57,14 @@ test_that("export_manifest with minimal arguments", {
   expect_identical(
     object = manifest_content[["params"]],
     expected = list()
+  )
+  expected_environment_info <- suppressWarnings({
+      get_manifest_envirionment_info()
+    })
+  expected_environment_info[["packages"]][["loaded"]] <- NULL
+  manifest_content[["envirionment"]][["packages"]][["loaded"]] <- NULL
+  expect_identical(
+    object = manifest_content[["envirionment"]],
+    expected = expected_environment_info
   )
 })

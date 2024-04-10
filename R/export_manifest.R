@@ -3,6 +3,9 @@
 #' @param manifest_path Path to the manifest file.
 #' @param input_files List of files that are inputs to the workflow.
 #' @param output_files List of files that are outputs from the workflow.
+#' @param params List parameters used to define the workflow.
+#' @param ... Nested list to be included in manifest. Passed on to
+#' `create_manifest`.
 #'
 #' @return (invisible) JSON string with metadata manifest.
 #'
