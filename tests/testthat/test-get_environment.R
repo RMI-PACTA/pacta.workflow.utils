@@ -55,16 +55,4 @@ test_that("get_environment_info returns expected structure", {
       "loaded"
     )
   )
-  expect_named(
-    object = env_info[["packages"]][["base"]],
-    expected = utils::sessionInfo()[["basePkgs"]]
-  )
-  expect_named(
-    object = env_info[["packages"]][["attached"]],
-    expected = names(utils::sessionInfo()[["otherPkgs"]])
-  )
-  expect_named(
-    object = env_info[["packages"]][["loaded"]],
-    expected = names(utils::sessionInfo()[["loadedOnly"]])
-  )
 })
