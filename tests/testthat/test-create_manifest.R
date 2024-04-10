@@ -19,6 +19,7 @@ test_that("create_manifest with minimal arguments", {
       input_files = NULL,
       output_files = NULL
     )
+    expected_environment_info <- get_manifest_envirionment_info()
   })
 
   expect_type(manifest, "list")
@@ -39,11 +40,15 @@ test_that("create_manifest with minimal arguments", {
     object = manifest[["output_files"]],
     expected = list()
   )
-  expect_identical(
-    object = manifest[["envirionment"]],
-    expected = suppressWarnings({
+  # loaded packages can change during testthat testing
+  expected_environment_info <- suppressWarnings({
       get_manifest_envirionment_info()
     })
+  expected_environment_info[["packages"]][["loaded"]] <- list()
+  manifest[["envirionment"]][["packages"]][["loaded"]] <- list()
+  expect_identical(
+    object = manifest[["envirionment"]],
+    expected = expected_environment_info
   )
   expect_equal(
     object = as.POSIXct(manifest[["manifest_creation_datetime"]], tz = "UTC"),

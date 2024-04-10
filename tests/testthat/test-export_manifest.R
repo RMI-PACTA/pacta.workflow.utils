@@ -58,11 +58,12 @@ test_that("export_manifest with minimal arguments", {
     object = manifest_content[["params"]],
     expected = list()
   )
+  # loaded packages can change during testthat testing
   expected_environment_info <- suppressWarnings({
       get_manifest_envirionment_info()
     })
-  expected_environment_info[["packages"]][["loaded"]] <- NULL
-  manifest_content[["envirionment"]][["packages"]][["loaded"]] <- NULL
+  expected_environment_info[["packages"]][["loaded"]] <- list()
+  manifest_content[["envirionment"]][["packages"]][["loaded"]] <- list()
   expect_identical(
     object = manifest_content[["envirionment"]],
     expected = expected_environment_info
