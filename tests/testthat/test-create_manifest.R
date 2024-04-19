@@ -42,8 +42,8 @@ test_that("create_manifest with minimal arguments", {
   )
   # loaded packages can change during testthat testing
   expected_environment_info <- suppressWarnings({
-      get_manifest_envirionment_info()
-    })
+    get_manifest_envirionment_info()
+  })
   expected_environment_info[["packages"]][["loaded"]] <- list()
   manifest[["envirionment"]][["packages"]][["loaded"]] <- list()
   expect_identical(
