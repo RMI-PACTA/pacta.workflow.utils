@@ -27,6 +27,8 @@ test_that("export_manifest with minimal arguments", {
   expect_true(file.exists(manifest_file))
   expect_gt(file.size(manifest_file), 0L)
   manifest_content <- jsonlite::fromJSON(txt = manifest_file)
+  creation_time <- as.POSIXct(Sys.time(), tz = "UTC")
+  attr(creation_time, "tzone") <- "UTC"
   expect_type(manifest_content, "list")
   expect_named(
     object = manifest_content,
@@ -51,8 +53,8 @@ test_that("export_manifest with minimal arguments", {
       manifest_content[["manifest_creation_datetime"]],
       tz = "UTC"
     ),
-    expected = as.POSIXct(Sys.time(), tz = "UTC"),
-    tolerance = 5L
+    expected = creation_time,
+    tolerance = 1L
   )
   expect_identical(
     object = manifest_content[["params"]],
