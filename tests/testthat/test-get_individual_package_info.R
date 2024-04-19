@@ -500,7 +500,7 @@ test_that("get_individual_package_info gets correct libpath for lower search pri
   new_lib <- normalizePath(withr::local_tempdir())
   newer_lib <- normalizePath(withr::local_tempdir())
   with_local_install(new_lib, remote_package[["gh_repo"]], {
-    with_local_install(newer_lib, "yihui/rmini", {
+    with_local_install(newer_lib, "yihui/rmini", { # nolint: nonportable_path_linter
       package_info <- get_individual_package_info(remote_package[["name"]])
       expect_package_info(
         package_info,
