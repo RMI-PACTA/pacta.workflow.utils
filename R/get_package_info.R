@@ -107,7 +107,7 @@ get_individual_package_info <- function(packagename) {
           "{installed_path}"
         )
         log_warn("Using installation first on the search path.")
-        warning("Multiple installations of package found.")
+        warning("Multiple installations of package:", packagename, "found.")
       }
       lib_index <- min(which(.libPaths() == installed_path)) #nolint: undesirable_function_linter
       lib <- .libPaths()[lib_index] #nolint: undesirable_function_linter
