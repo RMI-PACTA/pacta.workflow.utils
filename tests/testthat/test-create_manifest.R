@@ -51,8 +51,10 @@ test_that("create_manifest with minimal arguments", {
     expected = expected_environment_info
   )
   expect_equal(
-    object = as.POSIXct(manifest[["manifest_creation_datetime"]], tz = "UTC"),
-    expected = as.POSIXct(Sys.time(), tz = "UTC"),
+    object = as.numeric(
+      as.POSIXct(manifest[["manifest_creation_datetime"]], tz = "UTC")
+    ),
+    expected = as.numeric(as.POSIXct(Sys.time(), tz = "UTC")),
     tolerance = 5L
   )
 })
