@@ -33,6 +33,7 @@ expect_warning_if_any_pkgload <- function(object, regexp) {
 }
 
 test_that("get_package_info outputs correct structure for defaults", {
+  testthat::skip_if(covr::in_covr())
   expect_warning_if_any_pkgload(
     object = {
       package_info <- get_package_info()
