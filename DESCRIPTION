@@ -23,6 +23,7 @@ Imports:
     pkgdepends,
     pkgload
 Suggests: 
+    covr,
     devtools,
     pak,
     testthat (>= 3.0.0),
