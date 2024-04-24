@@ -81,7 +81,7 @@ get_single_file_metadata <- function(filepath) {
     )
   } else if (!is.null(contents)) {
     logger::log_trace(
-      "Only data.frame objects supported for summary information."
+      "Only data.frame and list objects supported for summary information."
     )
     summary_info <- list(
       class = class(contents)
