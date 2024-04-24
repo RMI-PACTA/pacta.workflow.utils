@@ -9,9 +9,11 @@ export_manifest(manifest_path, input_files, output_files, params, ...)
 \arguments{
 \item{manifest_path}{Path to the manifest file.}
 
-\item{input_files}{List of files that are inputs to the workflow.}
+\item{input_files}{List or vector (named or unnamed) of files that are
+inputs to the workflow. Passed to \verb{[get_file_metadata()]}.}
 
-\item{output_files}{List of files that are outputs from the workflow.}
+\item{output_files}{List or vector (named or unnamed) of files that are
+outputs from the workflow. Passed to \verb{[get_file_metadata()]}.}
 
 \item{params}{List parameters used to define the workflow.}
 
