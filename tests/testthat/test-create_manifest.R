@@ -67,10 +67,10 @@ test_that("create_manifest with works with simple file arguments", {
     file_extension = "csv",
     file_path = csv_file,
     file_size_human = format(
-      structure(as.integer(file.size(csv_file)), class = "object_size"),
+      structure(as.integer(file.size(csv_file)), class = "object_size"), # nolint: undesirable_function_linter
       units = "auto",
       standard = "SI"
-      ),
+    ),
     file_size = as.integer(file.size(csv_file)),
     file_last_modified = format(
       as.POSIXlt(file.mtime(csv_file), tz = "UTC"),
@@ -119,10 +119,10 @@ test_that("create_manifest with works with vector file arguments", {
     file_extension = "csv",
     file_path = csv_file,
     file_size_human = format(
-      structure(as.integer(file.size(csv_file)), class = "object_size"),
+      structure(as.integer(file.size(csv_file)), class = "object_size"), # nolint: undesirable_function_linter
       units = "auto",
       standard = "SI"
-      ),
+    ),
     file_size = as.integer(file.size(csv_file)),
     file_last_modified = format(
       as.POSIXlt(file.mtime(csv_file), tz = "UTC"),
@@ -143,10 +143,10 @@ test_that("create_manifest with works with vector file arguments", {
     file_extension = "rds",
     file_path = rds_file,
     file_size_human = format(
-      structure(as.integer(file.size(rds_file)), class = "object_size"),
+      structure(as.integer(file.size(rds_file)), class = "object_size"), # nolint: undesirable_function_linter
       units = "auto",
       standard = "SI"
-      ),
+    ),
     file_size = as.integer(file.size(rds_file)),
     file_last_modified = format(
       as.POSIXlt(file.mtime(rds_file), tz = "UTC"),
@@ -195,10 +195,10 @@ test_that("create_manifest with works with named vector file arguments", {
     file_extension = "csv",
     file_path = csv_file,
     file_size_human = format(
-      structure(as.integer(file.size(csv_file)), class = "object_size"),
+      structure(as.integer(file.size(csv_file)), class = "object_size"), # nolint: undesirable_function_linter
       units = "auto",
       standard = "SI"
-      ),
+    ),
     file_size = as.integer(file.size(csv_file)),
     file_last_modified = format(
       as.POSIXlt(file.mtime(csv_file), tz = "UTC"),
@@ -219,10 +219,10 @@ test_that("create_manifest with works with named vector file arguments", {
     file_extension = "rds",
     file_path = rds_file,
     file_size_human = format(
-      structure(as.integer(file.size(rds_file)), class = "object_size"),
+      structure(as.integer(file.size(rds_file)), class = "object_size"), # nolint: undesirable_function_linter
       units = "auto",
       standard = "SI"
-      ),
+    ),
     file_size = as.integer(file.size(rds_file)),
     file_last_modified = format(
       as.POSIXlt(file.mtime(rds_file), tz = "UTC"),
@@ -271,10 +271,10 @@ test_that("create_manifest with works with named list file arguments", {
     file_extension = "csv",
     file_path = csv_file,
     file_size_human = format(
-      structure(as.integer(file.size(csv_file)), class = "object_size"),
+      structure(as.integer(file.size(csv_file)), class = "object_size"), # nolint: undesirable_function_linter
       units = "auto",
       standard = "SI"
-      ),
+    ),
     file_size = as.integer(file.size(csv_file)),
     file_last_modified = format(
       as.POSIXlt(file.mtime(csv_file), tz = "UTC"),
@@ -295,10 +295,10 @@ test_that("create_manifest with works with named list file arguments", {
     file_extension = "rds",
     file_path = rds_file,
     file_size_human = format(
-      structure(as.integer(file.size(rds_file)), class = "object_size"),
+      structure(as.integer(file.size(rds_file)), class = "object_size"), # nolint: undesirable_function_linter
       units = "auto",
       standard = "SI"
-      ),
+    ),
     file_size = as.integer(file.size(rds_file)),
     file_last_modified = format(
       as.POSIXlt(file.mtime(rds_file), tz = "UTC"),

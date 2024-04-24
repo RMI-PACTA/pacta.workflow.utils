@@ -26,10 +26,10 @@ test_that("get_single_file_metadata processes CSV tables correctly", {
       file_extension = "csv",
       file_path = testfile,
       file_size_human = format(
-        structure(as.integer(file.size(testfile)), class = "object_size"),
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
         units = "auto",
         standard = "SI"
-        ),
+      ),
       file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
@@ -58,10 +58,10 @@ test_that("get_single_file_metadata processes RDS tables correctly", {
       file_extension = "rds",
       file_path = testfile,
       file_size_human = format(
-        structure(as.integer(file.size(testfile)), class = "object_size"),
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
         units = "auto",
         standard = "SI"
-        ),
+      ),
       file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
@@ -90,10 +90,10 @@ test_that("get_single_file_metadata processes RDS non-tables correctly", {
       file_extension = "rds",
       file_path = testfile,
       file_size_human = format(
-        structure(as.integer(file.size(testfile)), class = "object_size"),
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
         units = "auto",
         standard = "SI"
-        ),
+      ),
       file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
@@ -120,10 +120,10 @@ test_that("get_single_file_metadata processes txt files correctly", {
       file_extension = "txt",
       file_path = testfile,
       file_size_human = format(
-        structure(as.integer(file.size(testfile)), class = "object_size"),
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
         units = "auto",
         standard = "SI"
-        ),
+      ),
       file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
@@ -156,10 +156,10 @@ test_that("get_single_file_metadata processes lists RDS correctly", {
       file_extension = "rds",
       file_path = testfile,
       file_size_human = format(
-        structure(as.integer(file.size(testfile)), class = "object_size"),
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
         units = "auto",
         standard = "SI"
-        ),
+      ),
       file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
@@ -196,10 +196,10 @@ test_that("get_single_file_metadata processes named JSON list correctly", {
       file_extension = "JSON",
       file_path = testfile,
       file_size_human = format(
-        structure(as.integer(file.size(testfile)), class = "object_size"),
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
         units = "auto",
         standard = "SI"
-        ),
+      ),
       file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
@@ -236,10 +236,10 @@ test_that("get_single_file_metadata processes unnamed JSON list correctly", {
       file_extension = "JSON",
       file_path = testfile,
       file_size_human = format(
-        structure(as.integer(file.size(testfile)), class = "object_size"),
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
         units = "auto",
         standard = "SI"
-        ),
+      ),
       file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
@@ -276,10 +276,10 @@ test_that("get_single_file_metadata processes partially named JSON", {
       file_extension = "JSON",
       file_path = testfile,
       file_size_human = format(
-        structure(as.integer(file.size(testfile)), class = "object_size"),
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
         units = "auto",
         standard = "SI"
-        ),
+      ),
       file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
@@ -308,10 +308,10 @@ test_that("get_single_file_metadata processes JSON table correctly", {
       file_extension = "JSON",
       file_path = testfile,
       file_size_human = format(
-        structure(as.integer(file.size(testfile)), class = "object_size"),
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
         units = "auto",
         standard = "SI"
-        ),
+      ),
       file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),
@@ -340,10 +340,10 @@ test_that("get_single_file_metadata processes empty files correctly", {
       file_extension = "gitkeep",
       file_path = testfile,
       file_size_human = format(
-        structure(as.integer(file.size(testfile)), class = "object_size"),
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
         units = "auto",
         standard = "SI"
-        ),
+      ),
       file_size = as.integer(file.size(testfile)),
       file_last_modified = format(
         as.POSIXlt(test_time, tz = "UTC"),

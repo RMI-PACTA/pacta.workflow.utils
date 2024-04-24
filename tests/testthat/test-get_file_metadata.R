@@ -24,7 +24,7 @@ csv_metadata <- list(
   file_extension = "csv",
   file_path = csv_file,
   file_size_human = format(
-    structure(as.integer(file.size(csv_file)), class = "object_size"),
+    structure(as.integer(file.size(csv_file)), class = "object_size"), # nolint: undesirable_function_linter
     units = "auto",
     standard = "SI"
   ),
@@ -49,7 +49,7 @@ rds_metadata <- list(
   file_extension = "rds",
   file_path = rds_file,
   file_size_human = format(
-    structure(as.integer(file.size(rds_file)), class = "object_size"),
+    structure(as.integer(file.size(rds_file)), class = "object_size"),# nolint: undesirable_function_linter
     units = "auto",
     standard = "SI"
   ),
