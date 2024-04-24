@@ -23,6 +23,11 @@ csv_metadata <- list(
   file_name = basename(csv_file),
   file_extension = "csv",
   file_path = csv_file,
+  file_size_human = format(
+    structure(as.integer(file.size(csv_file)), class = "object_size"),
+    units = "auto",
+    standard = "SI"
+  ),
   file_size = as.integer(file.size(csv_file)),
   file_last_modified = format(
     as.POSIXlt(test_time, tz = "UTC"),
@@ -43,6 +48,11 @@ rds_metadata <- list(
   file_name = basename(rds_file),
   file_extension = "rds",
   file_path = rds_file,
+  file_size_human = format(
+    structure(as.integer(file.size(rds_file)), class = "object_size"),
+    units = "auto",
+    standard = "SI"
+  ),
   file_size = as.integer(file.size(rds_file)),
   file_last_modified = format(
     as.POSIXlt(test_time, tz = "UTC"),

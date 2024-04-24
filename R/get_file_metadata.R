@@ -48,6 +48,11 @@ get_single_file_metadata <- function(filepath) {
     file_name = file_name,
     file_extension = file_extension,
     file_path = file_path,
+    file_size_human = format(
+      structure(file_size, class = "object_size"),
+      units = "auto",
+      standard = "SI"
+    ),
     file_size = file_size,
     file_last_modified = file_last_modified,
     file_md5 = file_md5
