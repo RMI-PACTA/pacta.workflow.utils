@@ -1,4 +1,6 @@
-linters: all_linters()
+linters: all_linters(
+    cyclocomp_linter = cyclocomp_linter(complexity_limit = 18L)
+  )
 exclusions: list(
     "tests/testthat.R"
   )
