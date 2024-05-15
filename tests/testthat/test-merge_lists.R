@@ -128,7 +128,7 @@ test_that("Merging a vector can replace a list", {
   )
 })
 
-test_that("Merging non-intesecting lists works", {
+test_that("Merging non-intersecting lists works", {
   overlay <- list(
     x = "overlay string",
     y = 1.5,
@@ -161,7 +161,7 @@ test_that("Merging non-intesecting lists works", {
   )
 })
 
-test_that("Merging nested non-intesecting keys works", {
+test_that("Merging nested non-intersecting keys works", {
   overlay <- list(c = list(f = "overlay_string"))
   result <- merge_lists(
     base_list = simple_list,
@@ -181,7 +181,7 @@ test_that("Merging nested non-intesecting keys works", {
   )
 })
 
-test_that("Merging nested non-intesecting keys replaces with no recursion", {
+test_that("Merging nested non-intersecting keys replaces with no recursion", {
   overlay <- list(c = list(f = "overlay string"))
   result <- merge_lists(
     base_list = simple_list,
@@ -200,7 +200,7 @@ test_that("Merging nested non-intesecting keys replaces with no recursion", {
   )
 })
 
-test_that("Merging nested intesecting keys works", {
+test_that("Merging nested intersecting keys works", {
   overlay <- list(c = list(e = "overlay string"))
   result <- merge_lists(
     base_list = simple_list,
