@@ -15,7 +15,7 @@ merge_lists(base_list, overlay_list, recursive = TRUE)
 keys?}
 }
 \value{
-nested list of file details, length the same as the input vector.
+merged list
 }
 \description{
 This function takes two lists (\code{base} and \code{overlay}), and merges them (by

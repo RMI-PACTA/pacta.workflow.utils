@@ -14,7 +14,7 @@
 #' @param recursive Should list be merged recurisvely, or only with top level
 #' keys?
 #'
-#' @return nested list of file details, length the same as the input vector.
+#' @return merged list
 merge_lists <- function(
   base_list,
   overlay_list,
@@ -41,7 +41,7 @@ merge_lists <- function(
       stop("Lists must be named.")
     }
 
-    # begin mering logic
+    # begin merging logic
     merged_list <- base_list
     for (name in names(overlay_list)) {
       base <- base_list[[name]]
