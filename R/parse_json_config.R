@@ -35,6 +35,10 @@ inherit_params <- function(
     )
 
     to_inherit <- params[[inherit_key]]
+    if (length(to_inherit) > 1L) {
+      log_error("Multiple values in inherit key.")
+      stop("Multiple values in inherit key.")
+    }
     params[[inherit_key]] <- NULL # remove inherit key
 
     possible_paths <- file.path(
