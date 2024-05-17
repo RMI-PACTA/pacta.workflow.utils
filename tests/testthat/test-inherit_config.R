@@ -297,4 +297,52 @@ test_that("Searching across multiple directories works", {
 })
 
 
-# TODO: multiple named inheritence file
+test_that("Searching across multiple directories works", {
+  params <- list(
+    foo = 1L,
+    string = "simple params",
+    inherit = "test01"
+  )
+  first_dir <- withr::local_tempdir()
+  writeLines(
+    '{
+      "inherited_key": 2,
+      "dir": "first",
+      "some_other_key": "test01",
+      "string": "we should not see this",
+      "test01": true
+    }',
+    file.path(first_dir, "test01.json")
+  )
+  second_dir <- withr::local_tempdir()
+  writeLines(
+    '{
+      "inherited_key": 3,
+      "dir": "second",
+      "some_other_key": "secret bonus file",
+      "string": "we should not see this either",
+      "test02": true
+    }',
+    file.path(second_dir, "test01.json")
+  )
+  testthat::expect_warning(
+    {
+      results <- inherit_params(
+        params = params,
+        inheritence_search_paths = c(first_dir, second_dir)
+      )
+    },
+    regexp = "^Multiple inheritence files found.$"
+  )
+  expect_identical(
+    object = results,
+    expected = list(
+      inherited_key = 2L,
+      dir = "first", # inheriting from first_dir/test01.json
+      some_other_key = "test01",
+      string = "simple params",
+      test01 = TRUE,
+      foo = 1L
+    )
+  )
+})
