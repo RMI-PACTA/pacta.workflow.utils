@@ -10,7 +10,7 @@ on.exit({
 })
 
 logger::log_appender(logger::appender_stdout)
-logger::log_threshold(logger::TRACE)
+logger::log_threshold(logger::FATAL)
 logger::log_layout(logger::layout_simple)
 
 test_that("No inheritence", {
