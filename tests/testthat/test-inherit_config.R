@@ -134,11 +134,56 @@ test_that("Nested inheritence works", {
     )
 })
 
-# TODO: test not inheriting
-# TODO: test not inheriting (through keyname)
-# TODO: test inheriting with multiple levels
+test_that("Missing inheritence file throws error", {
+  params <- list(
+    foo = 1L,
+    string = "simple params",
+    inherit = "test01"
+  )
+  param_dir <- withr::local_tempdir()
+  testthat::expect_error(
+    inherit_params(
+      params = params,
+      inheritence_search_paths = param_dir
+    ),
+    regexp = "^Inheritence file not found.$"
+  )
+})
+
+test_that("Multiple inherit keys in params throws error", {
+  params <- list(
+    foo = 1L,
+    string = "simple params",
+    inherit = "test01",
+    inherit = "test02"
+  )
+  param_dir <- withr::local_tempdir()
+  writeLines(
+    '{
+      "inherited_key": 2,
+      "some_other_key": "test01",
+      "string": "we should not see this"
+    }',
+    file.path(param_dir, "test01.json")
+  )
+  writeLines(
+    '{
+      "inherited_key": 3,
+      "some_other_key": "test02",
+      "string": "we should not see this either"
+    }',
+    file.path(param_dir, "test02.json")
+  )
+  testthat::expect_error(
+    inherit_params(
+      params = params,
+      inheritence_search_paths = param_dir
+    ),
+    regexp = "^Multiple inheritence keys found.$"
+  )
+})
+
 # TODO: circular inheritance (do not allow!)
 # TODO: multiple directories
-# TODO: Missing inheritence file
 # TODO: multiple named inheritence file
 # TODO: multiple "inherit" keys should fail

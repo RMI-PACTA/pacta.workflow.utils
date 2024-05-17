@@ -23,6 +23,13 @@ inherit_params <- function(
   inherit_key <- "inherit"
 
   while (inherit_key %in% names(params)) {
+
+    # check for multiple inheritence keys
+    if (sum(names(params) == inherit_key) > 1L) {
+      log_error("Multiple inheritence keys found.")
+      stop("Multiple inheritence keys found.")
+    }
+
     log_trace(
       "Key \"{inherit_key}\" found in parameters. Inheriting parameters."
     )
