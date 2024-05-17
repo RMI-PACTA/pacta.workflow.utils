@@ -22,6 +22,7 @@ inherit_params <- function(
 ) {
   inherit_key <- "inherit"
 
+  inherited_files <- NULL
   while (inherit_key %in% names(params)) {
 
     # check for multiple inheritence keys
@@ -59,6 +60,14 @@ inherit_params <- function(
         log_warn("Using first file: {candidate_file}.")
       }
     }
+    if (candidate_file %in% inherited_files) {
+      log_error(
+        "Inheritence loop detected while inheriting from {candidate_file}."
+      )
+      log_error("Inherited file: {inherited_files}.")
+      stop("Inheritence loop detected.")
+    }
+    inherited_files <- c(inherited_files, candidate_file)
     log_trace("Inheriting parameters from file: {candidate_file}.")
     inherit_params <- jsonlite::fromJSON(candidate_file)
     params <- merge_lists(

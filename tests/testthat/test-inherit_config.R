@@ -215,6 +215,40 @@ test_that("Multiple values in inherit key throws error", {
   )
 })
 
+test_that("Circular inheritence throws error", {
+  params <- list(
+    foo = 1L,
+    string = "simple params",
+    inherit = "test01"
+  )
+  param_dir <- withr::local_tempdir()
+  writeLines(
+    '{
+      "inherited_key": 2,
+      "some_other_key": "test01",
+      "string": "we should not see this",
+      "inherit": "test02"
+    }',
+    file.path(param_dir, "test01.json")
+  )
+  writeLines(
+    '{
+      "inherited_key": 3,
+      "some_other_key": "test02",
+      "string": "we should not see this either",
+      "inherit": "test01"
+    }',
+    file.path(param_dir, "test02.json")
+  )
+  testthat::expect_error(
+    inherit_params(
+      params = params,
+      inheritence_search_paths = param_dir
+    ),
+    regexp = "^Inheritence loop detected.$"
+  )
+})
+
 # TODO: circular inheritance (do not allow!)
 # TODO: multiple directories
 # TODO: multiple named inheritence file
