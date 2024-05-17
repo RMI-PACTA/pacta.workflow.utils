@@ -49,7 +49,7 @@ test_that("Simple inheritence works", {
       string = "simple params",
       foo = 1L
     )
-    )
+  )
 })
 
 test_that("Simple inheritence picks the correct file", {
@@ -88,7 +88,7 @@ test_that("Simple inheritence picks the correct file", {
       string = "simple params",
       foo = 1L
     )
-    )
+  )
 })
 
 test_that("Nested inheritence works", {
@@ -131,7 +131,7 @@ test_that("Nested inheritence works", {
       test01 = TRUE,
       foo = 1L
     )
-    )
+  )
 })
 
 test_that("Missing inheritence file throws error", {
@@ -155,7 +155,7 @@ test_that("Multiple inherit keys in params throws error", {
     foo = 1L,
     string = "simple params",
     inherit = "test01",
-    inherit = "test02"
+    inherit = "test02" # nolint: duplicate_argument_linter
   )
   param_dir <- withr::local_tempdir()
   writeLines(
@@ -249,6 +249,52 @@ test_that("Circular inheritence throws error", {
   )
 })
 
-# TODO: circular inheritance (do not allow!)
-# TODO: multiple directories
+test_that("Searching across multiple directories works", {
+  params <- list(
+    foo = 1L,
+    string = "simple params",
+    inherit = "test01"
+  )
+  first_dir <- withr::local_tempdir()
+  writeLines(
+    '{
+      "inherited_key": 2,
+      "dir": "first",
+      "some_other_key": "test01",
+      "string": "we should not see this",
+      "test01": true,
+      "inherit": "test02"
+    }',
+    file.path(first_dir, "test01.json")
+  )
+  second_dir <- withr::local_tempdir()
+  writeLines(
+    '{
+      "inherited_key": 3,
+      "dir": "second",
+      "some_other_key": "test02",
+      "string": "we should not see this either",
+      "test02": true
+    }',
+    file.path(second_dir, "test02.json")
+  )
+  results <- inherit_params(
+    params = params,
+    inheritence_search_paths = c(first_dir, second_dir)
+  )
+  expect_identical(
+    object = results,
+    expected = list(
+      inherited_key = 2L,
+      dir = "first", # inheriting from first_dir/test01.json
+      some_other_key = "test01",
+      string = "simple params",
+      test02 = TRUE,
+      test01 = TRUE,
+      foo = 1L
+    )
+  )
+})
+
+
 # TODO: multiple named inheritence file

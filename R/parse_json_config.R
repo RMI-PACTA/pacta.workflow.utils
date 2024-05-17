@@ -55,7 +55,6 @@ inherit_params <- function(
         log_warn("Multiple files matching inheritence pattern found:")
         log_warn("{candidate_file}.")
         warning("Multiple inheritence files found.")
-        browser()
         candidate_file <- candidate_file[[1L]]
         log_warn("Using first file: {candidate_file}.")
       }
