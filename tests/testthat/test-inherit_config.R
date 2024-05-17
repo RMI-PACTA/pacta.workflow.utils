@@ -52,6 +52,33 @@ test_that("Simple inheritence works", {
   )
 })
 
+test_that("Only inheritence works", {
+  params <- list(
+    inherit = "test01"
+  )
+  param_dir <- withr::local_tempdir()
+  writeLines(
+    '{
+      "inherited_key": 2,
+      "some_other_key": "test01",
+      "string": "we should not see this"
+    }',
+    file.path(param_dir, "test01.json")
+  )
+  results <- inherit_params(
+    params = params,
+    inheritence_search_paths = param_dir
+  )
+  expect_identical(
+    object = results,
+    expected = list(
+      inherited_key = 2L,
+      some_other_key = "test01",
+      string = "we should not see this"
+    )
+  )
+})
+
 test_that("Simple inheritence picks the correct file", {
   params <- list(
     foo = 1L,
