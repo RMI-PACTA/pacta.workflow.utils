@@ -18,9 +18,9 @@ parse_params <- function(
   if (!is.null(schema_file)) {
     if (requireNamespace("jsonvalidate", quietly = TRUE)) {
       log_trace("Validating parameters.")
-      validator <- jsonvalidate::json_schema[["new"]](schema = schema_file)
-      validation_results <- validator[["validate"]](
+      validation_results <- jsonvalidate::json_validate(
         json = jsonlite::toJSON(full_params, auto_unbox = TRUE),
+        schema = schema_file,
         verbose = TRUE
       )
       if (validation_results) {
@@ -114,7 +114,7 @@ pretty_log_jsonvalidate_errors <- function(
     return(NULL)
   }
   for (row in seq(1L, nrow(errors))) {
-    logging_function("JSON Validation Error ({row} / {nrow(errors)}):")
+    logging_function("JSON Validation ({row} / {nrow(errors)}):")
     logging_function("  Keyword: {errors[[row, 'keyword']]}")
     logging_function("  instancePath: {errors[[row, 'instancePath']]}")
     logging_function("  schemaPath: {errors[[row, 'schemaPath']]}")
