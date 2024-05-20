@@ -175,11 +175,11 @@ test_that("No inheritence, pass as string, failing validation works", {
   }'
   testthat::expect_error(
     object = {
-    parse_params(
-      json = json_string,
-      schema_file = schema_file
-    )
-  },
-  regexp = "^JSON Validation failed.$"
+      parse_params(
+        json = json_string,
+        schema_file = schema_file
+      )
+    },
+    regexp = "^JSON Validation failed.$"
   )
 })
