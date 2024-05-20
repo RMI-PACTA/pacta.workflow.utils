@@ -108,22 +108,17 @@ inherit_params <- function(
 pretty_log_jsonvalidate_errors <- function(
   validation_object,
   logging_function = log_error
-  ) {
+) {
   errors <- attr(validation_object, "errors")
   if (length(errors) == 0L) {
     return(NULL)
   }
-  for (row in seq(1, nrow(errors))) {
-    error <- errors[row, ]
-    error_message <- error[["message"]]
-    instance_path <- error[["instancePath"]]
-    keyword <- error[["keyword"]]
-    schema_path <- error[["schemaPath"]]
+  for (row in seq(1L, nrow(errors))) {
     logging_function("JSON Validation Error ({row} / {nrow(errors)}):")
-    logging_function("  Keyword: {keyword}")
-    logging_function("  instancePath: {instance_path}")
-    logging_function("  schemaPath: {schema_path}")
-    logging_function("  Message: {error_message}")
+    logging_function("  Keyword: {errors[[row, 'keyword']]}")
+    logging_function("  instancePath: {errors[[row, 'instancePath']]}")
+    logging_function("  schemaPath: {errors[[row, 'schemaPath']]}")
+    logging_function("  Message: {errors[[row, 'message']]}")
   }
   return(errors)
 }
