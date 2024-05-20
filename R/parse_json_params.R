@@ -1,6 +1,7 @@
 parse_params <- function(
   json,
-  inheritence_search_paths = NULL
+  inheritence_search_paths = NULL,
+  schema_file = NULL
 ) {
   log_trace("Parsing params.")
   if (file.exists(json)) {
@@ -13,6 +14,31 @@ parse_params <- function(
     raw_params,
     inheritence_search_paths
   )
+
+  if (!is.null(schema_file)) {
+    if (requireNamespace("jsonvalidate", quietly = TRUE)) {
+      log_trace("Validating parameters.")
+      validator <- jsonvalidate::json_schema[["new"]](schema = schema_file)
+      validation_results <- validator[["validate"]](
+        json = jsonlite::toJSON(full_params, auto_unbox = TRUE),
+        verbose = TRUE
+      )
+      if (validation_results) {
+        log_trace("Validation successful.")
+      } else {
+        log_error("Validation against JSON Schema failed.")
+        log_error("Schema file: {schema_file}")
+        pretty_log_jsonvalidate_errors(validation_results)
+        stop("JSON Validation failed.")
+      }
+    } else {
+      log_error("jsonvalidate package not found.")
+      stop("jsonvalidate package not found.")
+    }
+  } else {
+    log_trace("No JSON Schema provided. Skipping validation.")
+  }
+
   return(full_params)
 }
 
@@ -77,4 +103,27 @@ inherit_params <- function(
 
   log_trace("No inheritence key (\"{inherit_key}\") found.")
   return(params)
+}
+
+pretty_log_jsonvalidate_errors <- function(
+  validation_object,
+  logging_function = log_error
+  ) {
+  errors <- attr(validation_object, "errors")
+  if (length(errors) == 0L) {
+    return(NULL)
+  }
+  for (row in seq(1, nrow(errors))) {
+    error <- errors[row, ]
+    error_message <- error[["message"]]
+    instance_path <- error[["instancePath"]]
+    keyword <- error[["keyword"]]
+    schema_path <- error[["schemaPath"]]
+    logging_function("JSON Validation Error ({row} / {nrow(errors)}):")
+    logging_function("  Keyword: {keyword}")
+    logging_function("  instancePath: {instance_path}")
+    logging_function("  schemaPath: {schema_path}")
+    logging_function("  Message: {error_message}")
+  }
+  return(errors)
 }

@@ -110,3 +110,76 @@ test_that("Simple inheritence, pass as file", {
     )
   )
 })
+
+product_schema <- '{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Product",
+  "description": "A product from Acme\'s catalog",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "The unique identifier for a product",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the product",
+      "type": "string"
+    },
+    "price": {
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMinimum": true
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "required": ["id", "name", "price"]
+}'
+schema_dir <- withr::local_tempdir()
+schema_file <- file.path(schema_dir, "product.json")
+writeLines(product_schema, schema_file)
+
+test_that("No inheritence, pass as string, validation works", {
+  json_string <- '{
+    "id": 1,
+    "name": "A green door",
+    "price": 12.50,
+    "tags": ["home", "green"]
+  }'
+  results <- parse_params(
+    json = json_string,
+    schema_file = schema_file
+  )
+  expect_identical(
+    object = results,
+    expected = list(
+      id = 1L,
+      name = "A green door",
+      price = 12.5,
+      tags = c("home", "green")
+    )
+  )
+})
+
+test_that("No inheritence, pass as string, failing validation works", {
+  json_string <- '{
+    "id": 1.5,
+    "price": 12.50,
+    "tags": ["home", "green"]
+  }'
+  testthat::expect_error(
+    object = {
+    parse_params(
+      json = json_string,
+      schema_file = schema_file
+    )
+  },
+  regexp = "^JSON Validation failed.$"
+  )
+})
