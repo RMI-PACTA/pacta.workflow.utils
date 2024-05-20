@@ -183,3 +183,26 @@ test_that("No inheritence, pass as string, failing validation works", {
     regexp = "^JSON Validation failed.$"
   )
 })
+
+test_that("simple inheritence, pass as string, validation works", {
+  json_string <- '{
+    "id": 1,
+    "price": 12.50,
+    "inherit": "base01"
+  }'
+  results <- parse_params(
+    json = json_string,
+    inheritence_search_paths = base_params_dir,
+    schema_file = schema_file
+  )
+  expect_identical(
+    object = results,
+    expected = list(
+      name = "A green door",
+      tags = c("home", "green"),
+      supplier = "ACME Doors",
+      id = 1L,
+      price = 12.5
+    )
+  )
+})
