@@ -72,7 +72,7 @@ test_that("Simple inheritence, pass as string", {
     "inherit": "base01"
   }'
   results <- parse_params(
-    JSON = json_string,
+    json = json_string,
     inheritence_search_paths = base_params_dir
   )
   expect_identical(
@@ -96,7 +96,7 @@ test_that("Simple inheritence, pass as file", {
   json_file <- withr::local_tempfile(fileext = ".json")
   writeLines(json_string, json_file)
   results <- parse_params(
-    JSON = json_file,
+    json = json_file,
     inheritence_search_paths = base_params_dir
   )
   expect_identical(

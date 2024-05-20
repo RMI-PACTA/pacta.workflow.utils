@@ -1,14 +1,14 @@
 parse_params <- function(
-  JSON,
+  json,
   inheritence_search_paths = NULL
 ) {
   log_trace("Parsing params.")
-  if (file.exists(JSON)) {
-    log_trace("Reading params from file: {JSON}.}")
+  if (file.exists(json)) {
+    log_trace("Reading params from file: {json}.}")
   } else {
     log_trace("Reading params from string.")
   }
-  raw_params <- jsonlite::fromJSON(JSON)
+  raw_params <- jsonlite::fromJSON(json)
   full_params <- inherit_params(
     raw_params,
     inheritence_search_paths
