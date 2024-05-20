@@ -54,7 +54,7 @@ test_that("No inheritence, pass as file", {
   )
 })
 
-test_that("No inheritence, pass string to command args", {
+test_that("No inheritence, pass oneline string to command args", {
   json_string <- '{
       "id": 1,
       "name": "A green door",
@@ -62,7 +62,6 @@ test_that("No inheritence, pass string to command args", {
       "tags": ["home", "green"]
     }' |>
     gsub(pattern = "\\s{2,}", replacement = "", x = _) # Note _ instead of . for base pipe
-
   results <- run_with_cmd_args(
       code = "pacta.workflow.utils:::parse_params(commandArgs())",
       cmdargs = json_string
@@ -78,7 +77,51 @@ test_that("No inheritence, pass string to command args", {
   )
 })
 
+test_that("No inheritence, pass filepath to command args", {
+  json_string <- '{
+      "id": 1,
+      "name": "A green door",
+      "price": 12.50,
+      "tags": ["home", "green"]
+  }'
+  json_file <- withr::local_tempfile(fileext = ".json")
+  writeLines(json_string, json_file)
+  results <- run_with_cmd_args(
+      code = "pacta.workflow.utils:::parse_params(commandArgs())",
+      cmdargs = json_file
+  )
+  expect_identical(
+    object = results,
+    expected = list(
+      id = 1L,
+      name = "A green door",
+      price = 12.5,
+      tags = c("home", "green")
+    )
+  )
+})
 
+test_that("No inheritence, pass multiline string to command args", {
+  json_string <- '{
+      "id": 1,
+      "name": "A green door",
+      "price": 12.50,
+      "tags": ["home", "green"]
+  }'
+  results <- run_with_cmd_args(
+      code = "pacta.workflow.utils:::parse_params(commandArgs())",
+      cmdargs = json_string
+  )
+  expect_identical(
+    object = results,
+    expected = list(
+      id = 1L,
+      name = "A green door",
+      price = 12.5,
+      tags = c("home", "green")
+    )
+  )
+})
 
 base_params_dir <- withr::local_tempdir()
 base_01_string <- '{
