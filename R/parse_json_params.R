@@ -1,6 +1,6 @@
 parse_params <- function(
   JSON,
-  inheritence_search_paths
+  inheritence_search_paths = NULL
 ) {
   log_trace("Parsing params.")
   if (file.exists(JSON)) {
