@@ -4,7 +4,7 @@ parse_params <- function(
   schema_file = NULL
 ) {
   log_trace("Parsing params.")
-  if (file.exists(json)) {
+  if (length(json) == 1L && file.exists(json)) {
     log_trace("Reading params from file: {json}.}")
   } else {
     log_trace("Reading params from string.")
