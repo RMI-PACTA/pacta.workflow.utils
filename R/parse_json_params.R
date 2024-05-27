@@ -21,7 +21,8 @@ parse_params <- function(
       validation_results <- jsonvalidate::json_validate(
         json = jsonlite::toJSON(full_params, auto_unbox = TRUE),
         schema = schema_file,
-        verbose = TRUE
+        verbose = TRUE,
+        engine = "ajv"
       )
       if (validation_results) {
         log_trace("Validation successful.")
