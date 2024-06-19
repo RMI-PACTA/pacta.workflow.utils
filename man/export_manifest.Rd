@@ -4,7 +4,14 @@
 \alias{export_manifest}
 \title{Export manifest file with metadata}
 \usage{
-export_manifest(manifest_path, input_files, output_files, params, ...)
+export_manifest(
+  manifest_path,
+  input_files,
+  output_files,
+  params,
+  ...,
+  file_summary_info = FALSE
+)
 }
 \arguments{
 \item{manifest_path}{Path to the manifest file.}
@@ -17,7 +24,10 @@ outputs from the workflow. Passed to \verb{[get_file_metadata()]}.}
 
 \item{params}{List parameters used to define the workflow.}
 
-\item{...}{Nested list to be included in manifest. Passed on to
+\item{...}{Nested (named) lists to be included in manifest. Passed on to}
+
+\item{file_summary_info}{Logical. If \code{TRUE}, include file summary
+information.
 \code{create_manifest}.}
 }
 \value{

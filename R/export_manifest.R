@@ -6,7 +6,9 @@
 #' @param output_files List or vector (named or unnamed) of files that are
 #' outputs from the workflow. Passed to `[get_file_metadata()]`.
 #' @param params List parameters used to define the workflow.
-#' @param ... Nested list to be included in manifest. Passed on to
+#' @param ... Nested (named) lists to be included in manifest. Passed on to
+#' @param file_summary_info Logical. If `TRUE`, include file summary
+#' information.
 #' `create_manifest`.
 #'
 #' @return (invisible) JSON string with metadata manifest.
