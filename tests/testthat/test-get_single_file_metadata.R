@@ -18,7 +18,7 @@ test_that("get_single_file_metadata processes CSV tables correctly", {
   write.csv(mtcars, testfile, row.names = FALSE)
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
-  metadata <- get_single_file_metadata(testfile)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(
@@ -50,7 +50,7 @@ test_that("get_single_file_metadata processes RDS tables correctly", {
   saveRDS(mtcars, testfile)
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
-  metadata <- get_single_file_metadata(testfile)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(
@@ -82,7 +82,7 @@ test_that("get_single_file_metadata processes RDS non-tables correctly", {
   saveRDS("This is a string", testfile)
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
-  metadata <- get_single_file_metadata(testfile)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(
@@ -112,7 +112,7 @@ test_that("get_single_file_metadata processes txt files correctly", {
   writeLines("This is a string", testfile)
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
-  metadata <- get_single_file_metadata(testfile)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(
@@ -148,7 +148,7 @@ test_that("get_single_file_metadata processes lists RDS correctly", {
   saveRDS(test_list, testfile)
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
-  metadata <- get_single_file_metadata(testfile)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(
@@ -188,7 +188,7 @@ test_that("get_single_file_metadata processes named JSON list correctly", {
   jsonlite::write_json(test_list, testfile, auto_unbox = TRUE)
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
-  metadata <- get_single_file_metadata(testfile)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(
@@ -228,7 +228,7 @@ test_that("get_single_file_metadata processes unnamed JSON list correctly", {
   jsonlite::write_json(test_list, testfile, auto_unbox = TRUE)
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
-  metadata <- get_single_file_metadata(testfile)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(
@@ -268,7 +268,7 @@ test_that("get_single_file_metadata processes partially named JSON", {
   jsonlite::write_json(test_list, testfile, auto_unbox = TRUE)
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
-  metadata <- get_single_file_metadata(testfile)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(
@@ -300,7 +300,7 @@ test_that("get_single_file_metadata processes JSON table correctly", {
   jsonlite::write_json(mtcars, testfile, auto_unbox = TRUE)
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
-  metadata <- get_single_file_metadata(testfile)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(
@@ -332,7 +332,7 @@ test_that("get_single_file_metadata processes empty files correctly", {
   file.create(testfile)
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
-  metadata <- get_single_file_metadata(testfile)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(

@@ -33,11 +33,16 @@ csv_metadata <- list(
     as.POSIXlt(test_time, tz = "UTC"),
     "%Y-%m-%dT%H:%M:%S+00:00"
   ),
-  file_md5 = digest::digest(csv_file, algo = "md5", file = TRUE),
-  summary_info = list(
-    nrow = 32L,
-    colnames = colnames(mtcars),
-    class = "data.frame"
+  file_md5 = digest::digest(csv_file, algo = "md5", file = TRUE)
+)
+csv_metadata_summary <- c(
+  csv_metadata,
+  list(
+    summary_info = list(
+      nrow = 32L,
+      colnames = colnames(mtcars),
+      class = "data.frame"
+    )
   )
 )
 
@@ -58,11 +63,16 @@ rds_metadata <- list(
     as.POSIXlt(test_time, tz = "UTC"),
     "%Y-%m-%dT%H:%M:%S+00:00"
   ),
-  file_md5 = digest::digest(rds_file, algo = "md5", file = TRUE),
-  summary_info = list(
-    nrow = 32L,
-    colnames = colnames(mtcars),
-    class = "data.frame"
+  file_md5 = digest::digest(rds_file, algo = "md5", file = TRUE)
+)
+rds_metadata_summary <- c(
+  rds_metadata,
+  list(
+    summary_info = list(
+      nrow = 32L,
+      colnames = colnames(mtcars),
+      class = "data.frame"
+    )
   )
 )
 
