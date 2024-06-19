@@ -87,7 +87,8 @@ test_that("create_manifest with works with simple file arguments", {
   suppressWarnings({
     manifest <- create_manifest(
       input_files = csv_file,
-      output_files = csv_file
+      output_files = csv_file,
+      file_summary_info = TRUE
     )
   })
 
@@ -163,7 +164,8 @@ test_that("create_manifest with works with vector file arguments", {
   suppressWarnings({
     manifest <- create_manifest(
       input_files = c(csv_file, rds_file),
-      output_files = c(csv_file, rds_file)
+      output_files = c(csv_file, rds_file),
+      file_summary_info = TRUE
     )
   })
 
@@ -239,7 +241,8 @@ test_that("create_manifest with works with named vector file arguments", {
   suppressWarnings({
     manifest <- create_manifest(
       input_files = c(foo = csv_file, bar = rds_file),
-      output_files = NULL
+      output_files = NULL,
+      file_summary_info = TRUE
     )
   })
 
@@ -315,7 +318,8 @@ test_that("create_manifest with works with named list file arguments", {
   suppressWarnings({
     manifest <- create_manifest(
       input_files = list(foo = csv_file, bar = rds_file),
-      output_files = NULL
+      output_files = NULL,
+      file_summary_info = TRUE
     )
   })
 
@@ -344,7 +348,8 @@ test_that("create_manifest works with simple ... arguments", {
     manifest <- create_manifest(
       input_files = NULL,
       output_files = NULL,
-      params = list(foo = "bar")
+      params = list(foo = "bar"),
+      file_summary_info = TRUE
     )
   })
   expect_type(manifest, "list")
@@ -376,7 +381,8 @@ test_that("create_manifest works with nested ... arguments", {
           quux = 3.14159
         ),
         grault = "garply"
-      )
+      ),
+      file_summary_info = TRUE
     )
   })
   expect_type(manifest, "list")
