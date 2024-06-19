@@ -17,14 +17,16 @@ export_manifest <- function(
   input_files,
   output_files,
   params,
-  ...
+  ...,
+  file_summary_info = FALSE
 ) {
 
   manifest_list <- create_manifest(
     input_files = input_files,
     output_files = output_files,
     params = params,
-    ...
+    ...,
+    file_summary_info = file_summary_info
   )
 
   manifest_json <- jsonlite::toJSON(
@@ -46,7 +48,8 @@ export_manifest <- function(
 create_manifest <- function(
   input_files,
   output_files,
-  ...
+  ...,
+  file_summary_info = FALSE
 ) {
   log_debug("Creating metadata manifest")
   log_trace("Checking ... arguments")
@@ -55,8 +58,14 @@ create_manifest <- function(
     clean_args <- check_arg_type(args_list)
   }
   manifest_list <- list(
-    input_files = get_file_metadata(input_files),
-    output_files = get_file_metadata(output_files),
+    input_files = get_file_metadata(
+      input_files,
+      summary_info = file_summary_info
+    ),
+    output_files = get_file_metadata(
+      output_files,
+      summary_info = file_summary_info
+    ),
     envirionment = get_manifest_envirionment_info(),
     manifest_creation_datetime = format.POSIXct(
       x = Sys.time(),
