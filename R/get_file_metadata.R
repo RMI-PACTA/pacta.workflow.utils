@@ -114,6 +114,8 @@ get_single_file_metadata <- function(
     if (exists("summary_info")) {
       file_metadata[["summary_info"]] <- summary_info
     }
+  } else {
+    logger::log_trace("Skipping summary information for file: \"{filepath}\".")
   }
 
   return(file_metadata)
