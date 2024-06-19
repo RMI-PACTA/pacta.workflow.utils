@@ -4,10 +4,13 @@
 \alias{get_file_metadata}
 \title{Get Metadata for a vector of filepaths}
 \usage{
-get_file_metadata(filepaths)
+get_file_metadata(filepaths, summary_info = FALSE)
 }
 \arguments{
 \item{filepaths}{vector of filepaths}
+
+\item{summary_info}{logical, whether to include summary information
+(nrow/length, colnames/names, class)}
 }
 \value{
 nested list of file details, length the same as the input vector.
