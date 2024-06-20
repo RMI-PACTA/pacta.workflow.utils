@@ -78,50 +78,65 @@ rds_metadata_summary <- c(
 
 # TESTS BEGIN
 test_that("get_file_metadata processes single files correctly", {
-  metadata <- get_file_metadata(csv_file)
+  metadata <- get_file_metadata(
+    csv_file,
+    summary_info = TRUE
+  )
   expect_identical(
     metadata,
     list(
-      csv_metadata
+      csv_metadata_summary
     )
   )
 })
 
 test_that("get_file_metadata processes a vector of files correctly", {
-  metadata <- get_file_metadata(c(csv_file, rds_file))
+  metadata <- get_file_metadata(
+    c(csv_file, rds_file),
+    summary_info = TRUE
+  )
   expect_identical(
     metadata,
     list(
-      csv_metadata,
-      rds_metadata
+      csv_metadata_summary,
+      rds_metadata_summary
     )
   )
 })
 
 test_that("get_file_metadata processes a list of files correctly", {
-  metadata <- get_file_metadata(list(csv_file, rds_file))
+  metadata <- get_file_metadata(
+    list(csv_file, rds_file),
+    summary_info = TRUE
+  )
   expect_identical(
     metadata,
     list(
-      csv_metadata,
-      rds_metadata
+      csv_metadata_summary,
+      rds_metadata_summary
     )
   )
 })
 
 test_that("get_file_metadata respects input order", {
-  metadata <- get_file_metadata(c(rds_file, csv_file))
+  metadata <- get_file_metadata(
+    c(rds_file, csv_file),
+    summary_info = TRUE
+  )
   expect_identical(
     metadata,
     list(
-      rds_metadata,
-      csv_metadata
+      rds_metadata_summary,
+      csv_metadata_summary
     )
   )
 })
 
 test_that("get_file_metadata returns an empty list on empty input", {
-  metadata <- get_file_metadata(list())
+  metadata <- get_file_metadata(
+    list(),
+    summary_info = TRUE
+  )
   expect_identical(
     metadata,
     list()
@@ -129,7 +144,10 @@ test_that("get_file_metadata returns an empty list on empty input", {
 })
 
 test_that("get_file_metadata returns an empty list on NULL input", {
-  metadata <- get_file_metadata(NULL)
+  metadata <- get_file_metadata(
+    NULL,
+    summary_info = TRUE
+  )
   expect_identical(
     metadata,
     list()
@@ -144,7 +162,7 @@ test_that("missing files raise an error", {
   )
 })
 
-test_that("get_single_file_metadata without argument raises an error", {
+test_that("get_file_metadata without argument raises an error", {
   expect_error(
     object = get_file_metadata()
   )

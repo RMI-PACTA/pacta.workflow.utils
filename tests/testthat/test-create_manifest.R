@@ -17,7 +17,8 @@ test_that("create_manifest with minimal arguments", {
   suppressWarnings({
     manifest <- create_manifest(
       input_files = NULL,
-      output_files = NULL
+      output_files = NULL,
+      file_summary_info = TRUE
     )
     expected_environment_info <- get_manifest_envirionment_info()
   })

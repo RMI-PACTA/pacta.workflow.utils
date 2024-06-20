@@ -20,7 +20,8 @@ test_that("export_manifest with minimal arguments", {
       manifest_path = manifest_file,
       input_files = NULL,
       output_files = NULL,
-      params = list()
+      params = list(),
+      file_summary_info = TRUE
     )
   })
 
