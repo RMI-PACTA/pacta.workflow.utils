@@ -79,6 +79,17 @@ rds_metadata_summary <- c(
 # TESTS BEGIN
 test_that("get_file_metadata processes single files correctly", {
   metadata <- get_file_metadata(
+    csv_file
+  )
+  expect_identical(
+    metadata,
+    list(
+      csv_metadata
+    )
+  )
+})
+test_that("get_file_metadata processes single files with summary", {
+  metadata <- get_file_metadata(
     csv_file,
     summary_info = TRUE
   )
@@ -91,6 +102,19 @@ test_that("get_file_metadata processes single files correctly", {
 })
 
 test_that("get_file_metadata processes a vector of files correctly", {
+  metadata <- get_file_metadata(
+    c(csv_file, rds_file)
+  )
+  expect_identical(
+    metadata,
+    list(
+      csv_metadata,
+      rds_metadata
+    )
+  )
+})
+
+test_that("get_file_metadata processes a vector of files with summary", {
   metadata <- get_file_metadata(
     c(csv_file, rds_file),
     summary_info = TRUE
@@ -105,6 +129,19 @@ test_that("get_file_metadata processes a vector of files correctly", {
 })
 
 test_that("get_file_metadata processes a list of files correctly", {
+  metadata <- get_file_metadata(
+    list(csv_file, rds_file),
+  )
+  expect_identical(
+    metadata,
+    list(
+      csv_metadata,
+      rds_metadata
+    )
+  )
+})
+
+test_that("get_file_metadata processes a list of files with summary", {
   metadata <- get_file_metadata(
     list(csv_file, rds_file),
     summary_info = TRUE
