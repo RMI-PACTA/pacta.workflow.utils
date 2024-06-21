@@ -209,7 +209,10 @@ test_that("export_manifest with files with summary info", {
 
   expect_true(file.exists(manifest_file))
   expect_gt(file.size(manifest_file), 0L)
-  manifest_content <- jsonlite::fromJSON(txt = manifest_file, simplifyDataFrame = FALSE)
+  manifest_content <- jsonlite::fromJSON(
+    txt = manifest_file,
+    simplifyDataFrame = FALSE
+  )
   creation_time <- as.POSIXct(Sys.time(), tz = "UTC")
   attr(creation_time, "tzone") <- "UTC"
   expect_type(manifest_content, "list")
@@ -313,4 +316,3 @@ test_that("export_manifest with files", {
     expected = expected_environment_info
   )
 })
-

@@ -130,7 +130,7 @@ test_that("get_file_metadata processes a vector of files with summary", {
 
 test_that("get_file_metadata processes a list of files correctly", {
   metadata <- get_file_metadata(
-    list(csv_file, rds_file),
+    list(csv_file, rds_file)
   )
   expect_identical(
     metadata,
