@@ -17,7 +17,8 @@ test_that("create_manifest with minimal arguments", {
   suppressWarnings({
     manifest <- create_manifest(
       input_files = NULL,
-      output_files = NULL
+      output_files = NULL,
+      file_summary_info = TRUE
     )
     expected_environment_info <- get_manifest_envirionment_info()
   })
@@ -76,6 +77,53 @@ test_that("create_manifest with works with simple file arguments", {
       as.POSIXlt(file.mtime(csv_file), tz = "UTC"),
       "%Y-%m-%dT%H:%M:%S+00:00"
     ),
+    file_md5 = digest::digest(file = csv_file, algo = "md5")
+  )
+
+  suppressWarnings({
+    manifest <- create_manifest(
+      input_files = csv_file,
+      output_files = csv_file
+    )
+  })
+
+  expect_type(manifest, "list")
+  expect_named(
+    object = manifest,
+    expected = c(
+      "input_files",
+      "output_files",
+      "envirionment",
+      "manifest_creation_datetime"
+    )
+  )
+  expect_identical(
+    object = manifest[["input_files"]],
+    expected = list(csv_info)
+  )
+  expect_identical(
+    object = manifest[["output_files"]],
+    expected = list(csv_info)
+  )
+})
+
+test_that("create_manifest with works with simple file arguments and summary", {
+  csv_file <- withr::local_tempfile(fileext = ".csv")
+  write.csv(mtcars, csv_file, row.names = FALSE)
+  csv_info <- list(
+    file_name = basename(csv_file),
+    file_extension = "csv",
+    file_path = csv_file,
+    file_size_human = format(
+      structure(as.integer(file.size(csv_file)), class = "object_size"), # nolint: undesirable_function_linter
+      units = "auto",
+      standard = "SI"
+    ),
+    file_size = as.integer(file.size(csv_file)),
+    file_last_modified = format(
+      as.POSIXlt(file.mtime(csv_file), tz = "UTC"),
+      "%Y-%m-%dT%H:%M:%S+00:00"
+    ),
     file_md5 = digest::digest(file = csv_file, algo = "md5"),
     summary_info = list(
       nrow = nrow(mtcars),
@@ -87,7 +135,8 @@ test_that("create_manifest with works with simple file arguments", {
   suppressWarnings({
     manifest <- create_manifest(
       input_files = csv_file,
-      output_files = csv_file
+      output_files = csv_file,
+      file_summary_info = TRUE
     )
   })
 
@@ -163,7 +212,8 @@ test_that("create_manifest with works with vector file arguments", {
   suppressWarnings({
     manifest <- create_manifest(
       input_files = c(csv_file, rds_file),
-      output_files = c(csv_file, rds_file)
+      output_files = c(csv_file, rds_file),
+      file_summary_info = TRUE
     )
   })
 
@@ -239,7 +289,8 @@ test_that("create_manifest with works with named vector file arguments", {
   suppressWarnings({
     manifest <- create_manifest(
       input_files = c(foo = csv_file, bar = rds_file),
-      output_files = NULL
+      output_files = NULL,
+      file_summary_info = TRUE
     )
   })
 
@@ -315,7 +366,8 @@ test_that("create_manifest with works with named list file arguments", {
   suppressWarnings({
     manifest <- create_manifest(
       input_files = list(foo = csv_file, bar = rds_file),
-      output_files = NULL
+      output_files = NULL,
+      file_summary_info = TRUE
     )
   })
 
@@ -344,7 +396,8 @@ test_that("create_manifest works with simple ... arguments", {
     manifest <- create_manifest(
       input_files = NULL,
       output_files = NULL,
-      params = list(foo = "bar")
+      params = list(foo = "bar"),
+      file_summary_info = TRUE
     )
   })
   expect_type(manifest, "list")
@@ -376,7 +429,8 @@ test_that("create_manifest works with nested ... arguments", {
           quux = 3.14159
         ),
         grault = "garply"
-      )
+      ),
+      file_summary_info = TRUE
     )
   })
   expect_type(manifest, "list")

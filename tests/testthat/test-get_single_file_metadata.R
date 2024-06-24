@@ -35,6 +35,33 @@ test_that("get_single_file_metadata processes CSV tables correctly", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
+      file_md5 = digest::digest(testfile, algo = "md5", file = TRUE)
+    )
+  )
+})
+
+test_that("get_single_file_metadata processes CSV tables with summary info", {
+  testfile <- withr::local_tempfile(fileext = ".csv")
+  write.csv(mtcars, testfile, row.names = FALSE)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(testfile, test_time)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(testfile),
+      file_extension = "csv",
+      file_path = testfile,
+      file_size_human = format(
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
+        units = "auto",
+        standard = "SI"
+      ),
+      file_size = as.integer(file.size(testfile)),
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
       file_md5 = digest::digest(testfile, algo = "md5", file = TRUE),
       summary_info = list(
         nrow = 32L,
@@ -67,6 +94,33 @@ test_that("get_single_file_metadata processes RDS tables correctly", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
+      file_md5 = digest::digest(testfile, algo = "md5", file = TRUE)
+    )
+  )
+})
+
+test_that("get_single_file_metadata processes RDS tables with summary info", {
+  testfile <- withr::local_tempfile(fileext = ".rds")
+  saveRDS(mtcars, testfile)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(testfile, test_time)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(testfile),
+      file_extension = "rds",
+      file_path = testfile,
+      file_size_human = format(
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
+        units = "auto",
+        standard = "SI"
+      ),
+      file_size = as.integer(file.size(testfile)),
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
       file_md5 = digest::digest(testfile, algo = "md5", file = TRUE),
       summary_info = list(
         nrow = 32L,
@@ -83,6 +137,33 @@ test_that("get_single_file_metadata processes RDS non-tables correctly", {
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
   metadata <- get_single_file_metadata(testfile)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(testfile),
+      file_extension = "rds",
+      file_path = testfile,
+      file_size_human = format(
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
+        units = "auto",
+        standard = "SI"
+      ),
+      file_size = as.integer(file.size(testfile)),
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
+      file_md5 = digest::digest(testfile, algo = "md5", file = TRUE)
+    )
+  )
+})
+
+test_that("get_single_file_metadata processes RDS non-tables with summary", {
+  testfile <- withr::local_tempfile(fileext = ".rds")
+  saveRDS("This is a string", testfile)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(testfile, test_time)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(
@@ -135,6 +216,34 @@ test_that("get_single_file_metadata processes txt files correctly", {
   )
 })
 
+test_that("get_single_file_metadata processes txt files correctly", {
+  testfile <- withr::local_tempfile(fileext = ".txt")
+  writeLines("This is a string", testfile)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(testfile, test_time)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(testfile),
+      file_extension = "txt",
+      file_path = testfile,
+      file_size_human = format(
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
+        units = "auto",
+        standard = "SI"
+      ),
+      file_size = as.integer(file.size(testfile)),
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
+      file_md5 = digest::digest(testfile, algo = "md5", file = TRUE)
+      # No summary info
+    )
+  )
+})
+
 test_that("get_single_file_metadata processes lists RDS correctly", {
   testfile <- withr::local_tempfile(fileext = ".rds")
   test_list <- list(
@@ -149,6 +258,41 @@ test_that("get_single_file_metadata processes lists RDS correctly", {
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
   metadata <- get_single_file_metadata(testfile)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(testfile),
+      file_extension = "rds",
+      file_path = testfile,
+      file_size_human = format(
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
+        units = "auto",
+        standard = "SI"
+      ),
+      file_size = as.integer(file.size(testfile)),
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
+      file_md5 = digest::digest(testfile, algo = "md5", file = TRUE)
+    )
+  )
+})
+
+test_that("get_single_file_metadata processes lists RDS with summary", {
+  testfile <- withr::local_tempfile(fileext = ".rds")
+  test_list <- list(
+    a = 1L,
+    b = "two",
+    c = list(
+      d = 3.4,
+      e = "four"
+    )
+  )
+  saveRDS(test_list, testfile)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(testfile, test_time)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(
@@ -205,6 +349,41 @@ test_that("get_single_file_metadata processes named JSON list correctly", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
+      file_md5 = digest::digest(testfile, algo = "md5", file = TRUE)
+    )
+  )
+})
+
+test_that("get_single_file_metadata processes named JSON list with summary", {
+  testfile <- withr::local_tempfile(fileext = ".JSON")
+  test_list <- list(
+    a = 1L,
+    b = "two",
+    c = list(
+      d = 3.4,
+      e = "four"
+    )
+  )
+  jsonlite::write_json(test_list, testfile, auto_unbox = TRUE)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(testfile, test_time)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(testfile),
+      file_extension = "JSON",
+      file_path = testfile,
+      file_size_human = format(
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
+        units = "auto",
+        standard = "SI"
+      ),
+      file_size = as.integer(file.size(testfile)),
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
       file_md5 = digest::digest(testfile, algo = "md5", file = TRUE),
       summary_info = list(
         length = 3L,
@@ -229,6 +408,41 @@ test_that("get_single_file_metadata processes unnamed JSON list correctly", {
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
   metadata <- get_single_file_metadata(testfile)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(testfile),
+      file_extension = "JSON",
+      file_path = testfile,
+      file_size_human = format(
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
+        units = "auto",
+        standard = "SI"
+      ),
+      file_size = as.integer(file.size(testfile)),
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
+      file_md5 = digest::digest(testfile, algo = "md5", file = TRUE)
+    )
+  )
+})
+
+test_that("get_single_file_metadata processes unnamed JSON list with summary", {
+  testfile <- withr::local_tempfile(fileext = ".JSON")
+  test_list <- list(
+    1L,
+    "two",
+    list(
+      d = 3.4,
+      e = "four"
+    )
+  )
+  jsonlite::write_json(test_list, testfile, auto_unbox = TRUE)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(testfile, test_time)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(
@@ -285,6 +499,41 @@ test_that("get_single_file_metadata processes partially named JSON", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
+      file_md5 = digest::digest(testfile, algo = "md5", file = TRUE)
+    )
+  )
+})
+
+test_that("get_single_file_metadata partially named JSON with summary", {
+  testfile <- withr::local_tempfile(fileext = ".JSON")
+  test_list <- list(
+    1L,
+    b = "two",
+    list(
+      d = 3.4,
+      e = "four"
+    )
+  )
+  jsonlite::write_json(test_list, testfile, auto_unbox = TRUE)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(testfile, test_time)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(testfile),
+      file_extension = "JSON",
+      file_path = testfile,
+      file_size_human = format(
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
+        units = "auto",
+        standard = "SI"
+      ),
+      file_size = as.integer(file.size(testfile)),
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
       file_md5 = digest::digest(testfile, algo = "md5", file = TRUE),
       summary_info = list(
         length = 3L,
@@ -317,6 +566,33 @@ test_that("get_single_file_metadata processes JSON table correctly", {
         as.POSIXlt(test_time, tz = "UTC"),
         "%Y-%m-%dT%H:%M:%S+00:00"
       ),
+      file_md5 = digest::digest(testfile, algo = "md5", file = TRUE)
+    )
+  )
+})
+
+test_that("get_single_file_metadata processes JSON table with summary", {
+  testfile <- withr::local_tempfile(fileext = ".JSON")
+  jsonlite::write_json(mtcars, testfile, auto_unbox = TRUE)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(testfile, test_time)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(testfile),
+      file_extension = "JSON",
+      file_path = testfile,
+      file_size_human = format(
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
+        units = "auto",
+        standard = "SI"
+      ),
+      file_size = as.integer(file.size(testfile)),
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
       file_md5 = digest::digest(testfile, algo = "md5", file = TRUE),
       summary_info = list(
         nrow = 32L,
@@ -333,6 +609,34 @@ test_that("get_single_file_metadata processes empty files correctly", {
   test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
   Sys.setFileTime(testfile, test_time)
   metadata <- get_single_file_metadata(testfile)
+  expect_identical(
+    metadata,
+    list(
+      file_name = basename(testfile),
+      file_extension = "gitkeep",
+      file_path = testfile,
+      file_size_human = format(
+        structure(as.integer(file.size(testfile)), class = "object_size"), # nolint: undesirable_function_linter
+        units = "auto",
+        standard = "SI"
+      ),
+      file_size = as.integer(file.size(testfile)),
+      file_last_modified = format(
+        as.POSIXlt(test_time, tz = "UTC"),
+        "%Y-%m-%dT%H:%M:%S+00:00"
+      ),
+      file_md5 = digest::digest(testfile, algo = "md5", file = TRUE)
+      # No summary info
+    )
+  )
+})
+
+test_that("get_single_file_metadata processes empty files correctly", {
+  testfile <- withr::local_tempfile(fileext = ".gitkeep")
+  file.create(testfile)
+  test_time <- as.POSIXct("2020-01-01T12:34:56+00:00")
+  Sys.setFileTime(testfile, test_time)
+  metadata <- get_single_file_metadata(testfile, summary_info = TRUE)
   expect_identical(
     metadata,
     list(

@@ -4,10 +4,13 @@
 \alias{get_single_file_metadata}
 \title{Get Metadata for a file}
 \usage{
-get_single_file_metadata(filepath)
+get_single_file_metadata(filepath, summary_info = FALSE)
 }
 \arguments{
 \item{filepath}{vector of filepaths}
+
+\item{summary_info}{logical, whether to include summary information
+(nrow/length, colnames/names, class)}
 }
 \value{
 list of file details
