@@ -135,14 +135,14 @@ get_individual_package_info <- function(packagename) {
     EXPR = tolower(
       (pkg_details[["repotype"]] %||% pkg_details[["remotetype"]]) %||%
         pkg_details[["priority"]]
-    ),
+    )[[1L]],
     base = "Base",
     bioc = "Bioconductor",
     cran = "CRAN",
     github = "GitHub",
     local = "Local",
     pkgload = "Local (DEV)",
-    zz = NULL
+    zz = "R CMD Check"
   )
 
   is_local_pkg <- pkg_details[["pkg_source"]] %in% c("Local", "Local (DEV)")
