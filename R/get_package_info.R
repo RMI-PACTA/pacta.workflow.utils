@@ -161,7 +161,6 @@ get_individual_package_info <- function(packagename) {
     library = pkg_details[["library"]],
     library_index = pkg_details[["library_index"]],
     repository = pkg_details[["repository"]],
-    platform = pkg_details[["platform"]],
     built = pkg_details[["built"]],
     remotetype = pkg_details[["remotetype"]],
     remotepkgref = pkg_details[["remotepkgref"]],

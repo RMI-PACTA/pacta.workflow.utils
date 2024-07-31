@@ -36,7 +36,6 @@ expect_package_info <- function(
       "library",
       "library_index",
       "repository",
-      "platform",
       "built",
       "remotetype",
       "remotepkgref",
@@ -66,9 +65,6 @@ expect_package_info <- function(
       object = package_info[["library_index"]]
     )
     testthat::expect_null(
-      object = package_info[["platform"]]
-    )
-    testthat::expect_null(
       object = package_info[["library_index"]]
     )
   } else {
@@ -83,10 +79,6 @@ expect_package_info <- function(
     testthat::expect_lte(
       object = package_info[["library_index"]],
       expected = length(.libPaths()) # nolint: undesirable_function_linter
-    )
-    testthat::expect_match(
-      object = package_info[["platform"]],
-      regexp = paste0(R.version[["platform"]], "|\\*")
     )
     testthat::expect_type(
       object = package_info[["library_index"]],
