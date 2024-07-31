@@ -130,6 +130,7 @@ get_individual_package_info <- function(packagename) {
     )
     pkg_details[["library_index"]] <- lib_index
   }
+
   pkg_details[["pkg_source"]] <- switch(
     EXPR = tolower(
       (pkg_details[["repotype"]] %||% pkg_details[["remotetype"]]) %||%
@@ -143,14 +144,7 @@ get_individual_package_info <- function(packagename) {
     pkgload = "Local (DEV)",
     zz = NULL
   )
-  if (is.null(pkg_details[["pkg_source"]])) {
-    message(
-      "Package source not found for package ",
-      packagename,
-      "."
-    )
-    browser()
-  }
+
   is_local_pkg <- pkg_details[["pkg_source"]] %in% c("Local", "Local (DEV)")
   if (is_local_pkg) {
     git_info <- get_git_info(
@@ -165,11 +159,13 @@ get_individual_package_info <- function(packagename) {
   } else {
     pkg_details[["git"]] <- NULL
   }
+
   if (pkg_details[["pkg_source"]] == "CRAN") {
     pkg_details[["remotepkgref"]] <- NULL
     pkg_details[["remoteref"]] <- NULL
     pkg_details[["remotesha"]] <- NULL
   }
+
   details_list <- list(
     package = pkg_details[["package"]],
     version = pkg_details[["version"]],
