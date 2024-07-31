@@ -60,11 +60,16 @@ get_package_info <- function(
 #' - `library`: The path of the library the package is installed in
 #' - `library_index`: The index of the library in the `.libPaths()` vector
 #' - `repository`: The repository the package was pulled from
-#' - `platform`: The platform the package was built for
 #' - `built`: Information about package build (relevant for binary packages)
-#' - `remotepkgref`: The reference used by `pak` to install the package
-#' - `remoteref`: The reference of the package when it was pulled from REPO
-#' - `remotesha`: the SHA-1 hash of the reference (if applicable)
+#' - `remotepkgref`: The reference used by `pak` to install the package. NULL
+#' for CRAN packages.
+#' - `remoteref`: The reference of the package when it was pulled from REPO.
+#' NULL for CRAN packages.
+#' - `remotesha`: the SHA-1 hash of the reference (if applicable). NULL for
+#' CRAN packages.
+#' - `git`: Git information about the package, if it is loaded with `pkgload`
+#' or installed from local filesystem (`local::` in `pak` syntax). See
+#' `get_git_info`.
 get_individual_package_info <- function(packagename) {
   if (length(packagename) != 1L || !is.character(packagename)) {
     log_error("packagename must be a single string.")
