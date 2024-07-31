@@ -80,20 +80,11 @@ get_individual_package_info <- function(packagename) {
     package_dev_dir <- pkgload::pkg_path(
       path = dirname(system.file("DESCRIPTION", package = packagename))
     )
-    git_info <- get_git_info(repo = package_dev_dir)
     pkg_details <- list(
       package = pkgload::pkg_name(package_dev_dir),
       version = paste("DEV", pkgload::pkg_version(package_dev_dir)),
-      library = NULL,
-      library_index = NULL,
-      repository = NULL,
-      platform = NULL,
-      built = NULL,
-      remotetype = "pkgload",
-      remotepkgref = normalizePath(package_dev_dir),
-      remoteref = NULL,
-      remotesha = NULL,
-      git = git_info
+      repotype = "pkgload",
+      remotepkgref = normalizePath(package_dev_dir)
     )
   } else {
     if (packagename %in% utils::installed.packages()[, "Package"]) {
@@ -134,25 +125,39 @@ get_individual_package_info <- function(packagename) {
       }
     )
     pkg_details[["library_index"]] <- lib_index
-    if (is.null(pkg_details[["remotepkgref"]])) {
-      is_local_pkg <- FALSE
-    } else {
-      is_local_pkg <- grepl(
+  }
+  pkg_details[["pkg_source"]] <- switch(
+    EXPR = tolower(
+      (pkg_details[["repotype"]] %||% pkg_details[["remotetype"]]) %||%
+        pkg_details[["priority"]]
+    ),
+    base = "Base",
+    bioc = "Bioconductor",
+    cran = "CRAN",
+    github = "GitHub",
+    local = "Local",
+    pkgload = "Local (DEV)",
+    zz = NULL
+  )
+  if (is.null(pkg_details[["pkg_source"]])) {
+    message(
+      "Package source not found for package ",
+      packagename,
+      "."
+    )
+    browser()
+  }
+  is_local_pkg <- pkg_details[["pkg_source"]] %in% c("Local", "Local (DEV)")
+  if (is_local_pkg) {
+    git_info <- get_git_info(
+      repo = gsub(
         x = pkg_details[["remotepkgref"]],
-        pattern = "^local::"
+        pattern = "local::",
+        replacement = "",
+        fixed = TRUE
       )
-    }
-    if (is_local_pkg) {
-      git_info <- get_git_info(
-        repo = gsub(
-          x = pkg_details[["remotepkgref"]],
-          pattern = "local::",
-          replacement = "",
-          fixed = TRUE
-        )
-      )
-      pkg_details[["git"]] <- git_info
-    }
+    )
+    pkg_details[["git"]] <- git_info
   }
   details_list <- list(
     package = pkg_details[["package"]],
@@ -162,6 +167,7 @@ get_individual_package_info <- function(packagename) {
     library_index = pkg_details[["library_index"]],
     repository = pkg_details[["repository"]],
     built = pkg_details[["built"]],
+    pkg_source = pkg_details[["pkg_source"]],
     remotetype = pkg_details[["remotetype"]],
     remotepkgref = pkg_details[["remotepkgref"]],
     remoteref = pkg_details[["remoteref"]],
