@@ -19,7 +19,6 @@ expect_package_info <- function(
   version_identical,
   repository_match,
   pkg_source_identical,
-  remotetype_identical,
   remotepkgref_match,
   remoteref_identical,
   remotesha_identical,
@@ -39,7 +38,6 @@ expect_package_info <- function(
       "repository",
       "built",
       "pkg_source",
-      "remotetype",
       "remotepkgref",
       "remoteref",
       "remotesha",
@@ -115,10 +113,6 @@ expect_package_info <- function(
     object = package_info[["pkg_source"]],
     expected = pkg_source_identical
   )
-  testthat::expect_identical(
-    object = package_info[["remotetype"]],
-    expected = remotetype_identical
-  )
   if (is.null(remotepkgref_match)) {
     testthat::expect_null(
       package_info[["remotepkgref"]]
@@ -162,7 +156,6 @@ test_that("get_individual_package_info collects information for CRAN packages co
     version_identical = as.character(utils::packageVersion("digest")),
     repository_match = "^(CRAN|RSPM)$", #GH Actions installs from RSPM, not CRAN
     pkg_source_identical = "CRAN",
-    remotetype_identical = "standard",
     remotepkgref_match = "^digest$",
     remoteref_identical = "digest",
     remotesha_identical = as.character(utils::packageVersion("digest"))
@@ -180,7 +173,6 @@ test_that("get_individual_package_info collects information for base packages co
     ),
     repository_match = NULL, #GH Actions installs from RSPM, not CRAN
     pkg_source_identical = "Base",
-    remotetype_identical = NULL,
     remotepkgref_match = NULL,
     remoteref_identical = NULL,
     remotesha_identical = NULL
@@ -215,7 +207,6 @@ test_that("get_individual_package_info collects information for local packages c
       version_identical = remote_package[["version"]],
       repository_match = NULL,
       pkg_source_identical = "Local",
-      remotetype_identical = "local",
       remotepkgref_match = paste0("^local::", dest_dir, "$"),
       remoteref_identical = NULL,
       remotesha_identical = NULL,
@@ -255,7 +246,6 @@ test_that("get_individual_package_info collects information for GitHub packages 
       version_identical = remote_package[["version"]],
       repository_match = NULL,
       pkg_source_identical = "GitHub",
-      remotetype_identical = "github",
       remotepkgref_match = paste0("^", remote_package[["gh_repo"]], "$"),
       remoteref_identical = "HEAD",
       remotesha_identical = remote_package[["sha"]]
@@ -291,7 +281,6 @@ test_that("get_individual_package_info collects information for packages loaded 
         loaded_with_pkgload_identical = TRUE,
         repository_match = NULL,
         pkg_source_identical = "Local (DEV)",
-        remotetype_identical = "pkgload",
         remotepkgref_match = paste0("^", dest_dir, "$"),
         remoteref_identical = NULL,
         remotesha_identical = NULL,
@@ -346,7 +335,6 @@ test_that("get_individual_package_info collects information for packages loaded 
         loaded_with_pkgload_identical = TRUE,
         repository_match = NULL,
         pkg_source_identical = "Local (DEV)",
-        remotetype_identical = "pkgload",
         remotepkgref_match = paste0("^", dest_dir, "$"),
         remoteref_identical = NULL,
         remotesha_identical = NULL,
@@ -407,7 +395,6 @@ test_that("get_individual_package_info collects information for altered packages
         loaded_with_pkgload_identical = TRUE,
         repository_match = NULL,
         pkg_source_identical = "Local (DEV)",
-        remotetype_identical = "pkgload",
         remotepkgref_match = paste0("^", dest_dir, "$"),
         remoteref_identical = NULL,
         remotesha_identical = NULL,
@@ -480,7 +467,6 @@ test_that("get_individual_package_info gets correct libpath and version of multi
           version_identical = remote_package[["old_version"]],
           repository_match = NULL,
           pkg_source_identical = "GitHub",
-          remotetype_identical = "github",
           remotepkgref_match = paste0(
             "^", remote_package[["gh_repo_old"]], "$"
           ),
@@ -514,7 +500,6 @@ test_that("get_individual_package_info gets correct libpath for lower search pri
         version_identical = remote_package[["version"]],
         repository_match = NULL,
         pkg_source_identical = "GitHub",
-        remotetype_identical = "github",
         remotepkgref_match = paste0("^", remote_package[["gh_repo"]], "$"),
         remoteref_identical = "HEAD",
         remotesha_identical = remote_package[["sha"]]

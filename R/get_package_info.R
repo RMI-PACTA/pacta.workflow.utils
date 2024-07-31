@@ -62,7 +62,6 @@ get_package_info <- function(
 #' - `repository`: The repository the package was pulled from
 #' - `platform`: The platform the package was built for
 #' - `built`: Information about package build (relevant for binary packages)
-#' - `remotetype`: The type of remote repository the package was pulled from
 #' - `remotepkgref`: The reference used by `pak` to install the package
 #' - `remoteref`: The reference of the package when it was pulled from REPO
 #' - `remotesha`: the SHA-1 hash of the reference (if applicable)
@@ -168,7 +167,6 @@ get_individual_package_info <- function(packagename) {
     repository = pkg_details[["repository"]],
     built = pkg_details[["built"]],
     pkg_source = pkg_details[["pkg_source"]],
-    remotetype = pkg_details[["remotetype"]],
     remotepkgref = pkg_details[["remotepkgref"]],
     remoteref = pkg_details[["remoteref"]],
     remotesha = pkg_details[["remotesha"]],
