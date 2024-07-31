@@ -158,7 +158,7 @@ test_that("get_individual_package_info collects information for CRAN packages co
     pkg_source_identical = "CRAN",
     remotepkgref_match = NULL,
     remoteref_identical = NULL,
-    remotesha_identical = NULL,
+    remotesha_identical = NULL
   )
 })
 
