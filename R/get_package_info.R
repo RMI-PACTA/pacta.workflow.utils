@@ -157,6 +157,13 @@ get_individual_package_info <- function(packagename) {
       )
     )
     pkg_details[["git"]] <- git_info
+  } else {
+    pkg_details[["git"]] <- NULL
+  }
+  if (pkg_details[["pkg_source"]] == "CRAN") {
+    pkg_details[["remotepkgref"]] <- NULL
+    pkg_details[["remoteref"]] <- NULL
+    pkg_details[["remotesha"]] <- NULL
   }
   details_list <- list(
     package = pkg_details[["package"]],

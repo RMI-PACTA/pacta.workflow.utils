@@ -156,9 +156,9 @@ test_that("get_individual_package_info collects information for CRAN packages co
     version_identical = as.character(utils::packageVersion("digest")),
     repository_match = "^(CRAN|RSPM)$", #GH Actions installs from RSPM, not CRAN
     pkg_source_identical = "CRAN",
-    remotepkgref_match = "^digest$",
-    remoteref_identical = "digest",
-    remotesha_identical = as.character(utils::packageVersion("digest"))
+    remotepkgref_match = NULL,
+    remoteref_identical = NULL,
+    remotesha_identical = NULL,
   )
 })
 
