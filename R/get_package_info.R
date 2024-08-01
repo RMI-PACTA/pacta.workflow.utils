@@ -135,7 +135,7 @@ get_individual_package_info <- function(packagename) {
     EXPR = tolower(
       (pkg_details[["repotype"]] %||% pkg_details[["remotetype"]]) %||%
         pkg_details[["priority"]]
-    )[[1L]],
+    )[1L],
     base = "Base",
     bioc = "Bioconductor",
     cran = "CRAN",
