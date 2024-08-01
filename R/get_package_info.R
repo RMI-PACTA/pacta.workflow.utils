@@ -148,15 +148,6 @@ get_individual_package_info <- function(packagename) {
   )
 
   is_local_pkg <- pkg_details[["pkg_source"]] %in% c("Local", "Local (DEV)")
-  if (length(is_local_pkg) != 1L) {
-    log_warn("Package: {packagename}")
-    log_warn("is_local_pkg: {length(is_local_pkg)}")
-    log_warn("Sources: {pkg_details[\"pkg_source\"]}")
-    log_warn("repotype: {pkg_details[\"repotype\"]}")
-    log_warn("remotetype: {pkg_details[\"remotetype\"]}")
-    log_warn("priority: {pkg_details[\"priority\"]}")
-
-  }
   if (is_local_pkg) {
     git_info <- get_git_info(
       repo = gsub(
