@@ -142,7 +142,9 @@ get_individual_package_info <- function(packagename) {
     github = "GitHub",
     local = "Local",
     pkgload = "Local (DEV)",
-    r_cmd_check = "R CMD Check"
+    r_cmd_check = "R CMD Check",
+    standard = "Standard",
+    "Unknown"
   )
 
   is_local_pkg <- pkg_details[["pkg_source"]] %in% c("Local", "Local (DEV)")
