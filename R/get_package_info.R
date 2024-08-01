@@ -133,8 +133,15 @@ get_individual_package_info <- function(packagename) {
 
   pkg_details[["pkg_source"]] <- switch(
     EXPR = tolower(
-      (pkg_details[["repotype"]] %||% pkg_details[["remotetype"]]) %||%
-        pkg_details[["priority"]] %||% "r_cmd_check"
+      if (!is.null(pkg_details[["repotype"]])) {
+        pkg_details[["repotype"]]
+      } else if (!is.null(pkg_details[["remotetype"]])) {
+        pkg_details[["remotetype"]]
+      } else if (!is.null(pkg_details[["priority"]])) {
+        pkg_details[["priority"]]
+      } else {
+        "r_cmd_check"
+      }
     ),
     base = "Base",
     bioc = "Bioconductor",
