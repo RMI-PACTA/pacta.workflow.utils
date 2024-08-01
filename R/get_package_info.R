@@ -150,6 +150,9 @@ get_individual_package_info <- function(packagename) {
     log_warn("Package: {packagename}")
     log_warn("is_local_pkg: {length(is_local_pkg)}")
     log_warn("Sources: {pkg_details[\"pkg_source\"]}")
+    log_warn("repotype: {pkg_details[\"repotype\"]}")
+    log_warn("remotetype: {pkg_details[\"remotetype\"]}")
+    log_warn("priority: {pkg_details[\"priority\"]}")
 
   }
   if (is_local_pkg) {
@@ -166,7 +169,7 @@ get_individual_package_info <- function(packagename) {
     pkg_details[["git"]] <- NULL
   }
 
-  if (pkg_details[["pkg_source"]] == "CRAN") {
+  if (pkg_details[["pkg_source"]] %in% c("CRAN", "R CMD Check")) {
     pkg_details[["remotepkgref"]] <- NULL
     pkg_details[["remoteref"]] <- NULL
     pkg_details[["remotesha"]] <- NULL
