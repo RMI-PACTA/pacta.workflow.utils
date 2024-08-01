@@ -143,7 +143,7 @@ get_individual_package_info <- function(packagename) {
     local = "Local",
     pkgload = "Local (DEV)",
     r_cmd_check = "R CMD Check",
-    standard = "Standard",
+    standard = "CRAN",
     "Unknown"
   )
 
