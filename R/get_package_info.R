@@ -60,12 +60,16 @@ get_package_info <- function(
 #' - `library`: The path of the library the package is installed in
 #' - `library_index`: The index of the library in the `.libPaths()` vector
 #' - `repository`: The repository the package was pulled from
-#' - `platform`: The platform the package was built for
 #' - `built`: Information about package build (relevant for binary packages)
-#' - `remotetype`: The type of remote repository the package was pulled from
-#' - `remotepkgref`: The reference used by `pak` to install the package
-#' - `remoteref`: The reference of the package when it was pulled from REPO
-#' - `remotesha`: the SHA-1 hash of the reference (if applicable)
+#' - `remotepkgref`: The reference used by `pak` to install the package. NULL
+#' for CRAN packages.
+#' - `remoteref`: The reference of the package when it was pulled from REPO.
+#' NULL for CRAN packages.
+#' - `remotesha`: the SHA-1 hash of the reference (if applicable). NULL for
+#' CRAN packages.
+#' - `git`: Git information about the package, if it is loaded with `pkgload`
+#' or installed from local filesystem (`local::` in `pak` syntax). See
+#' `get_git_info`.
 get_individual_package_info <- function(packagename) {
   if (length(packagename) != 1L || !is.character(packagename)) {
     log_error("packagename must be a single string.")
@@ -80,20 +84,11 @@ get_individual_package_info <- function(packagename) {
     package_dev_dir <- pkgload::pkg_path(
       path = dirname(system.file("DESCRIPTION", package = packagename))
     )
-    git_info <- get_git_info(repo = package_dev_dir)
     pkg_details <- list(
       package = pkgload::pkg_name(package_dev_dir),
       version = paste("DEV", pkgload::pkg_version(package_dev_dir)),
-      library = NULL,
-      library_index = NULL,
-      repository = NULL,
-      platform = NULL,
-      built = NULL,
-      remotetype = "pkgload",
-      remotepkgref = normalizePath(package_dev_dir),
-      remoteref = NULL,
-      remotesha = NULL,
-      git = git_info
+      repotype = "pkgload",
+      remotepkgref = normalizePath(package_dev_dir)
     )
   } else {
     if (packagename %in% utils::installed.packages()[, "Package"]) {
@@ -134,26 +129,52 @@ get_individual_package_info <- function(packagename) {
       }
     )
     pkg_details[["library_index"]] <- lib_index
-    if (is.null(pkg_details[["remotepkgref"]])) {
-      is_local_pkg <- FALSE
-    } else {
-      is_local_pkg <- grepl(
-        x = pkg_details[["remotepkgref"]],
-        pattern = "^local::"
-      )
-    }
-    if (is_local_pkg) {
-      git_info <- get_git_info(
-        repo = gsub(
-          x = pkg_details[["remotepkgref"]],
-          pattern = "local::",
-          replacement = "",
-          fixed = TRUE
-        )
-      )
-      pkg_details[["git"]] <- git_info
-    }
   }
+
+  pkg_details[["pkg_source"]] <- switch(
+    EXPR = tolower(
+      if (!is.null(pkg_details[["repotype"]])) {
+        pkg_details[["repotype"]]
+      } else if (!is.null(pkg_details[["remotetype"]])) {
+        pkg_details[["remotetype"]]
+      } else if (!is.null(pkg_details[["priority"]])) {
+        pkg_details[["priority"]]
+      } else {
+        "r_cmd_check"
+      }
+    ),
+    base = "Base",
+    bioc = "Bioconductor",
+    cran = "CRAN",
+    github = "GitHub",
+    local = "Local",
+    pkgload = "Local (DEV)",
+    r_cmd_check = "R CMD Check",
+    standard = "CRAN",
+    "Unknown"
+  )
+
+  is_local_pkg <- pkg_details[["pkg_source"]] %in% c("Local", "Local (DEV)")
+  if (is_local_pkg) {
+    git_info <- get_git_info(
+      repo = gsub(
+        x = pkg_details[["remotepkgref"]],
+        pattern = "local::",
+        replacement = "",
+        fixed = TRUE
+      )
+    )
+    pkg_details[["git"]] <- git_info
+  } else {
+    pkg_details[["git"]] <- NULL
+  }
+
+  if (pkg_details[["pkg_source"]] %in% c("CRAN", "R CMD Check")) {
+    pkg_details[["remotepkgref"]] <- NULL
+    pkg_details[["remoteref"]] <- NULL
+    pkg_details[["remotesha"]] <- NULL
+  }
+
   details_list <- list(
     package = pkg_details[["package"]],
     version = pkg_details[["version"]],
@@ -161,9 +182,8 @@ get_individual_package_info <- function(packagename) {
     library = pkg_details[["library"]],
     library_index = pkg_details[["library_index"]],
     repository = pkg_details[["repository"]],
-    platform = pkg_details[["platform"]],
     built = pkg_details[["built"]],
-    remotetype = pkg_details[["remotetype"]],
+    pkg_source = pkg_details[["pkg_source"]],
     remotepkgref = pkg_details[["remotepkgref"]],
     remoteref = pkg_details[["remoteref"]],
     remotesha = pkg_details[["remotesha"]],
