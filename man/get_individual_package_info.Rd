@@ -19,12 +19,16 @@ Useful for identifying local development versions
 \item \code{library}: The path of the library the package is installed in
 \item \code{library_index}: The index of the library in the \code{.libPaths()} vector
 \item \code{repository}: The repository the package was pulled from
-\item \code{platform}: The platform the package was built for
 \item \code{built}: Information about package build (relevant for binary packages)
-\item \code{remotetype}: The type of remote repository the package was pulled from
-\item \code{remotepkgref}: The reference used by \code{pak} to install the package
-\item \code{remoteref}: The reference of the package when it was pulled from REPO
-\item \code{remotesha}: the SHA-1 hash of the reference (if applicable)
+\item \code{remotepkgref}: The reference used by \code{pak} to install the package. NULL
+for CRAN packages.
+\item \code{remoteref}: The reference of the package when it was pulled from REPO.
+NULL for CRAN packages.
+\item \code{remotesha}: the SHA-1 hash of the reference (if applicable). NULL for
+CRAN packages.
+\item \code{git}: Git information about the package, if it is loaded with \code{pkgload}
+or installed from local filesystem (\verb{local::} in \code{pak} syntax). See
+\code{get_git_info}.
 }
 }
 \description{
