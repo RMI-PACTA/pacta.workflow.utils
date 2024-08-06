@@ -19,6 +19,7 @@ parse_raw_params <- function(
   log_trace("Processing input parameters.")
   if (length(json) == 0L || all(json == "")) {
     log_error("No parameters specified.")
+    stop("No parameters specified.")
   }
 
   if (is.null(raw_schema_file)) {
