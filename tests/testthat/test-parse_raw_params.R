@@ -27,4 +27,3 @@ test_that("No inheritence, no raw param validation, pass as string", {
     )
   )
 })
-
