@@ -12,7 +12,7 @@
 #' See `jsonvalidate::json_validate` for details.
 #' @return list of parameters
 #' @examples
-
+# nolint start
 #' product_schema <- '{
 #'   "$schema": "http://json-schema.org/draft-04/schema#",
 #'   "title": "Product",
@@ -96,6 +96,7 @@
 #'   raw_schema_file = raw_schema_file
 #' )  
 #' results
+# nolint end
 #' @export
 parse_raw_params <- function(
   json,
