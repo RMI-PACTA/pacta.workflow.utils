@@ -14,16 +14,94 @@ parse_raw_params(
 \arguments{
 \item{json}{JSON string}
 
-\item{inheritence_search_paths}{value}
+\item{inheritence_search_paths}{path to directory in which to search for
+inheritance files. See \code{parse_params} for details.}
 
-\item{schema_file}{value}
+\item{schema_file}{JSON Schema file to validate parameters against. See
+\code{parse_params} for details.}
 
-\item{raw_schema_file}{value}
+\item{raw_schema_file}{JSON Schema file to validate raw parameters against.
+See \code{jsonvalidate::json_validate} for details.}
 }
 \value{
-returndes
+list of parameters
 }
 \description{
 Parse and validate JSON parameters, including optionally validation raw
 parameters prior to inheriting.
+}
+\examples{
+product_schema <- '{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "Product",
+  "description": "A product from Acme\'s catalog",
+  "type": "object",
+  "properties": {
+    "id": {
+      "description": "The unique identifier for a product",
+      "type": "integer"
+    },
+    "name": {
+      "description": "Name of the product",
+      "type": "string"
+    },
+    "price": {
+      "type": "number",
+      "minimum": 0,
+      "exclusiveMinimum": true
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+  "required": ["id", "name", "price"]
+}'
+schema_dir <- withr::local_tempdir()
+schema_file <- file.path(schema_dir, "product.json")
+writeLines(product_schema, schema_file)
+raw_schema <- '{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "rawProduct",
+  "description": "Valid Input params for product",
+  "type": "object",
+  "properties": {
+    "inherit": {
+      "description": "Valid keys for inheritence",
+      "type": "string",
+      "enum": [
+        "base01",
+        "base02"
+      ]
+    }
+  },
+  "anyOf": [
+    {
+      "required": [
+        "inherit"
+      ]
+    },
+    {
+      "$ref": "product.json"
+    }
+  ]
+}'
+raw_schema_file <- file.path(schema_dir, "rawProduct.json")
+writeLines(raw_schema, raw_schema_file)
+json_string <- '{
+ "id": 1,
+  "price": 12.50,
+  "inherit": "base01"
+}  '
+results <- parse_raw_params(
+  json = json_string,
+  schema_file = schema_file,
+  inheritence_search_paths = base_params_dir,
+  raw_schema_file = raw_schema_file
+)  
+results
 }
