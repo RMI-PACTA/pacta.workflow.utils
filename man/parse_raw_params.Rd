@@ -97,6 +97,16 @@ json_string <- '{
   "price": 12.50,
   "inherit": "base01"
 }  '
+base_params_dir <- withr::local_tempdir()
+base_01_string <- '{
+    "name": "A green door",
+    "tags": ["home", "green"],
+    "supplier": "ACME Doors"
+  }'
+writeLines(
+  base_01_string,
+  file.path(base_params_dir, "base01.json")
+)
 results <- parse_raw_params(
   json = json_string,
   schema_file = schema_file,
