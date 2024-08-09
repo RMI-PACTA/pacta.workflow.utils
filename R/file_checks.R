@@ -27,3 +27,23 @@ check_dir_writable <- function(dir) {
   }
   return(dir_is_writable)
 }
+
+check_file <- function(filepath) {
+  log_trace("Checking if file exists: ", filepath)
+  pass <- FALSE
+  info <- file.info(filepath, extra_cols = FALSE)
+  if (all(is.na(info))) {
+    log_error("File \"{filepath}\" does not exist.")
+    warning("File does not exist.")
+  } else if (is.na(info[["isdir"]]) || info[["isdir"]]) {
+    log_error("File \"{filepath}\" is a directory.")
+    warning("File is a directory.")
+  } else if (info[["size"]] == 0L || is.na(info[["size"]])) {
+    log_warn("File \"{filepath}\" is empty.")
+    warning("File is empty.")
+  } else {
+    log_trace("File exists and is non-zero size.")
+    pass <- TRUE
+  }
+  return(invisible(pass))
+}
