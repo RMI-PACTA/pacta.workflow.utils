@@ -1,5 +1,9 @@
 check_dir_writable <- function(dir) {
   log_trace("Checking if directory is writable: ", dir)
+  if (tolower(Sys.info()["sysname"]) == "windows") {
+    log_warn("Function check_dir_writable is not tested on Windows.")
+    warning("check_dir_writable may return incorrect results on Windows.")
+  }
   if (dir.exists(dir)) {
     log_trace("Directory exists.")
     test_path <- file.path(dir, ".test")
