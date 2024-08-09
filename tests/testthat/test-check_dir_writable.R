@@ -36,4 +36,3 @@ test_that("check_dir_writable emits warning on windows.", {
     regexp = "^check_dir_writable may return incorrect results on Windows.$"
   )
 })
-
