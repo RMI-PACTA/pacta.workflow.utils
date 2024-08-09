@@ -19,13 +19,13 @@ Imports:
     digest,
     gert,
     jsonlite,
+    jsonvalidate,
     logger,
     pkgdepends,
     pkgload
 Suggests: 
     covr,
     devtools,
-    jsonvalidate,
     pak,
     testthat (>= 3.0.0),
     withr
