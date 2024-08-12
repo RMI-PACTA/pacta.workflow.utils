@@ -23,7 +23,8 @@ check_dir_writable <- function(dir) {
     }
   } else {
     log_error("Directory \"{dir}\" does not exist.")
-    stop("Directory does not exist.")
+    warning("Directory does not exist.")
+    dir_is_writable <- FALSE
   }
   return(dir_is_writable)
 }
