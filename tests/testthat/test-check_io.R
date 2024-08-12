@@ -56,6 +56,11 @@ test_that("check_io correctly flags multiple good files", {
   expect_true(check_io(input_files = input_files))
 })
 
+test_that("check_io correctly flags multiple good files as list", {
+  input_files <- list(good_file, good_file2)
+  expect_true(check_io(input_files = input_files))
+})
+
 test_that("check_io correctly flags incorrect files in vector", {
   input_files <- c(
     missing_file,
@@ -85,6 +90,10 @@ test_that("check_io correctly flags multiple good dirs", {
   expect_true(check_io(output_dirs = c(test_dir, test_dir2)))
 })
 
+test_that("check_io correctly flags multiple good dirs as list", {
+  expect_true(check_io(output_dirs = list(test_dir, test_dir2)))
+})
+
 test_that("check_io correctly flags dir with no permissions", {
   expect_error(
     check_io(output_dirs = nopermissions_dir),
@@ -92,9 +101,9 @@ test_that("check_io correctly flags dir with no permissions", {
   )
 })
 
-test_that("check_io correctly flags dir witdoes not exist", {
+test_that("check_io correctly flags dir does not exist", {
   expect_error(
-    check_io(output_dirs = dne_dir),
+    suppressWarnings(check_io(output_dirs = dne_dir)),
     regexp = "^IO checks failed.$"
   )
 })
