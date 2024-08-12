@@ -72,11 +72,30 @@ test_that("check_io correctly flags incorrect files in vector", {
 })
 
 test_dir <- withr::local_tempdir()
+test_dir2 <- withr::local_tempdir()
 nopermissions_dir <- withr::local_tempdir()
 Sys.chmod(nopermissions_dir, mode = "000")
 dne_dir <- file.path(test_dir, "does_not_exist")
 
-test_that("check_io correctly flags single good file", {
+test_that("check_io correctly flags single good dir", {
   expect_true(check_io(output_dirs = test_dir))
+})
+
+test_that("check_io correctly flags multiple good dirs", {
+  expect_true(check_io(output_dirs = c(test_dir, test_dir2)))
+})
+
+test_that("check_io correctly flags dir with no permissions", {
+  expect_error(
+    check_io(output_dirs = nopermissions_dir),
+    regexp = "^IO checks failed.$"
+  )
+})
+
+test_that("check_io correctly flags dir witdoes not exist", {
+  expect_error(
+    check_io(output_dirs = dne_dir),
+    regexp = "^IO checks failed.$"
+  )
 })
 
