@@ -108,3 +108,29 @@ test_that("check_io correctly flags dir does not exist", {
   )
 })
 
+test_that("check_io correctly emits 1 error on multiple incorrect dir", {
+  expect_error(
+    check_io(
+      output_dirs = c(test_dir, nopermissions_dir, test_dir2, dne_dir)
+    )
+  )
+})
+
+
+test_that("check_io correctly flags inputs and outputs together", {
+  expect_true(
+    check_io(
+      input_files = c(good_file, good_file2),
+      output_dirs = c(test_dir, test_dir2)
+    )
+  )
+})
+
+test_that("check_io correctly emits 1 error on incorrect dir and files", {
+  expect_error(
+    check_io(
+      input_files = c(missing_file, file_is_dir, empty_file),
+      output_dirs = c(test_dir, nopermissions_dir, test_dir2, dne_dir)
+    )
+  )
+})
