@@ -83,10 +83,12 @@ Sys.chmod(nopermissions_dir, mode = "000")
 dne_dir <- file.path(test_dir, "does_not_exist")
 
 test_that("check_io correctly flags single good dir", {
+  skip_on_os("windows")
   expect_true(check_io(output_dirs = test_dir))
 })
 
 test_that("check_io correctly flags multiple good dirs", {
+  skip_on_os("windows")
   expect_true(check_io(output_dirs = c(test_dir, test_dir2)))
 })
 
@@ -95,6 +97,7 @@ test_that("check_io correctly flags multiple good dirs as list", {
 })
 
 test_that("check_io correctly flags dir with no permissions", {
+  skip_on_os("windows")
   expect_error(
     check_io(output_dirs = nopermissions_dir),
     regexp = "^IO checks failed.$"
