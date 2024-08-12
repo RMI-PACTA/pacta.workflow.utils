@@ -22,6 +22,7 @@ test_that("check_dir_writable correctly registers writable directory", {
 })
 
 test_that("check_dir_writable correctly errors on missing directory", {
+  skip_on_os("windows")
   test_dir <- withr::local_tempdir()
   dne_dir <- file.path(test_dir, "does_not_exist")
   expect_warning(

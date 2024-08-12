@@ -29,6 +29,13 @@ check_dir_writable <- function(dir) {
   return(dir_is_writable)
 }
 
+#' check_file
+#'
+#' check a filepath for existence, non-zero size, and non-directory status.
+#'
+#' @param filepath path to file
+#' @return logical(1L), is the file valid?
+#' @export
 check_file <- function(filepath) {
   log_trace("Checking if file exists: ", filepath)
   pass <- FALSE
@@ -49,6 +56,18 @@ check_file <- function(filepath) {
   return(invisible(pass))
 }
 
+#' check_io
+#'
+#' check `input_files` using \code{\link{check_file}} and `output_dirs` using
+#' \code{\link{check_dir_writable}}.
+#'
+#' @param input_files list or vector of file paths to check with
+#' \code{\link{check_file}}
+#' @param output_dirs list or vector of directories to check with
+#' \code{\link{check_dir_writable}}
+#' @return logical(1L), are all files and directories valid? Note that function
+#' will throw an error in situations where this is not TRUE.
+#' @export
 check_io <- function(
   input_files = NULL,
   output_dirs = NULL
