@@ -47,3 +47,31 @@ check_file <- function(filepath) {
   }
   return(invisible(pass))
 }
+
+check_io <- function(
+  input_files = NULL,
+  output_dirs = NULL
+) {
+  input_checks <- vapply(
+    X = input_files,
+    FUN = check_file,
+    FUN.VALUE = logical(1L)
+  )
+  output_checks <- vapply(
+    X = output_dirs,
+    FUN = check_dir_writable,
+    FUN.VALUE = logical(1L)
+  )
+  if (!all(c(input_checks, output_checks))) {
+    invalid_input_idx <- which(!input_checks)
+    for (ii in invalid_input_idx) {
+      log_error("Invalid input file: ", input_files[[ii]])
+    }
+    invalid_output_idx <- which(!output_checks)
+    for (ii in invalid_output_idx) {
+      log_error("Invalid output directory: ", output_dirs[[ii]])
+    }
+    stop("IO checks failed.")
+  }
+  return(invisible(all(input_checks, output_checks)))
+}
