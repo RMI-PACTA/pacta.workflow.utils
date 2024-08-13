@@ -13,6 +13,7 @@
 #' details, with the package names as keys, and further details as returned by
 #' [get_individual_package_info()].
 #' @seealso [get_individual_package_info()]
+#' @export
 get_package_info <- function(
   packagelist = list(
     base = utils::sessionInfo()[["basePkgs"]],
@@ -70,6 +71,7 @@ get_package_info <- function(
 #' - `git`: Git information about the package, if it is loaded with `pkgload`
 #' or installed from local filesystem (`local::` in `pak` syntax). See
 #' `get_git_info`.
+#' @export
 get_individual_package_info <- function(packagename) {
   if (length(packagename) != 1L || !is.character(packagename)) {
     log_error("packagename must be a single string.")
