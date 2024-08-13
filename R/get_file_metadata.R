@@ -8,6 +8,7 @@
 #' (nrow/length, colnames/names, class)
 #'
 #' @return nested list of file details, length the same as the input vector.
+#' @export
 get_file_metadata <- function(
   filepaths,
   summary_info = FALSE
@@ -33,6 +34,7 @@ get_file_metadata <- function(
 #' (nrow/length, colnames/names, class)
 #'
 #' @return list of file details
+#' @export
 get_single_file_metadata <- function(
   filepath,
   summary_info = FALSE
