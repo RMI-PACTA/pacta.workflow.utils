@@ -4,6 +4,7 @@
 #' inclusion in manifest export.
 #'
 #' @return nested list of file details, length the same as the input vector.
+#' @export
 get_manifest_envirionment_info <- function() {
   environment_list <- list(
     session = get_r_session_info(),
@@ -19,6 +20,7 @@ get_manifest_envirionment_info <- function() {
 #'
 #' @return list of session details, including R Version, platform, OS
 #' (`running`), locale, timezone, and library paths.
+#' @export
 get_r_session_info <- function() {
   return(
     list(

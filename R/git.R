@@ -1,3 +1,17 @@
+#' get_git_info
+#'
+#' Get git information for a repository.
+#'
+#' @param repo (Local directory) path to a git repository.
+#' @return list of git information. Keys include:
+#'   * repo: path to the repository.
+#'   * is_git: logical indicating if the path is in a git repository.
+#'   * commit: latest commit hash.
+#'   * clean: logical indicating if the repository is clean.
+#'   * branch: list of branch information. See `git_branch_info`.
+#'   * changed_files: list of changed files. See `git_changed_files`.
+#'   * tags: list of tags. See `git_tag_info`.
+#' @export
 get_git_info <- function(repo) {
   log_trace("checking that directory \"{repo}\"exists.")
   if (is_git_path(repo)) {
@@ -32,6 +46,13 @@ get_git_info <- function(repo) {
   return(out)
 }
 
+#' is_git_path
+#'
+#' Check if a path is in a git repository.
+#'
+#' @param path (Local directory) path to check.
+#' @return logical indicating if the path is in a git repository.
+#' @export
 is_git_path <- function(path) {
   log_trace("checking that path \"{path}\" is in a git repository.")
   if (file.exists(path)) {
@@ -57,6 +78,20 @@ is_git_path <- function(path) {
   return(is_git_path)
 }
 
+#' git_branch_info
+#'
+#' Get branch information for a repository.
+#'
+#' @param repo (Local directory) path to a git repository.
+#' @return list of branch information. Keys include:
+#'   * name: name of the active branch.
+#'   * commit: commit hash of the active branch.
+#'   * upstream: name of the upstream branch.
+#'   * remote_url: URL of the remote repository.
+#'   * up_to_date: logical indicating if the active branch is up to date with
+#'   remote
+#'   * upstream_commit: commit hash of the upstream branch.
+#' @export
 git_branch_info <- function(repo) {
   log_trace("checking branch information for repo \"{repo}\".")
   if (is_git_path(repo)) {
@@ -117,6 +152,13 @@ git_branch_info <- function(repo) {
   return(out)
 }
 
+#' git_changed_files
+#'
+#' Get changed files in a repository.
+#'
+#' @param repo (Local directory) path to a git repository.
+#' @return list of changed files. Keys are file paths, values are status.
+#' @export
 git_changed_files <- function(repo) {
   log_trace("checking for changed files in repo \"{repo}\".")
   if (is_git_path(repo)) {
@@ -133,6 +175,17 @@ git_changed_files <- function(repo) {
   }
 }
 
+#' git_tag_info
+#'
+#' Get tag information for a repository.
+#'
+#' @param repo (Local directory) path to a git repository.
+#' @return list of tag information. Keys are tag names, values are lists with
+#' keys:
+#'   * name: tag name.
+#'   * commit: commit hash.
+#'   * points_to: commit hash that the tag points to.
+#' @export
 git_tag_info <- function(repo) {
   log_trace("checking for tags in repo \"{repo}\".")
   if (is_git_path(repo)) {

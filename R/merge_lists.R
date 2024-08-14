@@ -15,6 +15,7 @@
 #' keys?
 #'
 #' @return merged list
+#' @export
 merge_lists <- function(
   base_list,
   overlay_list,

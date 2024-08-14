@@ -1,3 +1,13 @@
+#' parse_params
+#'
+#' Parse parameters from JSON string or file.
+#'
+#' @param json JSON string or file path.
+#' @param inheritence_search_paths Paths to search for inherited parameters.
+#' See `inherit_params`.
+#' @param schema_file Path to JSON Schema file for validation.
+#' @return Parsed parameters as a standard R list.
+#' @export
 parse_params <- function(
   json,
   inheritence_search_paths = NULL,
@@ -43,6 +53,20 @@ parse_params <- function(
   return(full_params)
 }
 
+#' inherit_params
+#'
+#' Inherit parameters from a JSON file. This function will search for a file
+#' (in `inheritence_search_paths`) with the name of the value of the `inherit`
+#' key in the `params` list. If found, the parameters in that file will be
+#' overlaid onto the `params` list. This process will continue until no
+#' `inherit` key is found.
+#'
+#' @param params list of parameters, which may include an inheritence key
+#' (`inherit`).
+#' @param inheritence_search_paths Paths to search for inherited parameters.
+#' @return merged list of parameters, with inherited parameters overlaid onto
+#' `params`.
+#' @export
 inherit_params <- function(
   params,
   inheritence_search_paths
