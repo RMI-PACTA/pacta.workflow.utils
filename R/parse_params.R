@@ -6,6 +6,7 @@
 #' @param inheritence_search_paths Paths to search for inherited parameters.
 #' See `inherit_params`.
 #' @param schema_file Path to JSON Schema file for validation.
+#' @param force_array Path in params list to force casting as JSON array.
 #' @return Parsed parameters as a standard R list.
 #' @export
 parse_params <- function(
