@@ -1,3 +1,26 @@
+#' @title modify_list_element
+#'
+#' Apply a function to a one or more elements of a list, given the positions of
+#' the elements.
+#'
+#' @param x List to modify
+#' @param positions (List or vector) Position of elements to modify, as a
+#' vector of indices
+#' @param function_to_apply Function to apply to elements
+#' @return modified list
+#' @examples
+# nolint start
+# test_list <- list(a = 1L, b = list(ba = 2L, bb = 2.2), c = "a")
+# results <- modify_list_element(
+#   x = test_list,
+#   position = list(
+#     c("b", "bb"),
+#     "a"
+#   ),
+#   function_to_apply = I
+# )
+# nolint end
+#' @export
 modify_list_element <- function(
   x,
   positions,
@@ -17,6 +40,25 @@ modify_list_element <- function(
   return(x)
 }
 
+#' @title modify_single_list_element
+#'
+#' Apply a function to a single element of a list, givin a vector of list
+#' indices.
+#'
+#' @param x List to modify
+#' @param position Position of element to modify, as a vector of indices
+#' @param function_to_apply Function to apply to element
+#' @return modified list
+#' @examples
+# nolint start
+# test_list <- list(a = 1L, b = list(ba = 2L, bb = 2.2), c = "a")
+# results <- modify_single_list_element(
+#   x = test_list,
+#   position = c("b", "bb"),
+#   function_to_apply = I
+# )
+# nolint end
+#' @export
 modify_single_list_element <- function(
   x,
   position,
