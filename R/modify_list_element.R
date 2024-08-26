@@ -64,9 +64,6 @@ modify_single_list_element <- function(
   position,
   function_to_apply
 ) {
-  if (is.null(x)) {
-    browser()
-  }
   if (length(position) == 1L) {
     x[[position]] <- function_to_apply(x[[position]])
   } else {
