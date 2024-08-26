@@ -2,10 +2,7 @@
 % Please edit documentation in R/modify_list_element.R
 \name{modify_list_element}
 \alias{modify_list_element}
-\title{modify_list_element
-
-Apply a function to a one or more elements of a list, given the positions of
-the elements.}
+\title{title modify_list_element}
 \usage{
 modify_list_element(x, positions, function_to_apply)
 }
@@ -21,8 +18,18 @@ vector of indices}
 modified list
 }
 \description{
-modify_list_element
-
 Apply a function to a one or more elements of a list, given the positions of
 the elements.
+}
+\examples{
+test_list <- list(a = 1L, b = list(ba = 2L, bb = 2.2), c = "a")
+results <- modify_list_element(
+  x = test_list,
+  position = list(
+    c("b", "bb"),
+    "a"
+  ),
+  function_to_apply = I
+)
+results
 }

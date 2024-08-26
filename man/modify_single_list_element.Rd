@@ -2,10 +2,7 @@
 % Please edit documentation in R/modify_list_element.R
 \name{modify_single_list_element}
 \alias{modify_single_list_element}
-\title{modify_single_list_element
-
-Apply a function to a single element of a list, givin a vector of list
-indices.}
+\title{modify_single_list_element}
 \usage{
 modify_single_list_element(x, position, function_to_apply)
 }
@@ -20,8 +17,15 @@ modify_single_list_element(x, position, function_to_apply)
 modified list
 }
 \description{
-modify_single_list_element
-
 Apply a function to a single element of a list, givin a vector of list
 indices.
+}
+\examples{
+test_list <- list(a = 1L, b = list(ba = 2L, bb = 2.2), c = "a")
+results <- modify_single_list_element(
+  x = test_list,
+  position = c("b", "bb"),
+  function_to_apply = I
+)
+results
 }
