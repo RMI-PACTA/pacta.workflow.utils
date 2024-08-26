@@ -206,3 +206,30 @@ test_that("simple inheritence, pass as string, validation works", {
     )
   )
 })
+
+test_that("Forcing scalar to array works", {
+  json_string <- '{
+    "id": 1,
+    "name": "A green door",
+    "price": 12.50,
+    "tags": ["home"],
+    "supplier": "ACME Doors"
+  }'
+  results <- parse_params(
+    json = json_string,
+    inheritence_search_paths = base_params_dir,
+    schema_file = schema_file,
+    force_array = "tags"
+  )
+  expect_identical(
+    object = results,
+    expected = list(
+      id = 1L,
+      name = "A green door",
+      price = 12.5,
+      tags = I("home"),
+      supplier = "ACME Doors"
+    )
+  )
+})
+

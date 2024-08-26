@@ -135,3 +135,23 @@ test_that("modify_single_list_element can accept positional arguments", {
     )
   )
 })
+
+test_that("modify_single_list_element warns if element not found", {
+  test_list <- list(a = 1L, b = 2.2, c = "a")
+  # debugonce(modify_single_list_element)
+  expect_warning(
+    object = {
+      results <- modify_single_list_element(
+      x = test_list,
+      position = "x",
+      function_to_apply = I
+    )
+    },
+    regexp = "^NULL list elements cannot be modified.$"
+  )
+  expect_identical(
+    object = results,
+    expected = list(a = 1L, b = 2.2, c = "a")
+  )
+})
+

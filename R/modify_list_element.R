@@ -63,9 +63,14 @@ modify_single_list_element <- function(
   x,
   position,
   function_to_apply
-) {
+  ) {
   if (length(position) == 1L) {
-    x[[position]] <- function_to_apply(x[[position]])
+    if (is.null(x[[position[[1L]]]])) {
+      log_warn("Element {position[[1L]]} is not found (NULL).")
+      warning("NULL list elements cannot be modified.")
+    } else {
+      x[[position]] <- function_to_apply(x[[position]])
+    }
   } else {
     x[[position[[1L]]]] <- modify_single_list_element(
       x = x[[position[[1L]]]],
@@ -73,5 +78,5 @@ modify_single_list_element <- function(
       function_to_apply = function_to_apply
     )
   }
-  invisible(x)
+  return(invisible(x))
 }
