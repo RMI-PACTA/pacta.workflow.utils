@@ -7,15 +7,14 @@
 #' See `inherit_params`.
 #' @param schema_file Path to JSON Schema file for validation.
 #' @param force_array Path in params list to force casting as JSON array.
+#' (Default empty)
 #' @return Parsed parameters as a standard R list.
 #' @export
 parse_params <- function(
   json,
   inheritence_search_paths = NULL,
   schema_file = NULL,
-  force_array = list(
-    c("portfolio", "files")
-  )
+  force_array = list()
 ) {
   log_trace("Parsing params.")
   if (length(json) == 1L && file.exists(json)) {
