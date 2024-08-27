@@ -232,4 +232,3 @@ test_that("Forcing scalar to array works", {
     )
   )
 })
-

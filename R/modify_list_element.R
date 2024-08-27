@@ -1,4 +1,4 @@
-#' title modify_list_element
+#' modify_list_element
 #'
 #' Apply a function to a one or more elements of a list, given the positions of
 #' the elements.
@@ -65,7 +65,7 @@ modify_single_list_element <- function(
   x,
   position,
   function_to_apply
-  ) {
+) {
   if (length(position) == 1L) {
     if (is.null(x[[position[[1L]]]])) {
       log_warn("Element {position[[1L]]} is not found (NULL).")
