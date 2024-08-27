@@ -8,7 +8,7 @@ parse_params(
   json,
   inheritence_search_paths = NULL,
   schema_file = NULL,
-  force_array = list(c("portfolio", "files"))
+  force_array = list()
 )
 }
 \arguments{
@@ -19,7 +19,8 @@ See \code{inherit_params}.}
 
 \item{schema_file}{Path to JSON Schema file for validation.}
 
-\item{force_array}{Path in params list to force casting as JSON array.}
+\item{force_array}{Path in params list to force casting as JSON array.
+(Default empty)}
 }
 \value{
 Parsed parameters as a standard R list.

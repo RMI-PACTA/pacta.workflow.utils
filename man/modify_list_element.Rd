@@ -2,7 +2,7 @@
 % Please edit documentation in R/modify_list_element.R
 \name{modify_list_element}
 \alias{modify_list_element}
-\title{title modify_list_element}
+\title{modify_list_element}
 \usage{
 modify_list_element(x, positions, function_to_apply)
 }
