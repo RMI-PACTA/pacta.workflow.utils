@@ -141,7 +141,8 @@ parse_raw_params <- function(
   params <- parse_params(
     json = json,
     inheritence_search_paths = inheritence_search_paths,
-    schema_file = schema_file
+    schema_file = schema_file,
+    force_array = c("portfolio", "files")
   )
 
   return(params)
