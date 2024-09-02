@@ -18,7 +18,7 @@ parse_params <- function(
 ) {
   log_trace("Parsing params.")
   if (length(json) == 1L && file.exists(json)) {
-    log_trace("Reading params from file: {json}.}")
+    log_trace("Reading params from file: {json}.")
   } else {
     log_trace("Reading params from string.")
   }
