@@ -6,16 +6,19 @@
 #' @param inheritence_search_paths Paths to search for inherited parameters.
 #' See `inherit_params`.
 #' @param schema_file Path to JSON Schema file for validation.
+#' @param force_array Path in params list to force casting as JSON array.
+#' (Default empty)
 #' @return Parsed parameters as a standard R list.
 #' @export
 parse_params <- function(
   json,
   inheritence_search_paths = NULL,
-  schema_file = NULL
+  schema_file = NULL,
+  force_array = list()
 ) {
   log_trace("Parsing params.")
   if (length(json) == 1L && file.exists(json)) {
-    log_trace("Reading params from file: {json}.}")
+    log_trace("Reading params from file: {json}.")
   } else {
     log_trace("Reading params from string.")
   }
@@ -23,6 +26,13 @@ parse_params <- function(
   full_params <- inherit_params(
     raw_params,
     inheritence_search_paths
+  )
+
+  # force array
+  full_params <- modify_list_element(
+    x = full_params,
+    positions = force_array,
+    function_to_apply = I
   )
 
   if (!is.null(schema_file)) {

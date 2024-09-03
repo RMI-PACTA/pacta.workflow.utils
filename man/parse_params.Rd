@@ -4,7 +4,12 @@
 \alias{parse_params}
 \title{parse_params}
 \usage{
-parse_params(json, inheritence_search_paths = NULL, schema_file = NULL)
+parse_params(
+  json,
+  inheritence_search_paths = NULL,
+  schema_file = NULL,
+  force_array = list()
+)
 }
 \arguments{
 \item{json}{JSON string or file path.}
@@ -13,6 +18,9 @@ parse_params(json, inheritence_search_paths = NULL, schema_file = NULL)
 See \code{inherit_params}.}
 
 \item{schema_file}{Path to JSON Schema file for validation.}
+
+\item{force_array}{Path in params list to force casting as JSON array.
+(Default empty)}
 }
 \value{
 Parsed parameters as a standard R list.

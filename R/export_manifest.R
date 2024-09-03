@@ -82,10 +82,20 @@ create_manifest <- function(
   return(manifest_list)
 }
 
-# Check that arguments are nicely coercible to JSON. called for side effect of
-# `stop` if not.
+#' check_arg_type
+#'
+#' Check that arguments are nicely coercible to JSON. Primarily a check that
+#' lists are composed of simple types (other lists, characters,
+#' numeric/integers, or logicals). Called for side effect of `stop` if not.
+#'
+#' @param arg object to check. Lists will be checked recursively, and must be
+#' named.
+#' @return the same object, unchanged. Function will throw an error if objects
+#' are not simple
 check_arg_type <- function(arg) {
   log_trace("Checking argument type")
+  # remove AsIs class if necessary
+  arg <- un_asis(arg)
   if (inherits(arg, "list")) {
     if (
       length(arg) != length(names(arg)) ||
@@ -112,4 +122,18 @@ check_arg_type <- function(arg) {
     }
   }
   return(arg)
+}
+
+#' un_asis
+#'
+#' Remove AsIs class from object
+#'
+#' @param x an object (with the `AsIs` class)
+#' @return the same object, without AsIs class
+un_asis <- function(x) {
+  if (inherits(x, "AsIs")) {
+    log_trace("Removing AsIs class from object")
+    class(x) <- class(x)[-match("AsIs", class(x))]
+  }
+  return(x)
 }
