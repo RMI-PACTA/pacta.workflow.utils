@@ -11,7 +11,8 @@ check_arg_type(arg)
 named.}
 }
 \value{
-the same object, unchanged. Function will throw an error if objects are not simple
+the same object, unchanged. Function will throw an error if objects
+are not simple
 }
 \description{
 Check that arguments are nicely coercible to JSON. Primarily a check that

@@ -90,7 +90,8 @@ create_manifest <- function(
 #'
 #' @param arg object to check. Lists will be checked recursively, and must be
 #' named.
-#' @return the same object, unchanged. Function will throw an error if objects are not simple
+#' @return the same object, unchanged. Function will throw an error if objects
+#' are not simple
 check_arg_type <- function(arg) {
   log_trace("Checking argument type")
   # remove AsIs class if necessary
@@ -123,7 +124,7 @@ check_arg_type <- function(arg) {
   return(arg)
 }
 
-#' un_asis 
+#' un_asis
 #'
 #' Remove AsIs class from object
 #'
