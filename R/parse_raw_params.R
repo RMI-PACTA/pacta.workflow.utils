@@ -105,7 +105,10 @@ parse_raw_params <- function(
   raw_schema_file = NULL
 ) {
   # Read Params
-  log_trace("Processing input parameters.")
+  log_debug("Processing input parameters.")
+  log_trace(
+    logger::skip_formatter(paste("Input parameters:", json, collapse = " "))
+  )
   if (length(json) == 0L || all(json == "")) {
     log_error("No parameters specified.")
     stop("No parameters specified.")
@@ -131,9 +134,10 @@ parse_raw_params <- function(
       log_error(
         "Invalid raw input parameters. ",
         "Must include \"inherit\" key, or match full schema.",
-        "See schema for details.",
+        "See schema for details. ",
         raw_schema_file
       )
+      pretty_log_jsonvalidate_errors(raw_input_validation_results)
       stop("Invalid raw input parameters.")
     }
   }
