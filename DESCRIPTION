@@ -1,6 +1,6 @@
 Package: pacta.workflow.utils
 Title: Utility functions for PACTA workflows
-Version: 0.0.0.9013
+Version: 0.0.0.9014
 Authors@R: 
     c(person(given = "Alex",
              family = "Axthelm",
