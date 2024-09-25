@@ -134,9 +134,10 @@ parse_raw_params <- function(
       log_error(
         "Invalid raw input parameters. ",
         "Must include \"inherit\" key, or match full schema.",
-        "See schema for details.",
+        "See schema for details. ",
         raw_schema_file
       )
+      pretty_log_jsonvalidate_errors(raw_input_validation_results)
       stop("Invalid raw input parameters.")
     }
   }
