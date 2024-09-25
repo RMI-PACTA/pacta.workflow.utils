@@ -105,7 +105,10 @@ parse_raw_params <- function(
   raw_schema_file = NULL
 ) {
   # Read Params
-  log_trace("Processing input parameters.")
+  log_debug("Processing input parameters.")
+  log_trace(
+    logger::skip_formatter(paste("Input parameters:", json, collapse = " "))
+  )
   if (length(json) == 0L || all(json == "")) {
     log_error("No parameters specified.")
     stop("No parameters specified.")
