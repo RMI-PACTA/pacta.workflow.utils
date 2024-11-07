@@ -96,44 +96,43 @@ inherit_params <- function(
       "Key \"{inherit_key}\" found in parameters. Inheriting parameters."
     )
 
-    to_inherit <- params[[inherit_key]]
-    if (length(to_inherit) > 1L) {
-      log_error("Multiple values in inherit key.")
-      stop("Multiple values in inherit key.")
-    }
+    to_inherit_vec <- params[[inherit_key]]
     params[[inherit_key]] <- NULL # remove inherit key
 
-    possible_paths <- file.path(
-      inheritence_search_paths,
-      paste0(to_inherit, ".json")
-    )
-    candidate_file <- possible_paths[file.exists(possible_paths)]
-    if (length(candidate_file) == 0L) {
-      log_error("Inheritence file not found: {possible_paths}.")
-      stop("Inheritence file not found.")
-    } else {
-      if (length(candidate_file) > 1L) {
-        log_warn("Multiple files matching inheritence pattern found:")
-        log_warn("{candidate_file}.")
-        warning("Multiple inheritence files found.")
-        candidate_file <- candidate_file[[1L]]
-        log_warn("Using first file: {candidate_file}.")
-      }
-    }
-    if (candidate_file %in% inherited_files) {
-      log_error(
-        "Inheritence loop detected while inheriting from {candidate_file}."
+    for (to_inherit in to_inherit_vec) {
+
+      possible_paths <- file.path(
+        inheritence_search_paths,
+        paste0(to_inherit, ".json")
       )
-      log_error("Inherited file: {inherited_files}.")
-      stop("Inheritence loop detected.")
+      candidate_file <- possible_paths[file.exists(possible_paths)]
+      if (length(candidate_file) == 0L) {
+        log_error("Inheritence file not found: {possible_paths}.")
+        stop("Inheritence file not found.")
+      } else {
+        if (length(candidate_file) > 1L) {
+          log_warn("Multiple files matching inheritence pattern found:")
+          log_warn("{candidate_file}.")
+          warning("Multiple inheritence files found.")
+          candidate_file <- candidate_file[[1L]]
+          log_warn("Using first file: {candidate_file}.")
+        }
+      }
+      if (candidate_file %in% inherited_files) {
+        log_error(
+          "Inheritence loop detected while inheriting from {candidate_file}."
+        )
+        log_error("Inherited file: {inherited_files}.")
+        stop("Inheritence loop detected.")
+      }
+      inherited_files <- c(inherited_files, candidate_file)
+      log_trace("Inheriting parameters from file: {candidate_file}.")
+      inherit_params <- jsonlite::fromJSON(candidate_file)
+      params <- merge_lists(
+        base_list = inherit_params,
+        overlay_list = params
+      )
     }
-    inherited_files <- c(inherited_files, candidate_file)
-    log_trace("Inheriting parameters from file: {candidate_file}.")
-    inherit_params <- jsonlite::fromJSON(candidate_file)
-    params <- merge_lists(
-      base_list = inherit_params,
-      overlay_list = params
-    )
   }
 
   log_trace("No inheritence key (\"{inherit_key}\") found.")

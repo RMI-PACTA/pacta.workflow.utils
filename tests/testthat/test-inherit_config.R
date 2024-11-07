@@ -205,7 +205,7 @@ test_that("Multiple values in inherit key inherits from multiple files", {
   writeLines(
     '{
       "inherited_key": 2,
-      "some_other_key": "test01",
+      "some_other_key": "test01"
     }',
     file.path(param_dir, "test01.json")
   )
@@ -224,13 +224,13 @@ test_that("Multiple values in inherit key inherits from multiple files", {
   expect_identical(
     object = results,
     expected = list(
-      foo  = 1L,
-      string = "simple params",
-      inherited_key = 2L,
-      some_other_key = "test01",
       other_inherited_key = 3L,
       some_third_key = "test02",
-      string2 = "this is a string"
+      string2 = "this is a string",
+      inherited_key = 2L,
+      some_other_key = "test01",
+      foo  = 1L,
+      string = "simple params"
     )
   )
 })
