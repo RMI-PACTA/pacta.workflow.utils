@@ -195,7 +195,7 @@ test_that("Multiple inherit keys in params throws error", {
   )
 })
 
-test_that("Multiple values in inherit key throws error", {
+test_that("Multiple values in inherit key inherits from multiple files", {
   params <- list(
     foo = 1L,
     string = "simple params",
@@ -206,24 +206,32 @@ test_that("Multiple values in inherit key throws error", {
     '{
       "inherited_key": 2,
       "some_other_key": "test01",
-      "string": "we should not see this"
     }',
     file.path(param_dir, "test01.json")
   )
   writeLines(
     '{
-      "inherited_key": 3,
-      "some_other_key": "test02",
-      "string": "we should not see this either"
+      "other_inherited_key": 3,
+      "some_third_key": "test02",
+      "string2": "this is a string"
     }',
     file.path(param_dir, "test02.json")
   )
-  testthat::expect_error(
-    inherit_params(
-      params = params,
-      inheritence_search_paths = param_dir
-    ),
-    regexp = "^Multiple values in inherit key.$"
+  results <- inherit_params(
+    params = params,
+    inheritence_search_paths = param_dir
+  )
+  expect_identical(
+    object = results,
+    expected = list(
+      foo  = 1L,
+      string = "simple params",
+      inherited_key = 2L,
+      some_other_key = "test01",
+      other_inherited_key = 3L,
+      some_third_key = "test02",
+      string2 = "this is a string"
+    )
   )
 })
 
