@@ -69,7 +69,12 @@ parse_params <- function(
 #' (in `inheritence_search_paths`) with the name of the value of the `inherit`
 #' key in the `params` list. If found, the parameters in that file will be
 #' overlaid onto the `params` list. This process will continue until no
-#' `inherit` key is found.
+#' `inherit` key is found. It is possible to specify multiple values in the
+#' `inherit` key; doing so will cause the parameters from each file to be
+#' overlaid onto the `params` list in the order specified. If inherit is
+#' `list("file01", "file02")`, then the `params` list will remain as-is, any
+#' _new_ values from `file01` will be added, and then any new values that
+#' aren't in `params` or `file01` will be added from `file02`.
 #'
 #' @param params list of parameters, which may include an inheritence key
 #' (`inherit`).
