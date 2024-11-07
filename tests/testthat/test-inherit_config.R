@@ -268,6 +268,56 @@ test_that("Identical inheritence paths throws error", {
   )
 })
 
+test_that("Overwriting inherited properties in decreasing precendence", {
+  params <- list(
+    foo = 1L,
+    string = "simple params",
+    inherit = c("test01", "test02", "test03")
+  )
+  param_dir <- withr::local_tempdir()
+  writeLines(
+    '{
+      "foo": 2,
+      "introcuded_in_test01": "test01",
+      "string": "We should not see this."
+    }',
+    file.path(param_dir, "test01.json")
+  )
+  writeLines(
+    '{
+      "foo": 3,
+      "introcuded_in_test01": "test02",
+      "introcuded_in_test02": "test02",
+      "string": "We should not see this."
+    }',
+    file.path(param_dir, "test02.json")
+  )
+  writeLines(
+    '{
+      "foo": 4,
+      "introcuded_in_test01": "test03",
+      "introcuded_in_test02": "test03",
+      "introcuded_in_test03": "test03",
+      "string": "We should not see this."
+    }',
+    file.path(param_dir, "test03.json")
+  )
+  results <- inherit_params(
+    params = params,
+    inheritence_search_paths = param_dir
+  )
+  expect_identical(
+    object = results,
+    expected = list(
+      foo = 1L,
+      introcuded_in_test01 = "test01",
+      introcuded_in_test02 = "test02",
+      introcuded_in_test03 = "test03",
+      string = "simple params"
+    )
+  )
+})
+
 test_that("Circular inheritence throws error", {
   params <- list(
     foo = 1L,
