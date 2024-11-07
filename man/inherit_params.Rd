@@ -21,5 +21,10 @@ Inherit parameters from a JSON file. This function will search for a file
 (in \code{inheritence_search_paths}) with the name of the value of the \code{inherit}
 key in the \code{params} list. If found, the parameters in that file will be
 overlaid onto the \code{params} list. This process will continue until no
-\code{inherit} key is found.
+\code{inherit} key is found. It is possible to specify multiple values in the
+\code{inherit} key; doing so will cause the parameters from each file to be
+overlaid onto the \code{params} list in the order specified. If inherit is
+\code{list("file01", "file02")}, then the \code{params} list will remain as-is, any
+\emph{new} values from \code{file01} will be added, and then any new values that
+aren't in \code{params} or \code{file01} will be added from \code{file02}.
 }
