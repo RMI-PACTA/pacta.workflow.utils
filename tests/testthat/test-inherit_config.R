@@ -235,6 +235,39 @@ test_that("Multiple values in inherit key inherits from multiple files", {
   )
 })
 
+test_that("Identical inheritence paths throws error", {
+  params <- list(
+    foo = 1L,
+    string = "simple params",
+    inherit = c("test01", "test01")
+  )
+  param_dir <- withr::local_tempdir()
+  writeLines(
+    '{
+      "inherited_key": 2,
+      "some_other_key": "test01",
+      "string": "we should not see this",
+      "inherit": "test02"
+    }',
+    file.path(param_dir, "test01.json")
+  )
+  writeLines(
+    '{
+      "inherited_key": 3,
+      "some_other_key": "test02",
+      "string": "we should not see this either",
+    }',
+    file.path(param_dir, "test02.json")
+  )
+  testthat::expect_error(
+    inherit_params(
+      params = params,
+      inheritence_search_paths = param_dir
+    ),
+    regexp = "^Duplicate values found in inheritence key.$"
+  )
+})
+
 test_that("Circular inheritence throws error", {
   params <- list(
     foo = 1L,
