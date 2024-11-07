@@ -102,7 +102,7 @@ inherit_params <- function(
     )
 
     to_inherit_vec <- params[[inherit_key]]
-    if (length(to_inherit_vec) != length(unique(to_inherit_vec))) {
+    if (anyDuplicated(to_inherit_vec) != 0L) {
       log_error("Duplicate values found in inheritence key.")
       stop("Duplicate values found in inheritence key.")
     }
