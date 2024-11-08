@@ -19,11 +19,11 @@
 #' @export
 inherit_params <- function(
   params,
-  inheritence_search_paths
+  inheritence_search_paths,
+  inherited_files = NULL
 ) {
   inherit_key <- "inherit"
 
-  inherited_files <- NULL
   while (inherit_key %in% names(params)) {
 
     # check for multiple inheritence keys
@@ -73,7 +73,8 @@ inherit_params <- function(
       log_trace("Inheriting parameters from file: {candidate_file}.")
       params_to_inherit <- inherit_params(
         params = jsonlite::fromJSON(candidate_file),
-        inheritence_search_paths = inheritence_search_paths
+        inheritence_search_paths = inheritence_search_paths,
+        inherited_files = inherited_files
       )
       params <- merge_lists(
         base_list = params_to_inherit,

@@ -142,10 +142,10 @@ test_that("Multiple values in inherit key work with nested inheritence", {
     object = results,
     expected = list(
       key01 = 10L,
-      key10 = 10L,
-      key11 = 11L,
       key20 = 20L,
       key21 = 21L,
+      key10 = 10L,
+      key11 = 11L,
       foo  = 1L
     )
   )
@@ -213,14 +213,13 @@ test_that("Nested inheritence works with multiple inheritence", {
     object = results,
     expected = list(
       key01 = 10L,
-      key10 = 10L,
-      key12 = 12L,
-      key11 = 11L,
       key20 = 20L,
       key22 = 22L,
       key21 = 21L,
+      key10 = 10L,
+      key12 = 12L,
+      key11 = 11L,
       foo  = 1L
     )
   )
 })
-
