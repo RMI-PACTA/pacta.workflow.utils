@@ -10,6 +10,8 @@
 #' `parse_params` for details.
 #' @param raw_schema_file JSON Schema file to validate raw parameters against.
 #' See `jsonvalidate::json_validate` for details.
+#' @param force_array Path in params list to force casting as JSON array.
+#' Passed to `parse_params` agument `force_array`. (Default empty)
 #' @return list of parameters
 #' @examples
 # nolint start
@@ -102,7 +104,8 @@ parse_raw_params <- function(
   json,
   inheritence_search_paths = NULL,
   schema_file = NULL,
-  raw_schema_file = NULL
+  raw_schema_file = NULL,
+  force_array = list()
 ) {
   # Read Params
   log_debug("Processing input parameters.")
@@ -146,7 +149,7 @@ parse_raw_params <- function(
     json = json,
     inheritence_search_paths = inheritence_search_paths,
     schema_file = schema_file,
-    force_array = c("portfolio", "files")
+    force_array = force_array
   )
 
   return(params)
