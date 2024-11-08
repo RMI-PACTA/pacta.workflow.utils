@@ -11,7 +11,7 @@
 #' @param raw_schema_file JSON Schema file to validate raw parameters against.
 #' See `jsonvalidate::json_validate` for details.
 #' @param force_array Path in params list to force casting as JSON array.
-#' Passed to `parse_params` agument `force_array`. (Default empty)
+#' Passed to `parse_params` argument `force_array`. (Default empty)
 #' @return list of parameters
 #' @examples
 # nolint start
