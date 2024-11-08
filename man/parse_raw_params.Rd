@@ -25,7 +25,7 @@ inheritance files. See \code{parse_params} for details.}
 See \code{jsonvalidate::json_validate} for details.}
 
 \item{force_array}{Path in params list to force casting as JSON array.
-Passed to \code{parse_params} agument \code{force_array}. (Default empty)}
+Passed to \code{parse_params} argument \code{force_array}. (Default empty)}
 }
 \value{
 list of parameters
