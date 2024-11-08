@@ -71,7 +71,10 @@ inherit_params <- function(
       }
       inherited_files <- c(inherited_files, candidate_file)
       log_trace("Inheriting parameters from file: {candidate_file}.")
-      params_to_inherit <- jsonlite::fromJSON(candidate_file)
+      params_to_inherit <- inherit_params(
+        params = jsonlite::fromJSON(candidate_file),
+        inheritence_search_paths = inheritence_search_paths
+      )
       params <- merge_lists(
         base_list = params_to_inherit,
         overlay_list = params
@@ -82,4 +85,3 @@ inherit_params <- function(
   log_trace("No inheritence key (\"{inherit_key}\") found.")
   return(params)
 }
-
