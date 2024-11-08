@@ -24,7 +24,7 @@ inherit_params <- function(
 ) {
   inherit_key <- "inherit"
 
-  while (inherit_key %in% names(params)) {
+  if (inherit_key %in% names(params)) {
 
     # check for multiple inheritence keys
     if (sum(names(params) == inherit_key) > 1L) {
