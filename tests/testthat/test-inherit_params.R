@@ -292,3 +292,31 @@ test_that("Searching across multiple directories works", {
     )
   )
 })
+
+test_that("Inheritence only looks at top level keys (not nested)", {
+  params <- list(
+    foo = 1L,
+    bar = list(
+      baz = 2L,
+      inherit = "test01"
+    )
+  )
+  param_dir <- withr::local_tempdir()
+  writeLines(
+    '{
+      "inherited_key": 2,
+      "some_other_key": "test01",
+      "string": "we should not see this"
+    }',
+    file.path(param_dir, "test01.json")
+  )
+  results <- inherit_params(
+    params = params,
+    inheritence_search_paths = param_dir
+  )
+  expect_identical(
+    object = results,
+    expected = params
+  )
+})
+
