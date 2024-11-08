@@ -235,6 +235,61 @@ test_that("Multiple values in inherit key inherits from multiple files", {
   )
 })
 
+test_that("Multiple values in inherit key work with nested inheritence", {
+  params <- list(
+    foo = 1L,
+    inherit = c("test10", "test20")
+  )
+  param_dir <- withr::local_tempdir()
+  writeLines(
+    '{
+      "key01": 10,
+      "key10": 10,
+      "inherit": "test11"
+    }',
+    file.path(param_dir, "test10.json")
+  )
+  writeLines(
+    '{
+      "key01": 11,
+      "key10": 11,
+      "key11": 11
+    }',
+    file.path(param_dir, "test11.json")
+  )
+  writeLines(
+    '{
+      "key01": 20,
+      "key20": 20,
+      "inherit": "test21"
+    }',
+    file.path(param_dir, "test20.json")
+  )
+  writeLines(
+    '{
+      "key01": 21,
+      "key20": 21,
+      "key21": 21
+    }',
+    file.path(param_dir, "test21.json")
+  )
+  results <- inherit_params(
+    params = params,
+    inheritence_search_paths = param_dir
+  )
+  expect_identical(
+    object = results,
+    expected = list(
+      key01 = 10L,
+      key10 = 10L,
+      key11 = 11L,
+      key20 = 20L,
+      key21 = 21L,
+      foo  = 1L
+    )
+  )
+})
+
 test_that("Identical inheritence paths throws error", {
   params <- list(
     foo = 1L,
