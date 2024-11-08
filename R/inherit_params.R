@@ -14,6 +14,8 @@
 #' @param params list of parameters, which may include an inheritence key
 #' (`inherit`).
 #' @param inheritence_search_paths Paths to search for inherited parameters.
+#' @param inherited_files Paths of files that have already been inherited from
+#' (Used in recursive calls, not for user use).
 #' @return merged list of parameters, with inherited parameters overlaid onto
 #' `params`.
 #' @export
