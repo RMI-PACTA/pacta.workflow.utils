@@ -17,7 +17,6 @@ test_that("Simple inheritence works", {
   writeLines(
     '{
       "inherited_key": 2,
-      "some_other_key": "test01",
       "string": "we should not see this"
     }',
     file.path(param_dir, "test01.json")
@@ -30,14 +29,13 @@ test_that("Simple inheritence works", {
     object = results,
     expected = list(
       inherited_key = 2L,
-      some_other_key = "test01",
       string = "simple params",
       foo = 1L
     )
   )
 })
 
-test_that("Only inheritence works", {
+test_that("Inheritence works with only an inherit key", {
   params <- list(
     inherit = "test01"
   )
@@ -45,8 +43,7 @@ test_that("Only inheritence works", {
   writeLines(
     '{
       "inherited_key": 2,
-      "some_other_key": "test01",
-      "string": "we should not see this"
+      "string": "some string"
     }',
     file.path(param_dir, "test01.json")
   )
@@ -58,8 +55,7 @@ test_that("Only inheritence works", {
     object = results,
     expected = list(
       inherited_key = 2L,
-      some_other_key = "test01",
-      string = "we should not see this"
+      string = "some string"
     )
   )
 })
@@ -106,26 +102,20 @@ test_that("Simple inheritence picks the correct file", {
 test_that("Nested inheritence works", {
   params <- list(
     foo = 1L,
-    string = "simple params",
     inherit = "test01"
   )
   param_dir <- withr::local_tempdir()
   writeLines(
     '{
-      "inherited_key": 2,
-      "some_other_key": "test01",
-      "string": "we should not see this",
-      "test01": true,
+      "inherited_key": "test01",
       "inherit": "test02"
     }',
     file.path(param_dir, "test01.json")
   )
   writeLines(
     '{
-      "inherited_key": 3,
-      "some_other_key": "test02",
-      "string": "we should not see this either",
-      "test02": true
+      "inherited_key": "test02",
+      "some_other_key": "test02"
     }',
     file.path(param_dir, "test02.json")
   )
@@ -136,11 +126,8 @@ test_that("Nested inheritence works", {
   expect_identical(
     object = results,
     expected = list(
-      inherited_key = 2L,
-      some_other_key = "test01",
-      string = "simple params",
-      test02 = TRUE,
-      test01 = TRUE,
+      inherited_key = "test01",
+      some_other_key = "test02",
       foo = 1L
     )
   )
@@ -149,7 +136,6 @@ test_that("Nested inheritence works", {
 test_that("Missing inheritence file throws error", {
   params <- list(
     foo = 1L,
-    string = "simple params",
     inherit = "test01"
   )
   param_dir <- withr::local_tempdir()
@@ -165,15 +151,12 @@ test_that("Missing inheritence file throws error", {
 test_that("Circular inheritence throws error", {
   params <- list(
     foo = 1L,
-    string = "simple params",
     inherit = "test01"
   )
   param_dir <- withr::local_tempdir()
   writeLines(
     '{
       "inherited_key": 2,
-      "some_other_key": "test01",
-      "string": "we should not see this",
       "inherit": "test02"
     }',
     file.path(param_dir, "test01.json")
@@ -181,8 +164,6 @@ test_that("Circular inheritence throws error", {
   writeLines(
     '{
       "inherited_key": 3,
-      "some_other_key": "test02",
-      "string": "we should not see this either",
       "inherit": "test01"
     }',
     file.path(param_dir, "test02.json")
@@ -196,20 +177,15 @@ test_that("Circular inheritence throws error", {
   )
 })
 
-test_that("Searching across multiple directories works", {
+test_that("Inheritence across multiple directories works", {
   params <- list(
     foo = 1L,
-    string = "simple params",
     inherit = "test01"
   )
   first_dir <- withr::local_tempdir()
   writeLines(
     '{
-      "inherited_key": 2,
-      "dir": "first",
-      "some_other_key": "test01",
-      "string": "we should not see this",
-      "test01": true,
+      "inherited_key": "test01",
       "inherit": "test02"
     }',
     file.path(first_dir, "test01.json")
@@ -217,11 +193,8 @@ test_that("Searching across multiple directories works", {
   second_dir <- withr::local_tempdir()
   writeLines(
     '{
-      "inherited_key": 3,
-      "dir": "second",
-      "some_other_key": "test02",
-      "string": "we should not see this either",
-      "test02": true
+      "inherited_key": "test02",
+      "some_other_key": "test02"
     }',
     file.path(second_dir, "test02.json")
   )
@@ -232,42 +205,31 @@ test_that("Searching across multiple directories works", {
   expect_identical(
     object = results,
     expected = list(
-      inherited_key = 2L,
-      dir = "first", # inheriting from first_dir/test01.json
-      some_other_key = "test01",
-      string = "simple params",
-      test02 = TRUE,
-      test01 = TRUE,
+      inherited_key = "test01",
+      some_other_key = "test02",
       foo = 1L
     )
   )
 })
 
-test_that("Searching across multiple directories works", {
+test_that("Searching across multiple directories sets precendence by order", {
   params <- list(
     foo = 1L,
-    string = "simple params",
     inherit = "test01"
   )
   first_dir <- withr::local_tempdir()
   writeLines(
     '{
-      "inherited_key": 2,
-      "dir": "first",
-      "some_other_key": "test01",
-      "string": "we should not see this",
-      "test01": true
+      "inherited_key": "test01",
+      "dir": "first"
     }',
     file.path(first_dir, "test01.json")
   )
   second_dir <- withr::local_tempdir()
   writeLines(
     '{
-      "inherited_key": 3,
-      "dir": "second",
-      "some_other_key": "secret bonus file",
-      "string": "we should not see this either",
-      "test02": true
+      "inherited_key": "test01",
+      "dir": "second"
     }',
     file.path(second_dir, "test01.json")
   )
@@ -283,11 +245,8 @@ test_that("Searching across multiple directories works", {
   expect_identical(
     object = results,
     expected = list(
-      inherited_key = 2L,
+      inherited_key = "test01",
       dir = "first", # inheriting from first_dir/test01.json
-      some_other_key = "test01",
-      string = "simple params",
-      test01 = TRUE,
       foo = 1L
     )
   )
