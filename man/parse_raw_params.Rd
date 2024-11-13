@@ -8,7 +8,8 @@ parse_raw_params(
   json,
   inheritence_search_paths = NULL,
   schema_file = NULL,
-  raw_schema_file = NULL
+  raw_schema_file = NULL,
+  force_array = list()
 )
 }
 \arguments{
@@ -22,6 +23,9 @@ inheritance files. See \code{parse_params} for details.}
 
 \item{raw_schema_file}{JSON Schema file to validate raw parameters against.
 See \code{jsonvalidate::json_validate} for details.}
+
+\item{force_array}{Path in params list to force casting as JSON array.
+Passed to \code{parse_params} argument \code{force_array}. (Default empty)}
 }
 \value{
 list of parameters
